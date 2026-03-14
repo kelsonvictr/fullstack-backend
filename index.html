@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backend Java/Spring — Sistema Fullstack | Programa AI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a12;
+  --surface:#12121e;
+  --surface2:#1a1a2e;
+  --surface3:#222240;
+  --accent:#6c63ff;
+  --accent2:#ff6b6b;
+  --accent3:#4ecdc4;
+  --accent4:#45b7d1;
+  --accent5:#f7b731;
+  --accent6:#a78bfa;
+  --accent7:#06d6a0;
+  --java:#f89820;
+  --spring:#6db33f;
+  --text:#eef0f8;
+  --text-dim:#8892b0;
+  --code-bg:#0d0d1a;
+  --glow-accent:rgba(108,99,255,0.15);
+  --glow-spring:rgba(109,179,63,0.15);
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+
+/* === ANIMATED BACKGROUND === */
+.bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(108,99,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(108,99,255,0.03) 1px,transparent 1px);background-size:50px 50px}
+.bg-orbs{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.bg-orbs .orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.08;animation:orbFloat 25s ease-in-out infinite}
+.bg-orbs .orb:nth-child(1){width:600px;height:600px;background:var(--accent);top:-150px;left:-150px;animation-delay:0s}
+.bg-orbs .orb:nth-child(2){width:500px;height:500px;background:var(--spring);bottom:-150px;right:-150px;animation-delay:-8s}
+.bg-orbs .orb:nth-child(3){width:400px;height:400px;background:var(--accent2);top:40%;left:60%;animation-delay:-16s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.1)}66%{transform:translate(-40px,60px) scale(0.9)}}
+
+/* === PROGRESS BAR === */
+.progress-track{position:fixed;top:0;left:0;width:100%;height:4px;z-index:200;background:rgba(255,255,255,0.03)}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--spring),var(--accent4));transition:width 0.3s;border-radius:0 2px 2px 0;box-shadow:0 0 20px var(--accent)}
+
+/* === CONTAINER === */
+.container{max-width:960px;margin:0 auto;padding:20px;position:relative;z-index:1}
+
+/* === NAV SIDEBAR === */
+.sidebar-nav{position:fixed;left:0;top:0;width:290px;height:100vh;background:var(--surface);border-right:1px solid rgba(108,99,255,0.1);z-index:100;transform:translateX(-100%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;padding:24px 0}
+.sidebar-nav.open{transform:translateX(0)}
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.sidebar-overlay.open{opacity:1;pointer-events:auto}
+.sidebar-header{padding:0 24px 20px;border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:12px}
+.sidebar-header h3{font-size:1rem;color:var(--accent);font-weight:800;display:flex;align-items:center;gap:8px}
+.sidebar-group{padding:8px 16px}
+.sidebar-group-title{font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);padding:8px;font-weight:700}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;color:var(--text-dim);text-decoration:none;font-size:0.85rem;font-weight:600;transition:all 0.2s;cursor:pointer}
+.sidebar-link:hover,.sidebar-link.active{background:rgba(108,99,255,0.1);color:var(--text)}
+.sidebar-link .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sidebar-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-dim);font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:8px;transition:all 0.2s}
+.sidebar-close:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+
+.menu-toggle{position:fixed;top:16px;left:16px;z-index:98;background:var(--surface2);border:1px solid rgba(108,99,255,0.2);color:var(--text);width:44px;height:44px;border-radius:12px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.menu-toggle:hover{background:var(--accent);border-color:var(--accent)}
+
+/* === HERO === */
+.hero{text-align:center;padding:100px 20px 70px;position:relative}
+.hero-icons{font-size:3.5rem;display:flex;justify-content:center;gap:16px;margin-bottom:24px;animation:fadeSlideDown 0.8s ease both}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent),var(--accent6));color:white;font-weight:800;font-size:0.8rem;padding:6px 20px;border-radius:50px;text-transform:uppercase;letter-spacing:2px;margin-bottom:24px;animation:fadeSlideDown 0.8s ease 0.1s both}
+.hero h1{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:900;background:linear-gradient(135deg,var(--text),var(--accent4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15;margin-bottom:16px;animation:fadeSlideDown 0.8s ease 0.2s both}
+.hero .subtitle{font-size:1.15rem;color:var(--text-dim);max-width:700px;margin:0 auto 28px;animation:fadeSlideDown 0.8s ease 0.35s both}
+.hero-stack{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;animation:fadeSlideDown 0.8s ease 0.5s both}
+.stack-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:50px;font-size:0.8rem;font-weight:700;border:1px solid rgba(255,255,255,0.08);background:var(--surface2)}
+.stack-chip.java{border-color:rgba(248,152,32,0.3);color:var(--java)}
+.stack-chip.spring{border-color:rgba(109,179,63,0.3);color:var(--spring)}
+.stack-chip.pg{border-color:rgba(69,183,209,0.3);color:var(--accent4)}
+.stack-chip.swagger{border-color:rgba(76,175,80,0.3);color:#85ea2d}
+
+@keyframes fadeSlideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
+@keyframes typing{from{width:0}to{width:100%}}
+@keyframes blink{50%{border-color:transparent}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* === CHAPTER DIVIDER === */
+.chapter-divider{text-align:center;padding:60px 20px 30px;position:relative}
+.chapter-divider::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(108,99,255,0.3),transparent)}
+.chapter-icon{font-size:3rem;display:block;margin-bottom:12px;animation:bounce 2s ease-in-out infinite}
+.chapter-number{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent6));color:white;font-weight:900;font-size:0.75rem;padding:4px 16px;border-radius:50px;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.chapter-divider h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:900;margin-bottom:8px}
+.chapter-divider h2.grad-forn{background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.chapter-divider h2.grad-prod{background:linear-gradient(135deg,var(--accent4),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.chapter-divider h2.grad-cli{background:linear-gradient(135deg,var(--accent6),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.chapter-subtitle{color:var(--text-dim);font-size:1rem;max-width:500px;margin:0 auto}
+
+/* === SECTION STEP === */
+.step-section{margin:30px 0;opacity:0;transform:translateY(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.step-section.visible{opacity:1;transform:translateY(0)}
+.step-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.step-number{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.3rem;color:var(--bg);flex-shrink:0;position:relative}
+.step-number::after{content:'';position:absolute;inset:-3px;border-radius:17px;background:inherit;opacity:0.25;z-index:-1}
+.sn-red{background:var(--accent2)}
+.sn-blue{background:var(--accent4)}
+.sn-green{background:var(--accent3)}
+.sn-yellow{background:var(--accent5)}
+.sn-purple{background:var(--accent6)}
+.sn-main{background:var(--accent)}
+.step-title{font-size:1.45rem;font-weight:800}
+
+/* === CARDS === */
+.card{background:var(--surface);border:1px solid rgba(255,255,255,0.05);border-radius:20px;padding:32px;margin-bottom:24px;position:relative;overflow:hidden;transition:border-color 0.3s}
+.card:hover{border-color:rgba(108,99,255,0.15)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity 0.3s}
+.card:hover::before{opacity:1}
+
+/* === CONCEPT BOX === */
+.concept{background:var(--surface2);border-radius:16px;padding:24px;margin:16px 0;border-left:4px solid var(--accent5)}
+.concept-title{font-family:'Caveat',cursive;font-size:1.4rem;color:var(--accent5);margin-bottom:8px}
+.concept p{color:var(--text-dim);font-size:0.95rem}
+
+/* === ANALOGY === */
+.analogy{background:linear-gradient(135deg,rgba(167,139,250,0.06),rgba(69,183,209,0.06));border:1px solid rgba(167,139,250,0.15);border-radius:16px;padding:24px;margin:16px 0;position:relative}
+.analogy::before{content:'💡';font-size:1.6rem;position:absolute;top:-14px;left:20px}
+.analogy-title{font-family:'Caveat',cursive;font-size:1.3rem;color:var(--accent6);margin-bottom:8px}
+
+/* === TIP / WARNING === */
+.tip{background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.15);border-radius:14px;padding:20px 24px;margin:16px 0;display:flex;gap:12px;align-items:flex-start}
+.tip-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+.tip-content{color:var(--text-dim);font-size:0.92rem}
+.tip-content strong{color:var(--accent3)}
+
+.warning{background:rgba(247,183,49,0.06);border:1px solid rgba(247,183,49,0.15);border-radius:14px;padding:20px 24px;margin:16px 0;display:flex;gap:12px;align-items:flex-start}
+.warning-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+
+/* === CODE BLOCKS === */
+.code-block{background:var(--code-bg);border-radius:14px;margin:16px 0;overflow:hidden;border:1px solid rgba(255,255,255,0.05);position:relative}
+.code-header{background:rgba(255,255,255,0.03);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.05)}
+.code-header .dots{display:flex;gap:6px}
+.code-header .dot{width:10px;height:10px;border-radius:50%}
+.code-header .dot:nth-child(1){background:#ff5f57}
+.code-header .dot:nth-child(2){background:#febc2e}
+.code-header .dot:nth-child(3){background:#28c840}
+.code-header .filename{color:var(--text-dim);font-size:0.78rem;font-family:'JetBrains Mono',monospace}
+.code-header .lang-badge{font-size:0.65rem;padding:2px 8px;border-radius:4px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.code-header .lang-badge.java{background:rgba(248,152,32,0.15);color:var(--java)}
+.code-header .lang-badge.properties{background:rgba(78,205,196,0.15);color:var(--accent3)}
+.code-header .lang-badge.sql{background:rgba(69,183,209,0.15);color:var(--accent4)}
+.code-header .lang-badge.json{background:rgba(247,183,49,0.15);color:var(--accent5)}
+.code-header .lang-badge.http{background:rgba(255,107,107,0.15);color:var(--accent2)}
+pre{padding:20px;margin:0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.85;color:#c9d1d9;tab-size:4}
+.code-block.with-lines pre{padding-left:56px}
+.code-block .line-numbers{position:absolute;left:0;top:44px;padding:20px 12px 20px 16px;color:rgba(255,255,255,0.12);font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.85;text-align:right;user-select:none;border-right:1px solid rgba(255,255,255,0.03)}
+
+/* Syntax */
+.kw{color:#c4a7e7}.fn{color:#82aaff}.st{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.an{color:#ffcb6b}.tp{color:#f78c6c}.nb{color:#89ddff}.op{color:#c9d1d9}.num{color:#f78c6c}.bool{color:#82aaff}.pkg{color:#546e7a}
+
+/* Annotation highlight */
+.anno-line{display:inline-block;width:100%;padding:2px 6px;margin:0 -6px;border-radius:4px;transition:background 0.3s;cursor:help;position:relative}
+.anno-line:hover{background:rgba(108,99,255,0.08)}
+.anno-tooltip{display:none;position:absolute;left:100%;top:0;margin-left:12px;background:var(--surface2);border:1px solid rgba(108,99,255,0.2);border-radius:10px;padding:12px 16px;min-width:280px;z-index:10;font-size:0.8rem;line-height:1.5;color:var(--text-dim);font-family:'Nunito',sans-serif;font-style:normal;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
+.anno-line:hover .anno-tooltip{display:block}
+.anno-tooltip strong{color:var(--accent5);display:block;margin-bottom:4px;font-size:0.85rem}
+
+/* === FLOW DIAGRAM === */
+.flow-container{display:flex;flex-direction:column;align-items:center;gap:0;margin:24px 0}
+.flow-box{background:var(--surface2);border:2px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px 24px;text-align:center;font-weight:700;font-size:0.9rem;position:relative;min-width:260px;transition:all 0.3s;cursor:default}
+.flow-box:hover{transform:scale(1.03);border-color:rgba(255,255,255,0.15)}
+.flow-box .label{font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;font-weight:800}
+.flow-box.fb-client{border-color:var(--accent2);background:rgba(255,107,107,0.06)}
+.flow-box.fb-controller{border-color:var(--accent);background:rgba(108,99,255,0.06)}
+.flow-box.fb-service{border-color:var(--accent5);background:rgba(247,183,49,0.06)}
+.flow-box.fb-repo{border-color:var(--accent3);background:rgba(78,205,196,0.06)}
+.flow-box.fb-db{border-color:var(--accent4);background:rgba(69,183,209,0.06)}
+.flow-box.fb-response{border-color:var(--accent7);background:rgba(6,214,160,0.06)}
+.flow-arrow{width:2px;height:32px;position:relative;display:flex;align-items:center;justify-content:center}
+.flow-arrow::before{content:'';position:absolute;width:2px;height:100%;background:linear-gradient(to bottom,var(--text-dim),transparent)}
+.flow-arrow::after{content:'▼';position:absolute;bottom:-8px;color:var(--text-dim);font-size:0.65rem}
+.flow-arrow .flow-label{position:absolute;left:24px;top:50%;transform:translateY(-50%);font-size:0.85rem;color:var(--accent5);font-weight:700;white-space:nowrap;font-family:'Caveat',cursive}
+.flow-arrow .flow-label.right{left:auto;right:24px}
+.flow-arrow-up::after{content:'▲';top:-8px;bottom:auto}
+
+/* Flow syringe injection arrows */
+.flow-inject-arrow{position:relative;display:flex;align-items:center;justify-content:center;padding:6px 0;min-height:68px}
+.flow-inject-arrow::before{content:'';position:absolute;width:2px;height:100%;background:linear-gradient(to bottom,rgba(109,179,63,0.5),rgba(109,179,63,0.15));left:50%;transform:translateX(-50%);z-index:0}
+.flow-inject-arrow::after{content:'▼';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);color:var(--spring);font-size:0.65rem;z-index:1}
+.flow-inject-inner{display:flex;align-items:center;gap:6px;z-index:1;background:var(--surface);padding:2px 10px;border-radius:10px;border:1px solid rgba(109,179,63,0.2)}
+.flow-inject-inner .mini-syringe{width:28px;height:28px;filter:drop-shadow(0 0 4px rgba(109,179,63,0.3));flex-shrink:0}
+.flow-inject-inner .mini-syringe .syringe-body{fill:none;stroke:var(--spring);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.flow-inject-inner .mini-syringe .syringe-liquid{fill:rgba(109,179,63,0.35);stroke:none}
+.flow-inject-inner .mini-syringe .syringe-needle{stroke:var(--spring);stroke-width:2.5;stroke-linecap:round}
+.flow-inject-inner .flow-autowired-tag{font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:800;color:var(--spring);white-space:nowrap;animation:autowiredPulse 2.5s ease-in-out infinite}
+.flow-inject-inner .flow-inject-desc{font-size:0.65rem;color:var(--text-dim);font-weight:600;font-style:italic;white-space:nowrap}
+.flow-inject-label-area{display:flex;flex-direction:column;gap:1px}
+
+/* === INTERACTIVE DB VISUALIZATION === */
+.db-table{background:var(--surface2);border-radius:14px;overflow:hidden;margin:16px 0;border:1px solid rgba(255,255,255,0.06)}
+.db-table-header{background:rgba(69,183,209,0.1);padding:12px 20px;font-weight:800;font-size:0.85rem;color:var(--accent4);display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.db-table table{width:100%;border-collapse:collapse;font-size:0.78rem;font-family:'JetBrains Mono',monospace}
+.db-table th{padding:10px 12px;text-align:left;color:var(--text-dim);font-weight:700;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02)}
+.db-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text)}
+.db-table tr:last-child td{border-bottom:none}
+.db-table tr{transition:background 0.2s}
+.db-table tr:hover td{background:rgba(108,99,255,0.04)}
+.db-row-new{animation:rowSlideIn 0.5s ease both}
+@keyframes rowSlideIn{from{opacity:0;transform:translateX(-20px);background:rgba(108,99,255,0.1)}to{opacity:1;transform:translateX(0);background:transparent}}
+
+/* === ANNOTATION EXPLAINER === */
+.annotation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.annotation-card{background:var(--surface2);border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.05);transition:all 0.3s;cursor:default}
+.annotation-card:hover{border-color:rgba(108,99,255,0.2);transform:translateY(-3px)}
+.annotation-card .anno-name{font-family:'JetBrains Mono',monospace;font-size:0.82rem;color:var(--accent5);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.annotation-card .anno-name .at{color:var(--accent6)}
+.annotation-card .anno-desc{font-size:0.8rem;color:var(--text-dim);line-height:1.5}
+
+/* === TOGGLER === */
+.toggler{background:var(--surface);border-radius:14px;overflow:hidden;margin:16px 0;border:1px solid rgba(255,255,255,0.05)}
+.toggler-header{padding:16px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.3s;font-weight:700;font-size:0.95rem;user-select:none}
+.toggler-header:hover{background:rgba(255,255,255,0.02)}
+.toggler-arrow{transition:transform 0.3s;font-size:1rem;color:var(--text-dim)}
+.toggler-header.open .toggler-arrow{transform:rotate(180deg)}
+.toggler-body{max-height:0;overflow:hidden;transition:max-height 0.5s ease;padding:0 24px}
+.toggler-body.open{max-height:8000px;padding:0 24px 24px}
+
+/* === TERMINAL DEMO === */
+.demo-terminal{background:#080816;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);margin:16px 0}
+.demo-terminal .term-header{background:rgba(255,255,255,0.03);padding:12px 16px;display:flex;align-items:center;gap:8px}
+.demo-terminal .term-header .dots{display:flex;gap:6px}
+.demo-terminal .term-header .dot{width:10px;height:10px;border-radius:50%}
+.demo-terminal .term-header .dot:nth-child(1){background:#ff5f57}
+.demo-terminal .term-header .dot:nth-child(2){background:#febc2e}
+.demo-terminal .term-header .dot:nth-child(3){background:#28c840}
+.demo-terminal .term-header span{color:var(--text-dim);font-size:0.78rem;font-family:'JetBrains Mono',monospace;margin-left:8px}
+.demo-body{padding:20px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;min-height:200px;color:#c4b5fd;line-height:1.9;max-height:400px;overflow-y:auto}
+.demo-line{opacity:0;transform:translateX(-10px);transition:all 0.4s ease}
+.demo-line.show{opacity:1;transform:translateX(0)}
+.demo-line .method-post{color:#49cc90;font-weight:700}
+.demo-line .method-get{color:#61affe;font-weight:700}
+.demo-line .method-put{color:#fca130;font-weight:700}
+.demo-line .method-delete{color:#f93e3e;font-weight:700}
+.demo-line .url{color:var(--text)}
+.demo-line .status-ok{color:#49cc90;font-weight:700}
+.demo-line .status-created{color:#49cc90;font-weight:700}
+.demo-line .status-err{color:#f93e3e;font-weight:700}
+.demo-line .json-key{color:#82aaff}
+.demo-line .json-val{color:#c3e88d}
+.demo-line .json-num{color:#f78c6c}
+.demo-line .arrow{color:var(--accent5)}
+.demo-line .dim{color:var(--text-dim)}
+
+.btn-demo{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent),#5a52e0);color:white;border:none;padding:12px 28px;border-radius:12px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.3s;margin:8px 4px}
+.btn-demo:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(108,99,255,0.3)}
+.btn-demo:active{transform:translateY(0)}
+.btn-demo.btn-spring{background:linear-gradient(135deg,var(--spring),#4a9e2f)}
+.btn-demo.btn-spring:hover{box-shadow:0 8px 30px rgba(109,179,63,0.3)}
+.btn-demo.btn-red{background:linear-gradient(135deg,var(--accent2),#e05555)}
+.btn-demo.btn-yellow{background:linear-gradient(135deg,var(--accent5),#e0a020)}
+.btn-demo.btn-teal{background:linear-gradient(135deg,var(--accent3),#3ab0a5)}
+.btn-demo.btn-small{padding:8px 18px;font-size:0.82rem}
+
+/* === KEYWORD MAP === */
+.keyword-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0}
+.keyword-chip{background:var(--surface2);border-radius:12px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,0.05);transition:all 0.3s;cursor:default}
+.keyword-chip:hover{border-color:rgba(255,255,255,0.12);transform:translateY(-3px)}
+.keyword-chip .emoji{font-size:1.4rem;display:block;margin-bottom:6px}
+.keyword-chip .kw-name{font-weight:800;font-size:0.82rem;color:var(--accent5);display:block;margin-bottom:4px}
+.keyword-chip .kw-desc{font-size:0.72rem;color:var(--text-dim);margin-top:4px;display:block}
+
+/* === PULSE BADGE === */
+.pulse-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.25);padding:4px 14px;border-radius:50px;font-size:0.78rem;color:var(--accent);font-weight:700}
+.pulse-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s ease-in-out infinite}
+
+/* === SECTION CONNECTOR === */
+.section-connector{display:flex;justify-content:center;margin:10px 0 20px}
+.section-connector .line{width:2px;height:50px;background:linear-gradient(to bottom,rgba(108,99,255,0.15),transparent)}
+
+/* === STAGGER ANIMATION === */
+.stagger>*{opacity:0;transform:translateY(20px);transition:all 0.5s ease}
+.stagger.visible>*:nth-child(1){transition-delay:.05s}
+.stagger.visible>*:nth-child(2){transition-delay:.1s}
+.stagger.visible>*:nth-child(3){transition-delay:.15s}
+.stagger.visible>*:nth-child(4){transition-delay:.2s}
+.stagger.visible>*:nth-child(5){transition-delay:.25s}
+.stagger.visible>*:nth-child(6){transition-delay:.3s}
+.stagger.visible>*:nth-child(7){transition-delay:.35s}
+.stagger.visible>*:nth-child(8){transition-delay:.4s}
+.stagger.visible>*{opacity:1;transform:translateY(0)}
+
+/* === LAYER DIAGRAM === */
+.layer-stack{display:flex;flex-direction:column;gap:4px;margin:20px 0;max-width:520px;margin-left:auto;margin-right:auto}
+.layer-item{padding:16px 24px;border-radius:12px;text-align:center;font-weight:800;font-size:0.9rem;position:relative;transition:all 0.3s;cursor:default}
+.layer-item:hover{transform:scale(1.03)}
+.layer-item .layer-sub{font-size:0.72rem;font-weight:600;color:rgba(255,255,255,0.7);margin-top:2px}
+.layer-client{background:linear-gradient(135deg,rgba(255,107,107,0.15),rgba(255,107,107,0.05));border:1px solid rgba(255,107,107,0.2);color:var(--accent2)}
+.layer-controller{background:linear-gradient(135deg,rgba(108,99,255,0.15),rgba(108,99,255,0.05));border:1px solid rgba(108,99,255,0.2);color:var(--accent)}
+.layer-service{background:linear-gradient(135deg,rgba(247,183,49,0.15),rgba(247,183,49,0.05));border:1px solid rgba(247,183,49,0.2);color:var(--accent5)}
+.layer-repo{background:linear-gradient(135deg,rgba(78,205,196,0.15),rgba(78,205,196,0.05));border:1px solid rgba(78,205,196,0.2);color:var(--accent3)}
+.layer-model{background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(167,139,250,0.05));border:1px solid rgba(167,139,250,0.2);color:var(--accent6)}
+.layer-db{background:linear-gradient(135deg,rgba(69,183,209,0.15),rgba(69,183,209,0.05));border:1px solid rgba(69,183,209,0.2);color:var(--accent4)}
+.layer-arrow{text-align:center;color:var(--text-dim);font-size:0.8rem}
+
+/* Layer syringe connector */
+.layer-syringe-connector{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 0;position:relative}
+.layer-syringe-connector .layer-syringe-icon{width:22px;height:22px;filter:drop-shadow(0 0 4px rgba(109,179,63,0.4));flex-shrink:0}
+.layer-syringe-connector .layer-syringe-icon .syringe-body{fill:none;stroke:var(--spring);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.layer-syringe-connector .layer-syringe-icon .syringe-liquid{fill:rgba(109,179,63,0.35);stroke:none}
+.layer-syringe-connector .layer-syringe-icon .syringe-needle{stroke:var(--spring);stroke-width:2.5;stroke-linecap:round}
+.layer-syringe-connector .layer-autowired{font-family:'JetBrains Mono',monospace;font-size:0.65rem;font-weight:800;color:var(--spring);background:rgba(109,179,63,0.1);border:1px solid rgba(109,179,63,0.25);padding:2px 8px;border-radius:6px;animation:autowiredPulse 2.5s ease-in-out infinite}
+.layer-syringe-connector .layer-inject-text{font-size:0.65rem;color:var(--text-dim);font-weight:600}
+
+/* === SYRINGE INJECTION DIAGRAM === */
+.injection-diagram{max-width:600px;margin:30px auto 0;display:flex;flex-direction:column;align-items:center;gap:0}
+.inj-row{display:flex;align-items:center;justify-content:center;width:100%;gap:0;position:relative}
+.inj-box{padding:18px 28px;border-radius:14px;text-align:center;font-weight:800;font-size:0.95rem;min-width:180px;position:relative;z-index:2;transition:all 0.3s}
+.inj-box:hover{transform:scale(1.04)}
+.inj-box .inj-annotation{font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:700;opacity:0.8;margin-top:4px;display:block}
+.inj-box.box-controller{background:linear-gradient(135deg,rgba(108,99,255,0.18),rgba(108,99,255,0.06));border:2px solid rgba(108,99,255,0.35);color:var(--accent)}
+.inj-box.box-service{background:linear-gradient(135deg,rgba(247,183,49,0.18),rgba(247,183,49,0.06));border:2px solid rgba(247,183,49,0.35);color:var(--accent5)}
+.inj-box.box-repo{background:linear-gradient(135deg,rgba(78,205,196,0.18),rgba(78,205,196,0.06));border:2px solid rgba(78,205,196,0.35);color:var(--accent3)}
+
+.inj-syringe-area{display:flex;flex-direction:column;align-items:center;padding:8px 0;position:relative;min-height:80px;justify-content:center}
+
+/* Syringe SVG styling */
+.syringe-wrapper{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 0}
+.syringe-wrapper .autowired-tag{font-family:'JetBrains Mono',monospace;font-size:0.78rem;font-weight:800;color:var(--spring);background:rgba(109,179,63,0.12);border:1px solid rgba(109,179,63,0.3);padding:3px 12px;border-radius:8px;white-space:nowrap;animation:autowiredPulse 2.5s ease-in-out infinite;letter-spacing:0.5px}
+.syringe-wrapper .inject-label{font-size:0.72rem;color:var(--text-dim);font-weight:600;font-style:italic}
+
+.syringe-svg{width:60px;height:60px;filter:drop-shadow(0 0 8px rgba(109,179,63,0.3))}
+.syringe-svg .syringe-body{fill:none;stroke:var(--spring);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.syringe-svg .syringe-liquid{fill:rgba(109,179,63,0.3);stroke:none}
+.syringe-svg .syringe-needle{stroke:var(--spring);stroke-width:2.5;stroke-linecap:round}
+
+/* Syringe animation */
+.syringe-anim{animation:syringeInject 3s ease-in-out infinite}
+@keyframes syringeInject{0%,100%{transform:translateY(0)}30%{transform:translateY(6px)}50%{transform:translateY(6px)}70%{transform:translateY(0)}}
+
+/* Liquid drip animation */
+.liquid-drops{position:absolute;width:4px;height:4px;background:var(--spring);border-radius:50%;opacity:0;animation:liquidDrip 3s ease-in-out infinite}
+.liquid-drops:nth-child(1){animation-delay:0.4s;left:calc(50% - 2px)}
+.liquid-drops:nth-child(2){animation-delay:0.6s;left:calc(50% + 4px)}
+.liquid-drops:nth-child(3){animation-delay:0.8s;left:calc(50% - 6px)}
+@keyframes liquidDrip{0%,25%{opacity:0;transform:translateY(0)}35%{opacity:0.8;transform:translateY(4px)}60%{opacity:0.3;transform:translateY(18px)}70%,100%{opacity:0;transform:translateY(24px)}}
+@keyframes autowiredPulse{0%,100%{box-shadow:0 0 0 rgba(109,179,63,0);text-shadow:0 0 0 transparent}50%{box-shadow:0 0 16px rgba(109,179,63,0.25);text-shadow:0 0 8px rgba(109,179,63,0.4)}}
+
+/* === HTTP METHOD BADGES === */
+.method-badge{display:inline-block;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.7rem;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px}
+.method-badge.post{background:rgba(73,204,144,0.15);color:#49cc90}
+.method-badge.get{background:rgba(97,175,254,0.15);color:#61affe}
+.method-badge.put{background:rgba(252,161,48,0.15);color:#fca130}
+.method-badge.delete{background:rgba(249,62,62,0.15);color:#f93e3e}
+
+/* === ENDPOINT TABLE === */
+.endpoint-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.85rem}
+.endpoint-table th{text-align:left;padding:10px 14px;color:var(--text-dim);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.endpoint-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.endpoint-table tr:hover td{background:rgba(108,99,255,0.03)}
+.endpoint-table code{font-family:'JetBrains Mono',monospace;font-size:0.8rem}
+
+/* === COPY BUTTON === */
+.copy-btn{position:absolute;top:52px;right:12px;background:rgba(255,255,255,0.06);border:none;color:var(--text-dim);padding:5px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all 0.3s;z-index:2}
+.copy-btn:hover{background:rgba(255,255,255,0.12);color:var(--text)}
+
+/* === ROADMAP === */
+.roadmap{display:flex;flex-direction:column;gap:0;margin:20px 0;position:relative}
+.roadmap::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--accent5),var(--accent3),var(--accent6));border-radius:2px;opacity:0.3}
+.roadmap-item{display:flex;gap:20px;align-items:flex-start;padding:16px 0;position:relative}
+.roadmap-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;position:relative;z-index:1;margin-top:3px;margin-left:16px;box-shadow:0 0 12px rgba(0,0,0,0.3)}
+.roadmap-dot.active{animation:pulse 2s ease-in-out infinite}
+.roadmap-content{flex:1}
+.roadmap-content h4{font-size:0.95rem;font-weight:800;margin-bottom:4px}
+.roadmap-content p{color:var(--text-dim);font-size:0.85rem}
+
+/* === PROFESSOR BANNER === */
+.prof-banner{background:linear-gradient(135deg,rgba(108,99,255,0.08),rgba(109,179,63,0.06));border:1px solid rgba(108,99,255,0.12);border-radius:20px;padding:28px 32px;margin-bottom:0;display:flex;align-items:center;gap:24px;position:relative;overflow:hidden;animation:fadeSlideDown 0.8s ease 0.6s both}
+.prof-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--spring),var(--accent4),var(--accent5))}
+.prof-banner::after{content:'';position:absolute;top:-50%;right:-10%;width:300px;height:300px;background:radial-gradient(circle,rgba(108,99,255,0.06),transparent 70%);border-radius:50%;pointer-events:none}
+.prof-avatar{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent6));display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;box-shadow:0 8px 25px rgba(108,99,255,0.25);position:relative}
+.prof-avatar::after{content:'';position:absolute;inset:-3px;border-radius:21px;background:linear-gradient(135deg,var(--accent),var(--accent6));opacity:0.3;z-index:-1}
+.prof-info{flex:1;min-width:0}
+.prof-label{display:inline-flex;align-items:center;gap:6px;font-size:0.68rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--accent);font-weight:800;margin-bottom:4px}
+.prof-label .verified{width:16px;height:16px;border-radius:50%;background:var(--accent);color:white;display:inline-flex;align-items:center;justify-content:center;font-size:0.6rem}
+.prof-name{font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,var(--text),var(--accent4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.3}
+.prof-role{font-size:0.82rem;color:var(--text-dim);margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.prof-role .tag{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:50px;font-size:0.7rem;font-weight:700;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)}
+.prof-links{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.prof-link{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:8px;font-size:0.72rem;font-weight:700;color:var(--text-dim);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);text-decoration:none;transition:all 0.25s}
+.prof-link:hover{background:rgba(108,99,255,0.1);border-color:rgba(108,99,255,0.25);color:var(--text);transform:translateY(-1px)}
+.prof-link svg{width:14px;height:14px;fill:currentColor}
+.programa-ai-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:50px;background:linear-gradient(135deg,rgba(108,99,255,0.12),rgba(167,139,250,0.08));border:1px solid rgba(108,99,255,0.2);font-size:0.72rem;font-weight:800;color:var(--accent6);margin-top:8px}
+.programa-ai-badge .ai-dot{width:6px;height:6px;border-radius:50%;background:var(--accent6);animation:pulse 2s ease-in-out infinite}
+
+/* === FOOTER === */
+footer{text-align:center;padding:50px 20px;color:var(--text-dim);font-size:0.82rem;border-top:1px solid rgba(255,255,255,0.04);margin-top:60px}
+footer a{color:var(--accent);text-decoration:none}
+footer .heart{color:var(--accent2);animation:pulse 2s ease-in-out infinite;display:inline-block}
+
+/* === COMING SOON BADGE === */
+.coming-soon{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);padding:6px 18px;border-radius:50px;font-size:0.82rem;color:var(--accent6);font-weight:700;animation:popIn 0.5s ease both}
+.coming-soon .blink-dot{width:8px;height:8px;border-radius:50%;background:var(--accent6);animation:pulse 1.5s ease-in-out infinite}
+
+/* === RESPONSIVE === */
+@media(max-width:768px){
+  .container{padding:14px}
+  .card{padding:20px}
+  .hero{padding:60px 16px 40px}
+  .hero-icons{font-size:2.5rem}
+  pre{font-size:0.74rem}
+  .flow-box{min-width:180px;padding:12px 16px;font-size:0.82rem}
+  .annotation-grid{grid-template-columns:1fr}
+  .anno-tooltip{left:0;margin-left:0;top:100%;margin-top:8px}
+  .layer-stack{max-width:100%}
+  .endpoint-table{font-size:0.75rem}
+  .endpoint-table th,.endpoint-table td{padding:8px 10px}
+  .inj-box{min-width:140px;padding:14px 16px;font-size:0.82rem}
+  .inj-box .inj-annotation{font-size:0.62rem}
+  .syringe-wrapper .autowired-tag{font-size:0.68rem;padding:2px 8px}
+}
+@media(max-width:640px){
+  .prof-banner{flex-direction:column;text-align:center;padding:24px 20px}
+  .prof-info{display:flex;flex-direction:column;align-items:center}
+  .prof-role{justify-content:center}
+  .prof-links{justify-content:center}
+  .db-table table{font-size:0.68rem}
+  .db-table th,.db-table td{padding:6px 8px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- MENU TOGGLE -->
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR NAV -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar-nav" id="sidebarNav">
+  <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+  <div class="sidebar-header">
+    <h3>📚 Sumário do Curso</h3>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏠 Introdução</div>
+    <a class="sidebar-link" onclick="goTo('hero')"><span class="dot" style="background:var(--accent)"></span>Visão Geral</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐘 Tour — PostgreSQL</div>
+    <a class="sidebar-link" onclick="goTo('tour-pg')"><span class="dot" style="background:var(--accent4)"></span>O que é Banco de Dados?</a>
+    <a class="sidebar-link" onclick="goTo('tour-docker')"><span class="dot" style="background:#2496ED"></span>Docker + PostgreSQL</a>
+    <a class="sidebar-link" onclick="goTo('tour-dbeaver')"><span class="dot" style="background:var(--accent5)"></span>DBeaver — IDE do Banco</a>
+    <a class="sidebar-link" onclick="goTo('tour-sql')"><span class="dot" style="background:var(--accent3)"></span>SQL Básico (CRUD)</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🍃 Projeto Spring</div>
+    <a class="sidebar-link" onclick="goTo('arquitetura')"><span class="dot" style="background:var(--accent4)"></span>Arquitetura em Camadas</a>
+    <a class="sidebar-link" onclick="goTo('setup')"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📦 Capítulo 1 — Fornecedor</div>
+    <a class="sidebar-link" onclick="goTo('forn-model')"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" onclick="goTo('forn-repo')"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" onclick="goTo('forn-service')"><span class="dot" style="background:var(--accent5)"></span>Service</a>
+    <a class="sidebar-link" onclick="goTo('forn-controller')"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" onclick="goTo('forn-demo')"><span class="dot" style="background:var(--accent6)"></span>Demo Interativa</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔜 Próximos capítulos</div>
+    <a class="sidebar-link" onclick="goTo('proximos')"><span class="dot" style="background:var(--accent6)"></span>Produto (com DTOs)</a>
+    <a class="sidebar-link" onclick="goTo('proximos')"><span class="dot" style="background:var(--accent6)"></span>Cliente</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ════════════════════════════════════════ -->
+<!-- PROFESSOR BANNER -->
+<!-- ════════════════════════════════════════ -->
+<div class="prof-banner" style="margin-top:60px">
+  <div class="prof-avatar">👨‍🏫</div>
+  <div class="prof-info">
+    <div class="prof-label">
+      Professor <span class="verified">✓</span>
+    </div>
+    <div class="prof-name">Kelson Almeida</div>
+    <div class="prof-role">
+      <span class="tag">🚀 Programa AI</span>
+      <span class="tag">☕ Backend Java/Spring</span>
+      <span class="tag">📍 João Pessoa, PB</span>
+    </div>
+    <div class="prof-links">
+      <a href="https://github.com/kelsonvictr" target="_blank" class="prof-link">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+        GitHub
+      </a>
+      <a href="#" target="_blank" class="prof-link">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Repositório do Projeto
+      </a>
+    </div>
+    <div class="programa-ai-badge">
+      <span class="ai-dot"></span>
+      Programa AI — Curso Presencial Programação Fullstack
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- HERO -->
+<!-- ════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-icons">☕ 🍃 🐘</div>
+  <div class="hero-badge">Programa AI — Curso Presencial Programação Fullstack</div>
+  <h1>Backend com<br>Java &amp; Spring Boot</h1>
+  <p class="subtitle">A API REST que vai dar vida ao seu frontend React! Do zero ao CRUD completo — passo a passo, sem pular nada. Primeiro Fornecedores, depois Produtos e Clientes.</p>
+  <div class="hero-stack">
+    <span class="stack-chip java">☕ Java 21</span>
+    <span class="stack-chip spring">🍃 Spring Boot (versão mais recente)</span>
+    <span class="stack-chip pg">🐘 PostgreSQL</span>
+    <span class="stack-chip swagger">📗 Swagger</span>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║         TOUR: CONHECENDO O POSTGRESQL                       ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="chapter-divider" id="tour-pg">
+  <span class="chapter-icon">🐘</span>
+  <div class="chapter-number">Pré-requisito</div>
+  <h2 style="background:linear-gradient(135deg,var(--accent4),#336791);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Tour: Conhecendo o PostgreSQL</h2>
+  <p class="chapter-subtitle">Antes de codar, vamos entender onde os dados moram!</p>
+</div>
+
+<!-- O QUE É BANCO DE DADOS -->
+<section class="step-section" id="tour-bd">
+  <div class="step-header">
+    <div class="step-number sn-blue">🗄️</div>
+    <div>
+      <div class="step-title">O que é um Banco de Dados?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Entendendo o conceito antes de tudo</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Armário Organizado</div>
+      <p style="color:var(--text-dim)">Imagine um <strong style="color:var(--text)">armário gigante de escritório</strong> com várias <strong style="color:var(--accent4)">gavetas</strong>. Cada gaveta tem uma <strong style="color:var(--accent5)">etiqueta</strong> (nome da tabela): "Fornecedores", "Produtos", "Clientes". Dentro de cada gaveta tem <strong style="color:var(--accent3)">fichas organizadas</strong> em linhas e colunas. Isso é um banco de dados relacional! 📂</p>
+    </div>
+
+    <div class="concept">
+      <div class="concept-title">📖 Definição</div>
+      <p>Um <strong style="color:var(--text)">banco de dados</strong> é um lugar organizado para <strong>armazenar, consultar e manipular dados</strong>. Quando você fecha o programa, os dados não somem — ficam salvos permanentemente. É diferente de variáveis no código, que morrem quando o programa fecha.</p>
+    </div>
+
+    <div class="keyword-map stagger">
+      <div class="keyword-chip"><span class="emoji">🗄️</span><span class="kw-name">Banco (Database)</span><span class="kw-desc">O armário inteiro</span></div>
+      <div class="keyword-chip"><span class="emoji">📋</span><span class="kw-name">Tabela (Table)</span><span class="kw-desc">Uma gaveta — ex: "fornecedor"</span></div>
+      <div class="keyword-chip"><span class="emoji">📊</span><span class="kw-name">Coluna (Column)</span><span class="kw-desc">Os campos — ex: "nome", "email"</span></div>
+      <div class="keyword-chip"><span class="emoji">📝</span><span class="kw-name">Linha (Row)</span><span class="kw-desc">Um registro — ex: "Distribuidora ABC"</span></div>
+      <div class="keyword-chip"><span class="emoji">🔑</span><span class="kw-name">Chave Primária (PK)</span><span class="kw-desc">ID único de cada registro</span></div>
+      <div class="keyword-chip"><span class="emoji">📝</span><span class="kw-name">SQL</span><span class="kw-desc">A "linguagem" para falar com o banco</span></div>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">🖼️ Visualizando: como uma tabela se parece</h4>
+    <div class="db-table">
+      <div class="db-table-header">📋 Tabela: fornecedor</div>
+      <table>
+        <thead><tr><th>id 🔑</th><th>nome</th><th>cnpj</th><th>email</th><th>cidade</th><th>uf</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--accent5);font-weight:700">1</td><td>Distribuidora ABC</td><td style="color:var(--text-dim)">12.345.678/0001-99</td><td style="color:var(--text-dim)">contato@abc.com</td><td>São Paulo</td><td style="font-weight:700">SP</td></tr>
+          <tr><td style="color:var(--accent5);font-weight:700">2</td><td>Fornecedor XYZ</td><td style="color:var(--text-dim)">98.765.432/0001-11</td><td style="color:var(--text-dim)">vendas@xyz.com</td><td>João Pessoa</td><td style="font-weight:700">PB</td></tr>
+          <tr><td style="color:var(--accent5);font-weight:700">3</td><td>Tech Solutions</td><td style="color:var(--text-dim)">11.222.333/0001-44</td><td style="color:var(--text-dim)">info@tech.com</td><td>Recife</td><td style="font-weight:700">PE</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--text-dim);font-size:0.85rem;margin-top:8px">☝️ Cada <strong style="color:var(--text)">linha</strong> é um fornecedor cadastrado. Cada <strong style="color:var(--text)">coluna</strong> é uma informação sobre ele. O <strong style="color:var(--accent5)">id</strong> é gerado automaticamente e nunca se repete — é a chave primária (PK).</p>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🐘</span>
+      <div class="tip-content">
+        <strong>Por que PostgreSQL?</strong> Existem vários bancos (MySQL, SQLite, Oracle...). O PostgreSQL é <strong style="color:var(--accent4)">gratuito, robusto, seguro</strong> e um dos mais usados no mercado. É perfeito para aprender e também para projetos profissionais!
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- DOCKER + POSTGRESQL -->
+<section class="step-section" id="tour-docker">
+  <div class="step-header">
+    <div class="step-number" style="background:#2496ED">🐳</div>
+    <div>
+      <div class="step-title">Instalando o PostgreSQL com Docker</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A forma mais fácil e profissional de rodar bancos de dados</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🐳 O que é Docker?</div>
+      <p>Docker é como uma <strong style="color:var(--text)">caixa mágica</strong> que empacota um programa com tudo que ele precisa para funcionar. Em vez de instalar o PostgreSQL direto no seu computador (e lidar com configurações complicadas), você <strong style="color:#2496ED">cria um container</strong> — uma "mini-máquina" que roda o PostgreSQL isoladamente.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Container = Marmita</div>
+      <p style="color:var(--text-dim)">Instalar um programa direto no computador é como cozinhar na sua cozinha — suja tudo, ocupa espaço, e é difícil de limpar depois. Usar <strong style="color:#2496ED">Docker</strong> é como pedir uma <strong style="color:var(--text)">marmita</strong>: vem tudo pronto, embalado, e quando você termina, joga fora a embalagem sem sujar nada! 🍱</p>
+    </div>
+
+    <!-- PASSO 1: Docker Desktop -->
+    <h4 style="margin:24px 0 12px;color:#2496ED">📥 Passo 1 — Instale o Docker Desktop</h4>
+    <div style="background:rgba(36,150,237,0.06);border:1px solid rgba(36,150,237,0.15);border-radius:14px;padding:20px 24px;margin-bottom:16px">
+      <p style="font-size:0.92rem;margin-bottom:12px">O <strong style="color:#2496ED">Docker Desktop</strong> é o app que permite usar Docker no seu computador de forma visual e simples.</p>
+      <ol style="color:var(--text-dim);font-size:0.9rem;margin-left:20px;display:flex;flex-direction:column;gap:8px">
+        <li>Acesse <a href="https://www.docker.com/products/docker-desktop/" target="_blank" style="color:#2496ED;font-weight:700">docker.com/products/docker-desktop</a></li>
+        <li>Baixe para o seu sistema operacional (Windows, Mac ou Linux)</li>
+        <li>Instale normalmente (next, next, finish...)</li>
+        <li>Abra o Docker Desktop e aguarde ele iniciar (ícone da baleia 🐳 fica verde)</li>
+      </ol>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">✅</span>
+      <div class="tip-content">
+        <strong>Como saber se o Docker está funcionando?</strong> Abra o terminal e digite <code>docker --version</code>. Se aparecer uma versão, está tudo certo!
+      </div>
+    </div>
+
+    <!-- PASSO 2: Criar container -->
+    <h4 style="margin:24px 0 12px;color:#2496ED">🚀 Passo 2 — Criar o Container do PostgreSQL</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Com o Docker Desktop rodando, abra o <strong>terminal</strong> (Prompt de Comando, PowerShell ou Terminal do Mac) e cole este comando:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">Terminal</span><span class="lang-badge" style="background:rgba(36,150,237,0.15);color:#2496ED">bash</span></div>
+      </div>
+      <pre>docker run --name postgres-fullstack -e POSTGRES_PASSWORD=123 -e POSTGRES_USER=postgres -p 5432:5432 -d postgres</pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 O que cada parte desse comando faz?</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="display:grid;gap:10px;margin-top:8px;font-size:0.88rem">
+          <div><code style="color:#2496ED">docker run</code> — <span style="color:var(--text-dim)">Cria e inicia um novo container</span></div>
+          <div><code style="color:var(--accent5)">--name postgres-fullstack</code> — <span style="color:var(--text-dim)">Dá o nome "postgres-fullstack" ao container (pode ser qualquer nome)</span></div>
+          <div><code style="color:var(--accent3)">-e POSTGRES_PASSWORD=123</code> — <span style="color:var(--text-dim)">Define a <strong style="color:var(--text)">senha</strong> do usuário postgres como <strong>123</strong></span></div>
+          <div><code style="color:var(--accent3)">-e POSTGRES_USER=postgres</code> — <span style="color:var(--text-dim)">Define o <strong style="color:var(--text)">usuário</strong> como <strong>postgres</strong></span></div>
+          <div><code style="color:var(--accent6)">-p 5432:5432</code> — <span style="color:var(--text-dim)">Mapeia a porta 5432 do container para a porta 5432 do seu PC (porta padrão do PostgreSQL)</span></div>
+          <div><code style="color:var(--accent2)">-d</code> — <span style="color:var(--text-dim)">Roda em background (não trava o terminal)</span></div>
+          <div><code style="color:var(--spring)">postgres</code> — <span style="color:var(--text-dim)">Nome da <strong style="color:var(--text)">imagem</strong> oficial do PostgreSQL no Docker Hub</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:12px;border-left-color:#2496ED">
+      <span class="tip-icon">🐳</span>
+      <div class="tip-content">
+        <strong>Pronto!</strong> O PostgreSQL já está rodando! Você pode ver o container no <strong>Docker Desktop</strong> (aba "Containers") — ele deve estar com status verde <span style="color:#49cc90;font-weight:700">Running</span>.
+      </div>
+    </div>
+
+    <!-- PASSO 3: Comandos úteis -->
+    <h4 style="margin:24px 0 12px;color:#2496ED">🔧 Comandos úteis do Docker</h4>
+    <div class="annotation-grid">
+      <div class="annotation-card"><div class="anno-name" style="color:#2496ED">docker ps</div><div class="anno-desc">Lista containers rodando</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:#2496ED">docker stop postgres-fullstack</div><div class="anno-desc">Para o container</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:#2496ED">docker start postgres-fullstack</div><div class="anno-desc">Inicia novamente</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent2)">docker rm postgres-fullstack</div><div class="anno-desc">Remove o container (dados perdem!)</div></div>
+    </div>
+
+    <div class="warning">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Atenção:</strong> Sempre que ligar o computador, abra o Docker Desktop primeiro! Sem ele rodando, o PostgreSQL não funciona. O container não inicia sozinho — você pode configurar auto-start no Docker Desktop ou usar <code>docker start postgres-fullstack</code>.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- DBEAVER -->
+<section class="step-section" id="tour-dbeaver">
+  <div class="step-header">
+    <div class="step-number sn-yellow">🦫</div>
+    <div>
+      <div class="step-title">DBeaver — Sua IDE para Banco de Dados</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Visualize e manipule o banco de forma gráfica</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🤔 O que é o DBeaver?</div>
+      <p>O DBeaver é como o <strong style="color:var(--text)">VS Code, mas para bancos de dados</strong>. É uma ferramenta gráfica (GUI) que permite ver tabelas, escrever SQL, e manipular dados de forma visual — sem precisar decorar comandos. É <strong style="color:var(--accent5)">gratuito</strong> e funciona com qualquer banco!</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Explorer de Arquivos</div>
+      <p style="color:var(--text-dim)">O DBeaver é para o banco de dados o que o <strong style="color:var(--text)">Explorer/Finder</strong> é para arquivos no computador. Você pode navegar pelas "pastas" (bancos), abrir "arquivos" (tabelas), e editar o conteúdo visualmente. Sem ele, seria como usar o computador só pelo terminal — funciona, mas é mais difícil! 🖥️</p>
+    </div>
+
+    <!-- Instalação -->
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">📥 Instalando o DBeaver</h4>
+    <div style="background:rgba(247,183,49,0.06);border:1px solid rgba(247,183,49,0.15);border-radius:14px;padding:20px 24px;margin-bottom:16px">
+      <ol style="color:var(--text-dim);font-size:0.9rem;margin-left:20px;display:flex;flex-direction:column;gap:8px">
+        <li>Acesse <a href="https://dbeaver.io/download/" target="_blank" style="color:var(--accent5);font-weight:700">dbeaver.io/download</a></li>
+        <li>Baixe o <strong style="color:var(--text)">DBeaver Community</strong> (versão gratuita)</li>
+        <li>Instale normalmente</li>
+      </ol>
+    </div>
+
+    <!-- Conectando ao PostgreSQL -->
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">🔌 Conectando o DBeaver ao PostgreSQL</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Com o container Docker rodando, vamos conectar o DBeaver ao banco:</p>
+
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent4)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent4)">1. Nova Conexão</h4>
+          <p>Clique no ícone de <strong>tomada com "+"</strong> (canto superior esquerdo) ou vá em <strong>Database → New Database Connection</strong></p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent4)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent4)">2. Selecione PostgreSQL</h4>
+          <p>Na lista de bancos, escolha o <strong>PostgreSQL</strong> (ícone do elefantinho azul 🐘) e clique em <strong>Next</strong></p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent4)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent4)">3. Preencha os dados de conexão</h4>
+          <p>Configure assim:</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation-grid" style="margin:12px 0 16px">
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">Host</div><div class="anno-desc">localhost</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">Port</div><div class="anno-desc">5432</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent3)">Database</div><div class="anno-desc">postgres <span style="font-size:0.7rem;opacity:0.7">(padrão)</span></div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent5)">Username</div><div class="anno-desc">postgres</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent2)">Password</div><div class="anno-desc">123</div></div>
+    </div>
+
+    <div class="roadmap" style="margin-top:0">
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent3)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent3)">4. Testar Conexão</h4>
+          <p>Clique em <strong>"Test Connection"</strong>. Se aparecer <strong style="color:#49cc90">"Connected!"</strong>, está tudo certo! Clique em <strong>Finish</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🎉</span>
+      <div class="tip-content">
+        <strong>Parabéns!</strong> Você acabou de se conectar ao seu banco de dados! Agora no painel da esquerda do DBeaver você verá o PostgreSQL listado. Clique para expandir e explorar.
+      </div>
+    </div>
+
+    <!-- Criar o banco do projeto -->
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">🏗️ Criando o Banco do Nosso Projeto</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Precisamos criar um banco de dados específico para o nosso projeto. No DBeaver:</p>
+
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.05)">
+      <ol style="color:var(--text-dim);font-size:0.9rem;margin-left:20px;display:flex;flex-direction:column;gap:10px">
+        <li>No painel esquerdo, clique com <strong>botão direito</strong> em <strong>"Databases"</strong></li>
+        <li>Selecione <strong>"Create New Database"</strong></li>
+        <li>No campo nome, digite: <code style="color:var(--accent5);font-weight:700">bd_sistema_gestao</code></li>
+        <li>Clique em <strong>OK</strong></li>
+      </ol>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:8px">Ou, se preferir via SQL, abra um novo editor SQL (botão "SQL" no topo) e execute:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre><span class="kw">CREATE DATABASE</span> bd_sistema_gestao;</pre>
+    </div>
+
+    <div class="tip" style="border-left-color:var(--accent5)">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">
+        <strong>Depois de criar o banco</strong>, clique com <strong>botão direito</strong> na conexão do PostgreSQL (painel esquerdo) e selecione <strong>"Refresh"</strong> para ver o novo banco aparecer. Depois, <strong>conecte-se a ele</strong> dando duplo-clique no banco <code>bd_sistema_gestao</code>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- TOUR SQL BÁSICO -->
+<section class="step-section" id="tour-sql">
+  <div class="step-header">
+    <div class="step-number sn-green">📝</div>
+    <div>
+      <div class="step-title">SQL Básico — Falando com o Banco</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">CREATE TABLE, INSERT, SELECT, UPDATE, DELETE</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🗣️ O que é SQL?</div>
+      <p>SQL (Structured Query Language) é a <strong style="color:var(--text)">linguagem que usamos para conversar com o banco de dados</strong>. É como uma "língua" que o banco entende. Você escreve comandos em SQL e o banco executa — cria tabelas, insere dados, busca informações, etc.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Cardápio do Restaurante</div>
+      <p style="color:var(--text-dim)">SQL é como fazer pedidos em um restaurante. Você tem <strong style="color:#49cc90">CREATE TABLE</strong> = "quero criar um novo prato no cardápio", <strong style="color:#61affe">INSERT</strong> = "quero servir um prato", <strong style="color:#61affe">SELECT</strong> = "me mostra o que tem", <strong style="color:#fca130">UPDATE</strong> = "muda o prato", <strong style="color:#f93e3e">DELETE</strong> = "tire esse prato". Simples assim! 🍽️</p>
+    </div>
+
+    <div class="warning" style="margin-bottom:20px">
+      <span class="warning-icon">📌</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Onde escrever SQL?</strong> No DBeaver! Conecte-se ao banco <code>bd_sistema_gestao</code>, clique no botão <strong>"SQL"</strong> (ou Ctrl+Enter / Cmd+Enter) para abrir o editor SQL. Escreva os comandos lá e execute com <strong>Ctrl+Enter</strong> (ou o botão ▶️).</div>
+    </div>
+
+    <!-- CREATE TABLE -->
+    <h4 style="margin:20px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">CREATE TABLE</span> <span style="color:var(--text)">Criando uma tabela</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Antes de guardar dados, precisamos definir a <strong style="color:var(--text)">estrutura da gaveta</strong> — ou seja, quais colunas a tabela vai ter:</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7</div>
+      <pre>
+<span class="kw">CREATE TABLE</span> teste_fornecedor (
+    id     <span class="tp">SERIAL</span> <span class="kw">PRIMARY KEY</span>,   <span class="cm">-- ID automático, chave primária</span>
+    nome   <span class="tp">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>, <span class="cm">-- Texto de até 100 caracteres, obrigatório</span>
+    cnpj   <span class="tp">VARCHAR</span>(<span class="num">20</span>),           <span class="cm">-- Texto de até 20 caracteres</span>
+    email  <span class="tp">VARCHAR</span>(<span class="num">100</span>),          <span class="cm">-- Texto de até 100 caracteres</span>
+    cidade <span class="tp">VARCHAR</span>(<span class="num">50</span>)            <span class="cm">-- Texto de até 50 caracteres</span>
+);</pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 O que cada parte significa?</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="display:grid;gap:10px;margin-top:8px;font-size:0.88rem">
+          <div><code style="color:#49cc90">CREATE TABLE teste_fornecedor</code> — <span style="color:var(--text-dim)">Cria uma nova tabela chamada "teste_fornecedor"</span></div>
+          <div><code style="color:var(--accent5)">SERIAL</code> — <span style="color:var(--text-dim)">Tipo numérico que se auto-incrementa (1, 2, 3...)</span></div>
+          <div><code style="color:var(--accent5)">PRIMARY KEY</code> — <span style="color:var(--text-dim)">Marca o campo como chave primária (identificador único)</span></div>
+          <div><code style="color:var(--accent5)">VARCHAR(100)</code> — <span style="color:var(--text-dim)">Texto com no máximo 100 caracteres</span></div>
+          <div><code style="color:var(--accent5)">NOT NULL</code> — <span style="color:var(--text-dim)">Campo obrigatório — não pode ficar vazio</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content">Execute o comando no DBeaver e depois dê <strong>Refresh</strong> no painel esquerdo. Você verá a tabela <code>teste_fornecedor</code> aparecer dentro de <strong>Schemas → public → Tables</strong>!</div>
+    </div>
+
+    <!-- INSERT -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">INSERT</span> <span style="color:var(--text)">Inserindo dados</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Agora vamos <strong style="color:var(--text)">colocar dados dentro</strong> da tabela — como preencher fichas de cadastro:</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+      <pre>
+<span class="cm">-- Inserindo o primeiro fornecedor</span>
+<span class="kw">INSERT INTO</span> teste_fornecedor (nome, cnpj, email, cidade)
+<span class="kw">VALUES</span> (<span class="st">'Distribuidora ABC'</span>, <span class="st">'12.345.678/0001-99'</span>, <span class="st">'contato@abc.com'</span>, <span class="st">'São Paulo'</span>);
+
+<span class="cm">-- Inserindo mais alguns</span>
+<span class="kw">INSERT INTO</span> teste_fornecedor (nome, cnpj, email, cidade)
+<span class="kw">VALUES</span> (<span class="st">'Fornecedor XYZ'</span>, <span class="st">'98.765.432/0001-11'</span>, <span class="st">'vendas@xyz.com'</span>, <span class="st">'João Pessoa'</span>);
+
+<span class="kw">INSERT INTO</span> teste_fornecedor (nome, cnpj, email, cidade)
+<span class="kw">VALUES</span> (<span class="st">'Tech Solutions'</span>, <span class="st">'11.222.333/0001-44'</span>, <span class="st">'info@tech.com'</span>, <span class="st">'Recife'</span>);</pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">Perceba que <strong>NÃO informamos o id</strong>! Ele é <code>SERIAL</code> — o banco gera automaticamente: 1, 2, 3...</div>
+    </div>
+
+    <!-- SELECT -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(97,175,254,0.15);color:#61affe;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">SELECT</span> <span style="color:var(--text)">Consultando dados</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">O comando <strong>mais usado</strong> do SQL! É como perguntar ao banco: "me mostra os dados":</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Buscar TODOS os fornecedores (todas as colunas)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor;
+
+<span class="cm">-- Buscar só nome e cidade</span>
+<span class="kw">SELECT</span> nome, cidade <span class="kw">FROM</span> teste_fornecedor;
+
+<span class="cm">-- Buscar fornecedor com id = 1</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor <span class="kw">WHERE</span> id = <span class="num">1</span>;
+
+<span class="cm">-- Buscar fornecedores de São Paulo</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor <span class="kw">WHERE</span> cidade = <span class="st">'São Paulo'</span>;</pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 Traduzindo cada SELECT:</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="display:grid;gap:12px;margin-top:8px;font-size:0.88rem">
+          <div>
+            <code style="color:#61affe">SELECT * FROM teste_fornecedor;</code><br>
+            <span style="color:var(--text-dim)">→ "Me dá <strong style="color:var(--text)">tudo</strong> (*) que tem <strong style="color:var(--text)">na tabela</strong> teste_fornecedor"</span>
+          </div>
+          <div>
+            <code style="color:#61affe">SELECT nome, cidade FROM teste_fornecedor;</code><br>
+            <span style="color:var(--text-dim)">→ "Me dá <strong style="color:var(--text)">só o nome e a cidade</strong> dos fornecedores"</span>
+          </div>
+          <div>
+            <code style="color:#61affe">SELECT * FROM teste_fornecedor WHERE id = 1;</code><br>
+            <span style="color:var(--text-dim)">→ "Me dá tudo do fornecedor <strong style="color:var(--text)">cujo id é 1</strong>"</span>
+          </div>
+          <div>
+            <code style="color:#61affe">SELECT * FROM teste_fornecedor WHERE cidade = 'São Paulo';</code><br>
+            <span style="color:var(--text-dim)">→ "Me dá todos <strong style="color:var(--text)">que são de São Paulo</strong>"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPDATE -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(252,161,48,0.15);color:#fca130;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">UPDATE</span> <span style="color:var(--text)">Atualizando dados</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Precisa corrigir ou atualizar algum dado? Use o UPDATE:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Alterar o email do fornecedor com id = 1</span>
+<span class="kw">UPDATE</span> teste_fornecedor
+<span class="kw">SET</span> email = <span class="st">'novoemail@abc.com'</span>
+<span class="kw">WHERE</span> id = <span class="num">1</span>;
+
+<span class="cm">-- Verificar a alteração</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor <span class="kw">WHERE</span> id = <span class="num">1</span>;</pre>
+    </div>
+
+    <div class="warning">
+      <span class="warning-icon">🚨</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent2)">NUNCA esqueça o WHERE no UPDATE!</strong> Se fizer <code>UPDATE teste_fornecedor SET email = 'teste@teste.com'</code> sem WHERE, <strong>TODOS</strong> os fornecedores terão o email alterado! O WHERE filtra quem será afetado.</div>
+    </div>
+
+    <!-- DELETE -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(249,62,62,0.15);color:#f93e3e;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">DELETE</span> <span style="color:var(--text)">Deletando dados</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Para remover um registro da tabela:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Deletar o fornecedor com id = 3</span>
+<span class="kw">DELETE FROM</span> teste_fornecedor
+<span class="kw">WHERE</span> id = <span class="num">3</span>;
+
+<span class="cm">-- Verificar: agora só devem aparecer 2 registros</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor;</pre>
+    </div>
+
+    <div class="warning">
+      <span class="warning-icon">🚨</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent2)">NUNCA esqueça o WHERE no DELETE!</strong> Um <code>DELETE FROM teste_fornecedor</code> sem WHERE apaga <strong>TODOS</strong> os dados da tabela. Cuidado!</div>
+    </div>
+
+    <!-- Limpar tabela de teste -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="color:var(--text)">🧹 Limpando a tabela de teste</span></h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Essa tabela era só para praticar. O Spring Boot vai criar as tabelas reais automaticamente! Pode remover:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Apagar a tabela inteira (estrutura + dados)</span>
+<span class="kw">DROP TABLE</span> teste_fornecedor;</pre>
+    </div>
+
+    <!-- Resumo CRUD SQL -->
+    <h4 style="margin:28px 0 12px;color:var(--accent5)">📋 Resumão — CRUD em SQL</h4>
+
+    <table class="endpoint-table">
+      <thead><tr><th>Operação</th><th>Comando SQL</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.75rem;font-family:'JetBrains Mono',monospace">CREATE</span></td><td><code>INSERT INTO tabela ...</code></td><td>Insere um novo registro</td></tr>
+        <tr><td><span style="background:rgba(97,175,254,0.15);color:#61affe;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.75rem;font-family:'JetBrains Mono',monospace">READ</span></td><td><code>SELECT * FROM tabela</code></td><td>Consulta registros</td></tr>
+        <tr><td><span style="background:rgba(252,161,48,0.15);color:#fca130;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.75rem;font-family:'JetBrains Mono',monospace">UPDATE</span></td><td><code>UPDATE tabela SET ...</code></td><td>Atualiza registros</td></tr>
+        <tr><td><span style="background:rgba(249,62,62,0.15);color:#f93e3e;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.75rem;font-family:'JetBrains Mono',monospace">DELETE</span></td><td><code>DELETE FROM tabela ...</code></td><td>Remove registros</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip" style="margin-top:16px;border-left-color:var(--spring)">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-content">
+        <strong>A grande sacada:</strong> Quando usamos <strong style="color:var(--spring)">Spring Boot + JPA</strong>, <strong>você NÃO precisa escrever esses SQLs na mão!</strong> O Hibernate gera tudo automaticamente. O <code>CREATE TABLE</code> vira a anotação <code style="color:var(--accent5)">@Entity</code>, o <code>INSERT</code> vira <code style="color:var(--accent5)">.save()</code>, o <code>SELECT</code> vira <code style="color:var(--accent5)">.findAll()</code>, o <code>UPDATE</code> vira <code style="color:var(--accent5)">.save()</code> de novo, e o <code>DELETE</code> vira <code style="color:var(--accent5)">.deleteById()</code>. Mas é essencial entender o que acontece por baixo dos panos! 🪄
+      </div>
+    </div>
+
+    <!-- SQL vs Spring Boot comparison -->
+    <h4 style="margin:24px 0 12px;color:var(--accent6)">🔄 SQL Manual vs Spring Boot — Comparação</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+      <div style="background:rgba(69,183,209,0.06);border:1px solid rgba(69,183,209,0.15);border-radius:12px;padding:16px;font-size:0.82rem">
+        <div style="color:var(--accent4);font-weight:800;margin-bottom:8px;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px">📝 SQL Manual</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.7;display:block">
+          <span style="color:#49cc90">CREATE TABLE</span> fornecedor (...)<br>
+          <span style="color:#49cc90">INSERT INTO</span> fornecedor ...<br>
+          <span style="color:#61affe">SELECT</span> * FROM fornecedor<br>
+          <span style="color:#fca130">UPDATE</span> fornecedor SET ...<br>
+          <span style="color:#f93e3e">DELETE FROM</span> fornecedor ...
+        </code>
+      </div>
+      <div style="background:rgba(109,179,63,0.06);border:1px solid rgba(109,179,63,0.15);border-radius:12px;padding:16px;font-size:0.82rem">
+        <div style="color:var(--spring);font-weight:800;margin-bottom:8px;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px">🍃 Spring Boot</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.7;display:block">
+          <span style="color:var(--accent5)">@Entity @Table</span> ← cria tabela<br>
+          repository.<span style="color:var(--accent3)">save</span>(fornecedor)<br>
+          repository.<span style="color:var(--accent3)">findAll</span>()<br>
+          repository.<span style="color:var(--accent3)">save</span>(fornecedorEditado)<br>
+          repository.<span style="color:var(--accent3)">deleteById</span>(id)
+        </code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- INTRO: O QUE VAMOS CONSTRUIR -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="overview">
+  <div class="step-header">
+    <div class="step-number sn-main">🎯</div>
+    <div>
+      <div class="step-title">O que vamos construir?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">O backend que o seu frontend React precisa!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="font-size:1.02rem;margin-bottom:20px">Lembra do <strong style="color:var(--accent5)">JSON Server</strong> que usamos no frontend como banco de dados simulado? Agora vamos substituí-lo por uma <strong style="color:var(--spring)">API REST real</strong> feita com Java e Spring Boot!</p>
+
+    <div class="keyword-map stagger" id="overviewMap">
+      <div class="keyword-chip"><span class="emoji">📦</span><span class="kw-name">Fornecedor</span><span class="kw-desc">CRUD completo + endereço</span></div>
+      <div class="keyword-chip"><span class="emoji">🏷️</span><span class="kw-name">Produto</span><span class="kw-desc">Com vínculo ao fornecedor</span></div>
+      <div class="keyword-chip"><span class="emoji">👤</span><span class="kw-name">Cliente</span><span class="kw-desc">Dados + endereço</span></div>
+      <div class="keyword-chip"><span class="emoji">🔗</span><span class="kw-name">Relacionamentos</span><span class="kw-desc">Produto ↔ Fornecedor</span></div>
+    </div>
+
+    <div class="analogy" style="margin-top:20px">
+      <div class="analogy-title">Analogia: De garçom para cozinheiro</div>
+      <p style="color:var(--text-dim)">No frontend você era o <strong style="color:var(--text)">cliente do restaurante</strong> fazendo pedidos. Agora vamos montar a <strong style="color:var(--spring)">cozinha inteira</strong>: o Controller é o garçom que anota seu pedido, o Service é o cozinheiro que prepara, o Repository é a despensa onde os ingredientes ficam guardados, e o Model é a receita que diz o que tem em cada prato.</p>
+    </div>
+
+    <!-- ROADMAP VISUAL -->
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">🗺️ Nosso Roadmap Progressivo:</h4>
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-dot active" style="background:var(--accent5)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent5)">📦 Fase 1 — Fornecedor <span style="font-size:0.7rem;background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 8px;border-radius:4px;margin-left:6px">AGORA</span></h4>
+          <p>CRUD simples. Sem DTOs, sem ServiceImpl. Foco em entender o fluxo Model → Repository → Service → Controller.</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent4)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent4)">🏷️ Fase 2 — Produto</h4>
+          <p>Introduz DTOs, Mappers, ServiceImpl, @ManyToOne. Evolução natural das boas práticas.</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent6)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent6)">👤 Fase 3 — Cliente</h4>
+          <p>Consolidação. O aluno aplica sozinho tudo o que aprendeu.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- INTRO: ARQUITETURA EM CAMADAS -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="arquitetura">
+  <div class="step-header">
+    <div class="step-number sn-blue">🏗️</div>
+    <div>
+      <div class="step-title">Arquitetura em Camadas</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Cada camada tem uma responsabilidade clara</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🤔 Por que dividir em camadas?</div>
+      <p>Imagine uma pizzaria: o atendente anota o pedido, o pizzaiolo prepara a massa, e o estoquista organiza os ingredientes. Cada um faz <strong style="color:var(--text)">uma coisa só</strong> e faz bem feito. No código é igual — <strong style="color:var(--accent5)">separação de responsabilidades</strong> torna tudo organizado.</p>
+    </div>
+
+    <div class="layer-stack stagger" id="layerStack">
+      <div class="layer-item layer-client">🌐 Cliente (React / Swagger / Insomnia)<div class="layer-sub">Envia requisições HTTP</div></div>
+      <div class="layer-arrow">↕️ JSON</div>
+      <div class="layer-item layer-controller">🎮 Controller<div class="layer-sub">Recebe requests, devolve responses — @RestController</div></div>
+      <div class="layer-syringe-connector syringe-anim">
+        <svg class="layer-syringe-icon" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <line class="syringe-body" x1="30" y1="4" x2="30" y2="10"/><line class="syringe-body" x1="25" y1="4" x2="35" y2="4"/>
+          <line class="syringe-body" x1="30" y1="10" x2="30" y2="18"/>
+          <rect class="syringe-body" x="23" y="18" width="14" height="20" rx="2"/>
+          <rect class="syringe-liquid" x="24" y="27" width="12" height="10" rx="1"/>
+          <rect class="syringe-body" x="27" y="38" width="6" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+          <line class="syringe-needle" x1="30" y1="42" x2="30" y2="56"/>
+        </svg>
+        <span class="layer-autowired">@Autowired</span>
+        <span class="layer-inject-text">↕️ injeta Service no Controller</span>
+      </div>
+      <div class="layer-item layer-service">⚙️ Service<div class="layer-sub">Regras de negócio — @Service</div></div>
+      <div class="layer-syringe-connector syringe-anim" style="animation-delay:1.5s">
+        <svg class="layer-syringe-icon" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <line class="syringe-body" x1="30" y1="4" x2="30" y2="10"/><line class="syringe-body" x1="25" y1="4" x2="35" y2="4"/>
+          <line class="syringe-body" x1="30" y1="10" x2="30" y2="18"/>
+          <rect class="syringe-body" x="23" y="18" width="14" height="20" rx="2"/>
+          <rect class="syringe-liquid" x="24" y="27" width="12" height="10" rx="1"/>
+          <rect class="syringe-body" x="27" y="38" width="6" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+          <line class="syringe-needle" x1="30" y1="42" x2="30" y2="56"/>
+        </svg>
+        <span class="layer-autowired">@Autowired</span>
+        <span class="layer-inject-text">↕️ injeta Repository no Service</span>
+      </div>
+      <div class="layer-item layer-repo">🗄️ Repository<div class="layer-sub">Acesso ao banco de dados — extends JpaRepository</div></div>
+      <div class="layer-arrow">↕️ Entidades (Models)</div>
+      <div class="layer-item layer-model">📐 Model<div class="layer-sub">Modela as entidades — @Entity / @Table / @Column</div></div>
+      <div class="layer-arrow">↕️ SQL (automático via Hibernate)</div>
+      <div class="layer-item layer-db">🐘 PostgreSQL<div class="layer-sub">Banco de dados — onde os dados ficam salvos de verdade</div></div>
+    </div>
+
+    <div class="tip" style="margin-top:20px;border-left-color:var(--accent6)">
+      <span class="tip-icon">📐</span>
+      <div class="tip-content">
+        <strong>O que é o Model?</strong> É a classe Java que <strong style="color:var(--accent6)">representa uma tabela do banco de dados</strong>. Cada atributo da classe vira uma coluna. A classe <code>Fornecedor</code> com os atributos <code>nome</code>, <code>cnpj</code>, <code>email</code> gera automaticamente uma tabela <code>fornecedor</code> com essas colunas. Isso é <strong>ORM (Object-Relational Mapping)</strong> — o Hibernate traduz seus objetos Java em estrutura de banco!
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:12px">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">O Spring Boot gera o SQL automaticamente! Você trabalha com <strong>objetos Java</strong> e o Hibernate traduz tudo para SQL. Nunca mais <code>INSERT INTO</code> na mão!</div>
+    </div>
+  </div>
+
+  <!-- SYRINGE INJECTION DIAGRAM -->
+  <div class="card">
+    <h3 style="margin-bottom:6px;color:var(--spring)">💉 Injeção de Dependência — @Autowired</h3>
+    <p style="color:var(--text-dim);margin-bottom:8px;font-size:0.9rem">O Spring <strong>"injeta"</strong> automaticamente as dependências entre as camadas. É como uma seringa que conecta tudo pra você!</p>
+
+    <div class="concept" style="margin-bottom:20px">
+      <div class="concept-title">🤔 O que é @Autowired?</div>
+      <p>Quando o Controller precisa usar o Service, você não faz <code>new Service()</code> manualmente. O <strong style="color:var(--spring)">Spring injeta automaticamente</strong> a dependência — como uma seringa que entrega o componente certo no lugar certo. Isso é o padrão de <strong>Inversão de Controle (IoC)</strong>.</p>
+    </div>
+
+    <div class="injection-diagram">
+      <!-- Repository Box -->
+      <div class="inj-row">
+        <div class="inj-box box-repo">
+          🗄️ FornecedorRepository
+          <span class="inj-annotation">@Repository</span>
+        </div>
+      </div>
+
+      <!-- Syringe: Repository → Service -->
+      <div class="inj-syringe-area">
+        <div class="syringe-wrapper syringe-anim">
+          <svg class="syringe-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <line class="syringe-body" x1="30" y1="2" x2="30" y2="8"/>
+            <line class="syringe-body" x1="24" y1="2" x2="36" y2="2"/>
+            <line class="syringe-body" x1="30" y1="8" x2="30" y2="18"/>
+            <rect class="syringe-body" x="22" y="18" width="16" height="24" rx="2"/>
+            <rect class="syringe-liquid" x="23" y="28" width="14" height="13" rx="1"/>
+            <line class="syringe-body" x1="22" y1="24" x2="25" y2="24" style="stroke-width:1;opacity:0.5"/>
+            <line class="syringe-body" x1="22" y1="30" x2="25" y2="30" style="stroke-width:1;opacity:0.5"/>
+            <line class="syringe-body" x1="22" y1="36" x2="25" y2="36" style="stroke-width:1;opacity:0.5"/>
+            <rect class="syringe-body" x="26" y="42" width="8" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+            <line class="syringe-needle" x1="30" y1="46" x2="30" y2="58"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:3px">
+            <span class="autowired-tag">@Autowired</span>
+            <span class="inject-label">injeta Repository no Service</span>
+          </div>
+        </div>
+        <div class="liquid-drops"></div>
+        <div class="liquid-drops"></div>
+        <div class="liquid-drops"></div>
+      </div>
+
+      <!-- Service Box -->
+      <div class="inj-row">
+        <div class="inj-box box-service">
+          ⚙️ FornecedorService
+          <span class="inj-annotation">@Service</span>
+        </div>
+      </div>
+
+      <!-- Syringe: Service → Controller -->
+      <div class="inj-syringe-area">
+        <div class="syringe-wrapper syringe-anim" style="animation-delay:1.5s">
+          <svg class="syringe-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <line class="syringe-body" x1="30" y1="2" x2="30" y2="8"/>
+            <line class="syringe-body" x1="24" y1="2" x2="36" y2="2"/>
+            <line class="syringe-body" x1="30" y1="8" x2="30" y2="18"/>
+            <rect class="syringe-body" x="22" y="18" width="16" height="24" rx="2"/>
+            <rect class="syringe-liquid" x="23" y="28" width="14" height="13" rx="1"/>
+            <line class="syringe-body" x1="22" y1="24" x2="25" y2="24" style="stroke-width:1;opacity:0.5"/>
+            <line class="syringe-body" x1="22" y1="30" x2="25" y2="30" style="stroke-width:1;opacity:0.5"/>
+            <line class="syringe-body" x1="22" y1="36" x2="25" y2="36" style="stroke-width:1;opacity:0.5"/>
+            <rect class="syringe-body" x="26" y="42" width="8" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+            <line class="syringe-needle" x1="30" y1="46" x2="30" y2="58"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:3px">
+            <span class="autowired-tag">@Autowired</span>
+            <span class="inject-label">injeta Service no Controller</span>
+          </div>
+        </div>
+        <div class="liquid-drops" style="animation-delay:1.9s"></div>
+        <div class="liquid-drops" style="animation-delay:2.1s"></div>
+        <div class="liquid-drops" style="animation-delay:2.3s"></div>
+      </div>
+
+      <!-- Controller Box -->
+      <div class="inj-row">
+        <div class="inj-box box-controller">
+          🎮 FornecedorController
+          <span class="inj-annotation">@RestController</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:20px;border-left-color:var(--spring)">
+      <span class="tip-icon">💉</span>
+      <div class="tip-content">
+        <strong>Na prática:</strong> Quando você declara <code style="color:var(--spring)">@Autowired FornecedorService fornecedorService;</code> dentro do Controller, o Spring automaticamente cria e injeta uma instância do Service. Você <strong>nunca</strong> precisa fazer <code>new FornecedorService()</code> — o Spring cuida disso!
+      </div>
+    </div>
+  </div>
+
+  <!-- ANIMATED FLOW -->
+  <div class="card">
+    <h3 style="margin-bottom:16px;color:var(--accent4)">🔄 Fluxo de uma Requisição</h3>
+    <p style="color:var(--text-dim);margin-bottom:20px;font-size:0.9rem">Clique para ver o caminho que um <strong>POST /fornecedores</strong> faz:</p>
+
+    <button class="btn-demo btn-spring" onclick="runFlowDemo()" id="flowBtn">▶️ Animar Fluxo</button>
+
+    <div class="flow-container" id="flowDiagram">
+      <div class="flow-box fb-client" id="flow-0" style="opacity:0.3">
+        <div class="label">Cliente (React)</div>
+        📮 POST /fornecedores { "nome": "ABC" }
+      </div>
+      <div class="flow-arrow"><span class="flow-label" id="flow-label-0" style="opacity:0">JSON → HTTP Request</span></div>
+      <div class="flow-box fb-controller" id="flow-1" style="opacity:0.3">
+        <div class="label">Controller</div>
+        🎮 FornecedorController.criar()
+      </div>
+      <div class="flow-inject-arrow" id="flow-inject-1">
+        <div class="flow-inject-inner syringe-anim">
+          <svg class="mini-syringe" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <line class="syringe-body" x1="30" y1="4" x2="30" y2="10"/>
+            <line class="syringe-body" x1="25" y1="4" x2="35" y2="4"/>
+            <line class="syringe-body" x1="30" y1="10" x2="30" y2="18"/>
+            <rect class="syringe-body" x="23" y="18" width="14" height="20" rx="2"/>
+            <rect class="syringe-liquid" x="24" y="27" width="12" height="10" rx="1"/>
+            <rect class="syringe-body" x="27" y="38" width="6" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+            <line class="syringe-needle" x1="30" y1="42" x2="30" y2="56"/>
+          </svg>
+          <div class="flow-inject-label-area">
+            <span class="flow-autowired-tag">@Autowired</span>
+            <span class="flow-inject-desc">💉 injeta Service</span>
+          </div>
+        </div>
+        <span class="flow-label" id="flow-label-1" style="opacity:0">chama o service</span>
+      </div>
+      <div class="flow-box fb-service" id="flow-2" style="opacity:0.3">
+        <div class="label">Service</div>
+        ⚙️ FornecedorService.criar()
+      </div>
+      <div class="flow-inject-arrow" id="flow-inject-2">
+        <div class="flow-inject-inner syringe-anim" style="animation-delay:1.5s">
+          <svg class="mini-syringe" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <line class="syringe-body" x1="30" y1="4" x2="30" y2="10"/>
+            <line class="syringe-body" x1="25" y1="4" x2="35" y2="4"/>
+            <line class="syringe-body" x1="30" y1="10" x2="30" y2="18"/>
+            <rect class="syringe-body" x="23" y="18" width="14" height="20" rx="2"/>
+            <rect class="syringe-liquid" x="24" y="27" width="12" height="10" rx="1"/>
+            <rect class="syringe-body" x="27" y="38" width="6" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+            <line class="syringe-needle" x1="30" y1="42" x2="30" y2="56"/>
+          </svg>
+          <div class="flow-inject-label-area">
+            <span class="flow-autowired-tag">@Autowired</span>
+            <span class="flow-inject-desc">💉 injeta Repository</span>
+          </div>
+        </div>
+        <span class="flow-label" id="flow-label-2" style="opacity:0">chama o repository</span>
+      </div>
+      <div class="flow-box fb-repo" id="flow-3" style="opacity:0.3">
+        <div class="label">Repository</div>
+        🗄️ fornecedorRepository.save()
+      </div>
+      <div class="flow-arrow"><span class="flow-label" id="flow-label-3" style="opacity:0">INSERT INTO fornecedor...</span></div>
+      <div class="flow-box fb-db" id="flow-4" style="opacity:0.3">
+        <div class="label">Banco de Dados</div>
+        🐘 Salvo na tabela "fornecedor"!
+      </div>
+      <div class="flow-arrow flow-arrow-up"><span class="flow-label right" id="flow-label-4" style="opacity:0">201 Created ✅</span></div>
+      <div class="flow-box fb-response" id="flow-5" style="opacity:0.3">
+        <div class="label">Resposta</div>
+        ✅ HTTP 201 — Fornecedor criado!
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SETUP DO PROJETO -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="setup">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--spring)">🍃</div>
+    <div>
+      <div class="step-title">Setup do Projeto</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Spring Initializr + Configuração</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🚀 Spring Initializr</div>
+      <p>Acesse <strong style="color:var(--spring)"><a href="https://start.spring.io" target="_blank" style="color:var(--spring)">start.spring.io</a></strong> e gere o projeto com essas opções:</p>
+    </div>
+
+    <div class="tip" style="margin-bottom:16px;border-left-color:var(--spring)">
+      <div class="tip-icon">🍃</div>
+      <div class="tip-content">
+        <strong>Sobre a versão do Spring Boot:</strong> Sempre utilize a <strong style="color:var(--spring)">versão mais recente disponível</strong> no Spring Initializr — ela já vem selecionada por padrão.
+      </div>
+    </div>
+
+    <div class="annotation-grid" style="margin:20px 0">
+      <div class="annotation-card"><div class="anno-name">📦 Project</div><div class="anno-desc">Maven</div></div>
+      <div class="annotation-card"><div class="anno-name">☕ Language</div><div class="anno-desc">Java 21</div></div>
+      <div class="annotation-card"><div class="anno-name">🍃 Spring Boot</div><div class="anno-desc" style="font-size:0.8rem;line-height:1.4">Mais recente disponível</div></div>
+      <div class="annotation-card"><div class="anno-name">📂 Group</div><div class="anno-desc">br.com.programaai</div></div>
+      <div class="annotation-card"><div class="anno-name">📄 Artifact</div><div class="anno-desc">api</div></div>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent3)">📚 Dependências:</h4>
+    <div class="annotation-grid">
+      <div class="annotation-card"><div class="anno-name" style="color:var(--spring)">Spring Web</div><div class="anno-desc">Para criar endpoints REST</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">Spring Data JPA</div><div class="anno-desc">Para acessar o banco de dados</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">PostgreSQL Driver</div><div class="anno-desc">Driver de conexão com PostgreSQL</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent2)">Lombok</div><div class="anno-desc">Gera getters, setters, construtores</div></div>
+    </div>
+  </div>
+
+  <!-- application.properties -->
+  <div class="card">
+    <h3 style="margin-bottom:12px;color:var(--accent3)">⚙️ application.properties</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Este arquivo configura a conexão com o banco de dados:</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">src/main/resources/application.properties</span><span class="lang-badge properties">properties</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13</div>
+      <pre>
+<span class="cm"># Nome da aplicação</span>
+<span class="an">spring.application.name</span>=<span class="st">Programa AI - API</span>
+
+<span class="cm"># Conexão com o Banco de Dados PostgreSQL</span>
+<span class="an">spring.datasource.url</span>=<span class="st">jdbc:postgresql://localhost:5432/bd_sistema_gestao</span>
+<span class="an">spring.datasource.username</span>=<span class="st">postgres</span>
+<span class="an">spring.datasource.password</span>=<span class="st">123</span>
+<span class="an">spring.datasource.driver-class-name</span>=<span class="st">org.postgresql.Driver</span>
+
+<span class="cm"># Hibernate: cria/atualiza tabelas automaticamente!</span>
+<span class="an">spring.jpa.database-platform</span>=<span class="st">org.hibernate.dialect.PostgreSQLDialect</span>
+<span class="an">spring.jpa.hibernate.ddl-auto</span>=<span class="st">update</span>
+<span class="an">spring.jpa.show-sql</span>=<span class="st">true</span></pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 O que cada linha faz?</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="display:grid;gap:10px;margin-top:8px;font-size:0.88rem">
+          <div><code style="color:var(--accent5)">spring.datasource.url</code> — <span style="color:var(--text-dim)">Endereço do banco: protocolo + host + porta + nome do banco</span></div>
+          <div><code style="color:var(--accent5)">spring.datasource.username/password</code> — <span style="color:var(--text-dim)">Credenciais do PostgreSQL</span></div>
+          <div><code style="color:var(--accent5)">ddl-auto=update</code> — <span style="color:var(--text-dim)">O Hibernate CRIA e ATUALIZA as tabelas automaticamente baseado nas classes @Entity 🪄</span></div>
+          <div><code style="color:var(--accent5)">show-sql=true</code> — <span style="color:var(--text-dim)">Mostra no console o SQL que o Hibernate gera (ótimo para aprender!)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Importante:</strong> Crie o banco <code>bd_sistema_gestao</code> no PostgreSQL <strong>antes</strong> de rodar o projeto! O Hibernate cria as tabelas, mas não o banco.</div>
+    </div>
+  </div>
+
+  <!-- Estrutura de Pacotes -->
+  <div class="card">
+    <h3 style="margin-bottom:12px;color:var(--accent6)">📂 Estrutura de Pacotes</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Organize assim dentro de <code>br.com.programaai.api</code>:</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="filename">Estrutura do projeto</span>
+      </div>
+      <pre>
+br.com.programaai.api/
+├── 📄 ApiApplication.java       <span class="cm">← Classe principal (já vem pronta!)</span>
+├── 📁 <span class="an">model/</span>                   <span class="cm">← Entidades JPA (tabelas)</span>
+│   ├── Fornecedor.java
+│   ├── Produto.java            <span class="cm">← fase 2</span>
+│   └── Cliente.java            <span class="cm">← fase 3</span>
+├── 📁 <span class="fn">repository/</span>              <span class="cm">← Acesso ao banco</span>
+│   ├── FornecedorRepository.java
+│   ├── ProdutoRepository.java  <span class="cm">← fase 2</span>
+│   └── ClienteRepository.java  <span class="cm">← fase 3</span>
+├── 📁 <span class="tp">service/</span>                 <span class="cm">← Regras de negócio</span>
+│   ├── FornecedorService.java
+│   ├── ProdutoService.java     <span class="cm">← fase 2 (interface)</span>
+│   └── ClienteService.java     <span class="cm">← fase 3</span>
+├── 📁 <span class="kw">controller/</span>              <span class="cm">← Endpoints REST</span>
+│   ├── FornecedorController.java
+│   ├── ProdutoController.java  <span class="cm">← fase 2</span>
+│   └── ClienteController.java  <span class="cm">← fase 3</span>
+├── 📁 <span class="st">dtos/</span>                    <span class="cm">← fase 2 em diante</span>
+└── 📁 config/                   <span class="cm">← Configurações (CORS, etc.)</span></pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">📌</span>
+      <div class="tip-content">Sempre crie os pacotes <strong>dentro</strong> do pacote principal <code>br.com.programaai.api</code>. Se criar fora, o Spring não vai encontrar as classes!</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              CAPÍTULO 1: FORNECEDOR                         ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="chapter-divider" id="cap-forn">
+  <span class="chapter-icon">📦</span>
+  <div class="chapter-number">Capítulo 1</div>
+  <h2 class="grad-forn">CRUD de Fornecedor</h2>
+  <p class="chapter-subtitle">Sua primeira entidade completa — Create, Read, Update, Delete</p>
+</div>
+
+<!-- FORNECEDOR: MODEL -->
+<section class="step-section" id="forn-model">
+  <div class="step-header">
+    <div class="step-number sn-red">1.1</div>
+    <div>
+      <div class="step-title">Model — Fornecedor.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A entidade que representa a tabela no banco</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🤔 O que é um Model?</div>
+      <p>O Model é uma <strong style="color:var(--text)">classe Java que representa uma tabela</strong> no banco de dados. Cada <strong>atributo</strong> da classe vira uma <strong>coluna</strong> na tabela. Cada <strong>objeto</strong> que criamos a partir dessa classe vira uma <strong>linha</strong> na tabela.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Ficha de Cadastro</div>
+      <p style="color:var(--text-dim)">O Model é como uma <strong style="color:var(--text)">ficha de cadastro em branco</strong> de fornecedor. A ficha define quais campos existem (nome, CNPJ, email...). Quando você preenche uma ficha, é como criar um objeto. Quando arquiva a ficha, é como salvar no banco! 🗂️</p>
+    </div>
+
+    <div class="code-block with-lines" style="position:relative">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">model/Fornecedor.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47</div>
+      <pre>
+<span class="pkg">package br.com.programaai.api.model;</span>
+
+<span class="pkg">import jakarta.persistence.*;</span>
+<span class="pkg">import lombok.*;</span>
+
+<span class="anno-line"><span class="an">@NoArgsConstructor</span>  <span class="cm">// Gera construtor vazio</span><span class="anno-tooltip"><strong>@NoArgsConstructor</strong>O Lombok gera automaticamente um construtor sem parâmetros: <code>public Fornecedor() {}</code>. O JPA exige esse construtor para criar objetos a partir do banco.</span></span>
+<span class="anno-line"><span class="an">@AllArgsConstructor</span> <span class="cm">// Gera construtor com todos os campos</span><span class="anno-tooltip"><strong>@AllArgsConstructor</strong>Gera um construtor com TODOS os atributos como parâmetros.</span></span>
+<span class="anno-line"><span class="an">@Data</span>                <span class="cm">// Gera getters, setters, toString, equals</span><span class="anno-tooltip"><strong>@Data</strong>Anotação do Lombok que gera automaticamente: getters, setters, toString(), equals(), hashCode(). Sem ela, você teria que escrever ~150 linhas de código!</span></span>
+<span class="anno-line"><span class="an">@Entity</span>              <span class="cm">// "Esta classe é uma tabela!"</span><span class="anno-tooltip"><strong>@Entity</strong>Diz ao JPA: "esta classe Java representa uma tabela no banco de dados". É a anotação mais importante do Model!</span></span>
+<span class="anno-line"><span class="an">@Table</span>(name = <span class="st">"fornecedor"</span>)   <span class="cm">// Nome da tabela no banco</span><span class="anno-tooltip"><strong>@Table(name = "fornecedor")</strong>Define o nome da tabela no PostgreSQL. Sem essa anotação, o Hibernate usaria o nome da classe.</span></span>
+<span class="kw">public class</span> <span class="tp">Fornecedor</span> {
+
+<span class="anno-line">    <span class="an">@Id</span>                          <span class="cm">// "Este campo é a chave primária"</span><span class="anno-tooltip"><strong>@Id</strong>Marca este campo como a PRIMARY KEY da tabela. Todo @Entity precisa ter um @Id.</span></span>
+<span class="anno-line">    <span class="an">@GeneratedValue</span>(strategy = <span class="tp">GenerationType</span>.<span class="nb">IDENTITY</span>)<span class="anno-tooltip"><strong>@GeneratedValue(strategy = IDENTITY)</strong>O banco gera o ID automaticamente (auto-increment). Você NÃO precisa definir o ID ao criar — o PostgreSQL cuida disso!</span></span>
+    <span class="kw">private</span> <span class="tp">Long</span> id;
+
+    <span class="anno-line"><span class="an">@Column</span>(name = <span class="st">"nome"</span>)<span class="anno-tooltip"><strong>@Column(name = "nome")</strong>Define o nome da coluna no banco. Se o nome do atributo for igual ao da coluna, o @Column é opcional — mas deixa o código mais explícito e claro!</span></span>
+    <span class="kw">private</span> <span class="tp">String</span> nome;
+
+    <span class="anno-line"><span class="an">@Column</span>(name = <span class="st">"cnpj"</span>)<span class="anno-tooltip"><strong>@Column(name = "cnpj")</strong>Mapeia o atributo para a coluna "cnpj" no banco.</span></span>
+    <span class="kw">private</span> <span class="tp">String</span> cnpj;
+
+    <span class="an">@Column</span>(name = <span class="st">"email"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> email;
+
+    <span class="an">@Column</span>(name = <span class="st">"telefone"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> telefone;
+
+    <span class="an">@Column</span>(name = <span class="st">"cep"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> cep;
+
+    <span class="an">@Column</span>(name = <span class="st">"logradouro"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> logradouro;
+
+    <span class="an">@Column</span>(name = <span class="st">"numero"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> numero;
+
+    <span class="an">@Column</span>(name = <span class="st">"bairro"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> bairro;
+
+    <span class="an">@Column</span>(name = <span class="st">"cidade"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> cidade;
+
+    <span class="an">@Column</span>(name = <span class="st">"uf"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> uf;
+}</pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🏷️ O que cada anotação faz? (Clique para expandir)</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="annotation-grid" style="margin-top:8px">
+          <div class="annotation-card"><div class="anno-name"><span class="at">@</span>Entity</div><div class="anno-desc">"Esta classe é uma tabela no banco!" — Sem isso, o JPA ignora a classe.</div></div>
+          <div class="annotation-card"><div class="anno-name"><span class="at">@</span>Table</div><div class="anno-desc">Define o nome da tabela no banco. Sem ela, usa o nome da classe.</div></div>
+          <div class="annotation-card"><div class="anno-name"><span class="at">@</span>Id</div><div class="anno-desc">Marca o campo como PRIMARY KEY. Obrigatório em toda @Entity.</div></div>
+          <div class="annotation-card"><div class="anno-name"><span class="at">@</span>GeneratedValue</div><div class="anno-desc">O banco gera o valor automaticamente (auto-increment).</div></div>
+          <div class="annotation-card"><div class="anno-name"><span class="at">@</span>Column</div><div class="anno-desc">Mapeia o atributo para uma coluna específica no banco.</div></div>
+          <div class="annotation-card"><div class="anno-name"><span class="at">@</span>Data</div><div class="anno-desc">Lombok: gera getters, setters, toString, equals, hashCode.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DB Visualization -->
+    <h4 style="margin:24px 0 12px;color:var(--accent4)">🗄️ Como fica no banco de dados:</h4>
+    <div class="db-table">
+      <div class="db-table-header">🐘 Tabela: fornecedor</div>
+      <table>
+        <thead><tr><th>id</th><th>nome</th><th>cnpj</th><th>email</th><th>cidade</th><th>uf</th></tr></thead>
+        <tbody id="fornDbTable">
+          <tr style="color:var(--text-dim);font-style:italic"><td colspan="6" style="text-align:center;padding:20px">Tabela vazia — use os botões abaixo para simular!</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-demo btn-small" onclick="addFornDb('Distribuidora ABC','12.345.678/0001-99','contato@abc.com','São Paulo','SP')">+ Dist. ABC</button>
+      <button class="btn-demo btn-small btn-spring" onclick="addFornDb('Fornecedor XYZ','98.765.432/0001-11','vendas@xyz.com','Rio de Janeiro','RJ')">+ Forn. XYZ</button>
+      <button class="btn-demo btn-small btn-teal" onclick="addFornDb('Teste LTDA','23.323.232/2332-00','teste@programaai.dev','João Pessoa','PB')">+ Teste LTDA</button>
+      <button class="btn-demo btn-small" onclick="resetFornDb()" style="background:var(--surface2);border:1px solid rgba(255,255,255,0.1)">🔄 Limpar</button>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- FORNECEDOR: REPOSITORY -->
+<section class="step-section" id="forn-repo">
+  <div class="step-header">
+    <div class="step-number sn-green">1.2</div>
+    <div>
+      <div class="step-title">Repository — FornecedorRepository.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A camada que conversa com o banco</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🗄️ O que é um Repository?</div>
+      <p>O Repository é uma <strong style="color:var(--text)">interface</strong> (não uma classe!) que herda de <code style="color:var(--accent6)">JpaRepository</code>. Ao estender ela, você ganha <strong>de graça</strong> vários métodos para operar no banco — sem escrever nenhum SQL!</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Arquivista</div>
+      <p style="color:var(--text-dim)">O Repository é como um <strong style="color:var(--text)">arquivista super eficiente</strong>. Você pede: "guarde esta ficha de fornecedor", "me dê o fornecedor de ID 3", "me dê todos os fornecedores". Ele faz tudo sem você precisar organizar o arquivo!</p>
+    </div>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">repository/FornecedorRepository.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+      <pre>
+<span class="pkg">package br.com.programaai.api.repository;</span>
+
+<span class="pkg">import br.com.programaai.api.model.Fornecedor;</span>
+<span class="pkg">import org.springframework.data.jpa.repository.JpaRepository;</span>
+<span class="pkg">import org.springframework.stereotype.Repository;</span>
+
+<span class="anno-line"><span class="an">@Repository</span><span class="anno-tooltip"><strong>@Repository</strong>Marca esta interface como um componente de acesso a dados do Spring.</span></span>
+<span class="kw">public interface</span> <span class="tp">FornecedorRepository</span> <span class="kw">extends</span> <span class="tp">JpaRepository</span>&lt;<span class="tp">Fornecedor</span>, <span class="tp">Long</span>&gt; {
+}  <span class="cm">// Sim, está vazio! E já funciona! 🪄</span></pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🪄</span>
+      <div class="tip-content">
+        <strong>JpaRepository&lt;Fornecedor, Long&gt;</strong> significa: "este repositório gerencia a entidade <strong>Fornecedor</strong> e sua chave primária é do tipo <strong>Long</strong>". Ao herdar, você ganha de graça:
+      </div>
+    </div>
+
+    <div class="annotation-grid" style="margin-top:12px">
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent3)">.save(fornecedor)</div><div class="anno-desc">INSERT ou UPDATE — salva no banco</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent3)">.findAll()</div><div class="anno-desc">SELECT * — retorna todos</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent3)">.findById(id)</div><div class="anno-desc">SELECT WHERE id = ?</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent3)">.deleteById(id)</div><div class="anno-desc">DELETE WHERE id = ?</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- FORNECEDOR: SERVICE -->
+<section class="step-section" id="forn-service">
+  <div class="step-header">
+    <div class="step-number sn-yellow">1.3</div>
+    <div>
+      <div class="step-title">Service — FornecedorService.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Onde ficam as regras de negócio</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">⚙️ O que é um Service?</div>
+      <p>O Service é a <strong style="color:var(--text)">camada de regras de negócio</strong>. É aqui que a lógica acontece: validações, verificações, decisões. O Controller nunca acessa o Repository diretamente — sempre passa pelo Service.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Gerente da Loja</div>
+      <p style="color:var(--text-dim)">Imagine uma loja: o <strong style="color:var(--accent)">atendente</strong> (Controller) recebe o pedido do cliente. Mas quem decide se pode fazer a venda, se tem estoque, se o desconto é válido, é o <strong style="color:var(--accent5)">gerente</strong> (Service). O gerente então manda o <strong style="color:var(--accent3)">estoquista</strong> (Repository) buscar ou guardar os produtos.</p>
+    </div>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/FornecedorService.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65</div>
+      <pre>
+<span class="pkg">package br.com.programaai.api.service;</span>
+
+<span class="pkg">import br.com.programaai.api.model.Fornecedor;</span>
+<span class="pkg">import br.com.programaai.api.repository.FornecedorRepository;</span>
+<span class="pkg">import org.springframework.beans.factory.annotation.Autowired;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.stereotype.Service;</span>
+<span class="pkg">import org.springframework.web.server.ResponseStatusException;</span>
+<span class="pkg">import java.util.List;</span>
+<span class="pkg">import java.util.Optional;</span>
+
+<span class="anno-line"><span class="an">@Service</span>  <span class="cm">// "Esta classe é um Service do Spring!"</span><span class="anno-tooltip"><strong>@Service</strong>Marca a classe como um componente de serviço. O Spring cria uma instância automaticamente.</span></span>
+<span class="kw">public class</span> <span class="tp">FornecedorService</span> {
+
+<span class="anno-line">    <span class="an">@Autowired</span>  <span class="cm">// 💉 Injeção de dependência!</span><span class="anno-tooltip"><strong>@Autowired</strong>O Spring injeta automaticamente uma instância do FornecedorRepository aqui. Você NÃO precisa fazer <code>new FornecedorRepository()</code>!</span></span>
+    <span class="tp">FornecedorRepository</span> fornecedorRepository;
+
+    <span class="cm">// CREATE — salvar novo fornecedor</span>
+    <span class="kw">public void</span> <span class="fn">criarFornecedor</span>(<span class="tp">Fornecedor</span> fornecedor) {
+        fornecedorRepository.<span class="fn">save</span>(fornecedor);
+    }
+
+    <span class="cm">// READ — listar todos os fornecedores</span>
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">Fornecedor</span>&gt; <span class="fn">listarTodosFornecedores</span>() {
+        <span class="kw">return</span> fornecedorRepository.<span class="fn">findAll</span>();
+    }
+
+    <span class="cm">// READ — buscar por ID</span>
+    <span class="kw">public</span> <span class="tp">Optional</span>&lt;<span class="tp">Fornecedor</span>&gt; <span class="fn">buscarFornecedorPorId</span>(<span class="tp">Long</span> id) {
+        <span class="kw">return</span> fornecedorRepository.<span class="fn">findById</span>(id);
+    }
+
+    <span class="cm">// UPDATE — atualizar fornecedor por ID</span>
+    <span class="kw">public void</span> <span class="fn">atualizarFornecedorPorId</span>(<span class="tp">Long</span> id, <span class="tp">Fornecedor</span> fornecedor) {
+        <span class="tp">Optional</span>&lt;<span class="tp">Fornecedor</span>&gt; fornecedorDoBanco = <span class="fn">buscarFornecedorPorId</span>(id);
+
+        <span class="kw">if</span> (fornecedorDoBanco.<span class="fn">isEmpty</span>()) {
+            <span class="kw">throw new</span> <span class="tp">ResponseStatusException</span>(
+                <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Fornecedor não encontrado"</span>
+            );
+        }
+
+        <span class="tp">Fornecedor</span> fornecedorParaEditar = fornecedorDoBanco.<span class="fn">get</span>();
+        fornecedorParaEditar.<span class="fn">setNome</span>(fornecedor.<span class="fn">getNome</span>());
+        fornecedorParaEditar.<span class="fn">setCnpj</span>(fornecedor.<span class="fn">getCnpj</span>());
+        fornecedorParaEditar.<span class="fn">setEmail</span>(fornecedor.<span class="fn">getEmail</span>());
+        fornecedorParaEditar.<span class="fn">setTelefone</span>(fornecedor.<span class="fn">getTelefone</span>());
+        fornecedorParaEditar.<span class="fn">setCep</span>(fornecedor.<span class="fn">getCep</span>());
+        fornecedorParaEditar.<span class="fn">setLogradouro</span>(fornecedor.<span class="fn">getLogradouro</span>());
+        fornecedorParaEditar.<span class="fn">setNumero</span>(fornecedor.<span class="fn">getNumero</span>());
+        fornecedorParaEditar.<span class="fn">setBairro</span>(fornecedor.<span class="fn">getBairro</span>());
+        fornecedorParaEditar.<span class="fn">setCidade</span>(fornecedor.<span class="fn">getCidade</span>());
+        fornecedorParaEditar.<span class="fn">setUf</span>(fornecedor.<span class="fn">getUf</span>());
+
+        fornecedorRepository.<span class="fn">save</span>(fornecedorParaEditar);
+    }
+
+    <span class="cm">// DELETE — deletar fornecedor por ID</span>
+    <span class="kw">public void</span> <span class="fn">deletarFornecedorPorId</span>(<span class="tp">Long</span> id) {
+        fornecedorRepository.<span class="fn">deleteById</span>(id);
+    }
+}</pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 O que é Optional e por que usamos?</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="margin-top:8px;color:var(--text-dim);font-size:0.9rem">
+          <p><code style="color:var(--accent6)">Optional&lt;Fornecedor&gt;</code> é como uma <strong style="color:var(--text)">caixa de presente que pode estar vazia ou ter um fornecedor dentro</strong>.</p>
+          <p style="margin-top:8px">Quando buscamos por ID, o fornecedor pode não existir. O Optional nos obriga a tratar esse caso:</p>
+          <ul style="margin:8px 0 0 20px;display:flex;flex-direction:column;gap:4px">
+            <li><code>.isEmpty()</code> → a caixa está vazia? (fornecedor não existe)</li>
+            <li><code>.get()</code> → pega o fornecedor de dentro da caixa</li>
+            <li><code>.isPresent()</code> → tem algo na caixa?</li>
+          </ul>
+          <p style="margin-top:8px">Isso evita o famoso <strong style="color:var(--accent2)">NullPointerException</strong>! 💀</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- FORNECEDOR: CONTROLLER -->
+<section class="step-section" id="forn-controller">
+  <div class="step-header">
+    <div class="step-number sn-main">1.4</div>
+    <div>
+      <div class="step-title">Controller — FornecedorController.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A porta de entrada da API — endpoints REST</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🎮 O que é um Controller?</div>
+      <p>O Controller é a <strong style="color:var(--text)">porta de entrada</strong> da API. Ele recebe as requisições HTTP (GET, POST, PUT, DELETE), chama o Service apropriado, e devolve a resposta. É aqui que definimos as <strong>URLs</strong> (endpoints) da API.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Recepcionista</div>
+      <p style="color:var(--text-dim)">O Controller é o <strong style="color:var(--text)">recepcionista</strong> de um hotel. Ele recebe o hóspede (requisição), identifica o que ele precisa (método HTTP + URL), e encaminha para o departamento certo (Service). Quando o serviço é concluído, o recepcionista entrega a resposta.</p>
+    </div>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">controller/FornecedorController.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48</div>
+      <pre>
+<span class="pkg">package br.com.programaai.api.controller;</span>
+
+<span class="pkg">import br.com.programaai.api.model.Fornecedor;</span>
+<span class="pkg">import br.com.programaai.api.service.FornecedorService;</span>
+<span class="pkg">import org.springframework.beans.factory.annotation.Autowired;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.web.bind.annotation.*;</span>
+<span class="pkg">import java.util.List;</span>
+<span class="pkg">import java.util.Optional;</span>
+
+<span class="anno-line"><span class="an">@RestController</span>                    <span class="cm">// "Esta classe é um controller REST!"</span><span class="anno-tooltip"><strong>@RestController</strong>Combina @Controller + @ResponseBody. Retorna JSON automaticamente.</span></span>
+<span class="anno-line"><span class="an">@RequestMapping</span>(<span class="st">"/fornecedores"</span>)    <span class="cm">// URL base: /fornecedores</span><span class="anno-tooltip"><strong>@RequestMapping("/fornecedores")</strong>Define a URL base. Todos os endpoints começam com /fornecedores.</span></span>
+<span class="kw">public class</span> <span class="tp">FornecedorController</span> {
+
+    <span class="an">@Autowired</span>
+    <span class="tp">FornecedorService</span> fornecedorService;
+
+    <span class="cm">// POST /fornecedores — Criar</span>
+    <span class="anno-line"><span class="an">@PostMapping</span><span class="anno-tooltip"><strong>@PostMapping</strong>Responde a requisições HTTP POST. Usado para CRIAR recursos.</span></span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">CREATED</span>)       <span class="cm">// 201</span>
+    <span class="kw">public void</span> <span class="fn">criarFornecedor</span>(<span class="an">@RequestBody</span> <span class="tp">Fornecedor</span> fornecedor) {
+        fornecedorService.<span class="fn">criarFornecedor</span>(fornecedor);
+    }
+
+    <span class="cm">// GET /fornecedores — Listar todos</span>
+    <span class="anno-line"><span class="an">@GetMapping</span><span class="anno-tooltip"><strong>@GetMapping</strong>Responde a HTTP GET. Usado para BUSCAR/LISTAR recursos.</span></span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)             <span class="cm">// 200</span>
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">Fornecedor</span>&gt; <span class="fn">listarTodosFornecedores</span>() {
+        <span class="kw">return</span> fornecedorService.<span class="fn">listarTodosFornecedores</span>();
+    }
+
+    <span class="cm">// GET /fornecedores/{id} — Buscar por ID</span>
+    <span class="anno-line"><span class="an">@GetMapping</span>(<span class="st">"/{id}"</span>)<span class="anno-tooltip"><strong>@GetMapping("/{id}")</strong>O {id} é capturado da URL. Em /fornecedores/5, id = 5.</span></span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">Optional</span>&lt;<span class="tp">Fornecedor</span>&gt; <span class="fn">buscarFornecedorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        <span class="kw">return</span> fornecedorService.<span class="fn">buscarFornecedorPorId</span>(id);
+    }
+
+    <span class="cm">// PUT /fornecedores/{id} — Atualizar</span>
+    <span class="anno-line"><span class="an">@PutMapping</span>(<span class="st">"/{id}"</span>)<span class="anno-tooltip"><strong>@PutMapping</strong>Responde a HTTP PUT. Usado para ATUALIZAR recursos.</span></span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">NO_CONTENT</span>)     <span class="cm">// 204</span>
+    <span class="kw">public void</span> <span class="fn">atualizarFornecedorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id,
+                                          <span class="an">@RequestBody</span> <span class="tp">Fornecedor</span> fornecedor) {
+        fornecedorService.<span class="fn">atualizarFornecedorPorId</span>(id, fornecedor);
+    }
+
+    <span class="cm">// DELETE /fornecedores/{id} — Deletar</span>
+    <span class="anno-line"><span class="an">@DeleteMapping</span>(<span class="st">"/{id}"</span>)<span class="anno-tooltip"><strong>@DeleteMapping</strong>Responde a HTTP DELETE. Usado para REMOVER recursos.</span></span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">NO_CONTENT</span>)   <span class="cm">// 204</span>
+    <span class="kw">public void</span> <span class="fn">deletarFornecedorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        fornecedorService.<span class="fn">deletarFornecedorPorId</span>(id);
+    }
+}</pre>
+    </div>
+
+    <!-- Endpoint Table -->
+    <h4 style="margin:20px 0 10px;color:var(--accent4)">📍 Endpoints do Fornecedor</h4>
+    <table class="endpoint-table">
+      <thead><tr><th>Método</th><th>URL</th><th>Ação</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-badge post">POST</span></td><td><code>/fornecedores</code></td><td>Criar fornecedor</td><td>201 Created</td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/fornecedores</code></td><td>Listar todos</td><td>200 OK</td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/fornecedores/{id}</code></td><td>Buscar por ID</td><td>200 OK</td></tr>
+        <tr><td><span class="method-badge put">PUT</span></td><td><code>/fornecedores/{id}</code></td><td>Atualizar fornecedor</td><td>204 No Content</td></tr>
+        <tr><td><span class="method-badge delete">DELETE</span></td><td><code>/fornecedores/{id}</code></td><td>Deletar fornecedor</td><td>204 No Content</td></tr>
+      </tbody>
+    </table>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 @RequestBody vs @PathVariable — qual a diferença?</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="margin-top:8px;color:var(--text-dim);font-size:0.9rem;display:grid;gap:12px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="background:var(--accent5);color:var(--bg);padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.78rem;flex-shrink:0">@RequestBody</span>
+            <span>Pega os dados do <strong style="color:var(--text)">corpo</strong> da requisição (o JSON). Ex: <code>{ "nome": "ABC", "cnpj": "12.345..." }</code></span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="background:var(--accent);color:white;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.78rem;flex-shrink:0">@PathVariable</span>
+            <span>Pega o valor da <strong style="color:var(--text)">URL</strong>. Em <code>/fornecedores/5</code>, o {id} vira 5.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- FORNECEDOR: DEMO INTERATIVA -->
+<section class="step-section" id="forn-demo">
+  <div class="step-header">
+    <div class="step-number sn-purple">▶</div>
+    <div>
+      <div class="step-title">Demo: CRUD de Fornecedor</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Simulação do Swagger/Insomnia</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:16px">Veja como as requisições funcionam! Clique nos botões para simular cada operação:</p>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="btn-demo btn-spring btn-small" onclick="demoFornCrud('post')"><span class="method-badge post">POST</span> Criar</button>
+      <button class="btn-demo btn-small" onclick="demoFornCrud('getAll')"><span class="method-badge get">GET</span> Listar</button>
+      <button class="btn-demo btn-small btn-teal" onclick="demoFornCrud('getOne')"><span class="method-badge get">GET</span> Buscar/1</button>
+      <button class="btn-demo btn-small btn-yellow" onclick="demoFornCrud('put')"><span class="method-badge put">PUT</span> Atualizar</button>
+      <button class="btn-demo btn-small btn-red" onclick="demoFornCrud('delete')"><span class="method-badge delete">DELETE</span> Deletar</button>
+    </div>
+
+    <div class="demo-terminal">
+      <div class="term-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span>Swagger UI — localhost:8080</span>
+      </div>
+      <div class="demo-body" id="fornDemoBody">
+        <div style="color:var(--text-dim);font-style:italic">Clique em um botão acima para simular uma requisição...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+
+<!-- ════════════════════════════════════════ -->
+<!-- PRÓXIMOS CAPÍTULOS (COMING SOON) -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="proximos">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent6)">🔮</div>
+    <div>
+      <div class="step-title">Próximos Capítulos</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">O que vem por aí...</div>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <div class="coming-soon" style="margin-bottom:24px">
+      <span class="blink-dot"></span>
+      Em breve
+    </div>
+
+    <div class="roadmap" style="text-align:left">
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent4)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent4)">🏷️ Capítulo 2 — Produto</h4>
+          <p>Aqui a brincadeira evolui! Vamos introduzir <strong style="color:var(--text)">DTOs</strong> (Data Transfer Objects), <strong style="color:var(--text)">Mappers</strong> para conversão, <strong style="color:var(--text)">ServiceImpl</strong> (interface + implementação), e o relacionamento <strong style="color:var(--text)">@ManyToOne</strong> (Produto → Fornecedor).</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent6)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent6)">👤 Capítulo 3 — Cliente</h4>
+          <p>Consolidação de tudo que aprendemos. O aluno aplica sozinho os padrões de DTOs, Mappers e validações.</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent7)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent7)">🔗 Capítulo 4 — Integração com React</h4>
+          <p>Conectando o backend com o frontend React. CORS, fetch/axios, tipando respostas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════ -->
+<!-- RESUMO FINAL -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" style="text-align:center;padding:60px 20px">
+  <div style="font-size:3.5rem;margin-bottom:16px;animation:bounce 2s ease-in-out infinite;display:inline-block">📦</div>
+  <h2 style="font-size:2rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--spring),var(--accent4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Fornecedor Completo!</h2>
+  <p style="color:var(--text-dim);max-width:550px;margin:0 auto 30px;font-size:1.05rem">Você construiu seu primeiro <strong style="color:var(--accent5)">CRUD completo</strong> com Spring Boot — Model, Repository, Service e Controller. O padrão que se repete para toda entidade!</p>
+
+  <div class="card" style="text-align:left;max-width:600px;margin:0 auto">
+    <h3 style="margin-bottom:16px;color:var(--accent5)">📋 O que você aprendeu neste capítulo</h3>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.92rem">
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> Criar entidades JPA com @Entity, @Table, @Column, @Id</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> Usar Lombok (@Data, @NoArgsConstructor, @AllArgsConstructor)</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> Criar repositórios com JpaRepository</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> Services com lógica de CRUD</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> Controllers REST (GET, POST, PUT, DELETE)</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> Injeção de Dependência com @Autowired</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> Tratamento de erros (404 Not Found)</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> HTTP Status Codes (201, 200, 204)</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> Optional para evitar NullPointerException</div>
+    </div>
+
+    <div class="tip" style="margin-top:20px">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-content">
+        <strong>Próximo passo:</strong> No Capítulo 2 (Produto), vamos evoluir esse padrão introduzindo <strong>DTOs</strong>, <strong>Mappers</strong> e <strong>ServiceImpl</strong> — boas práticas que toda API profissional utiliza!
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Feito com <span class="heart">💜</span> para os alunos da <a href="#">Programa AI</a> — Curso Presencial Programação Fullstack<br>
+  <span style="font-size:0.75rem;margin-top:8px;display:block">Backend com Java/Spring Boot — Prof. Kelson Almeida</span>
+</footer>
+
+</div><!-- /container -->
+
+<script>
+// ═══════════════════════════════════════════
+// SCROLL PROGRESS
+// ═══════════════════════════════════════════
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
+  document.getElementById('progressBar').style.width=pct+'%';
+});
+
+// ═══════════════════════════════════════════
+// INTERSECTION OBSERVER — REVEAL ON SCROLL
+// ═══════════════════════════════════════════
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.12});
+document.querySelectorAll('.step-section,.stagger').forEach(s=>observer.observe(s));
+
+// ═══════════════════════════════════════════
+// SIDEBAR NAV
+// ═══════════════════════════════════════════
+function toggleSidebar(){
+  document.getElementById('sidebarNav').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function goTo(id){
+  toggleSidebar();
+  setTimeout(()=>{
+    document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+  },300);
+}
+
+// ═══════════════════════════════════════════
+// TOGGLER
+// ═══════════════════════════════════════════
+function toggleSection(header){
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════
+// FLOW ANIMATION
+// ═══════════════════════════════════════════
+let flowRunning=false;
+async function runFlowDemo(){
+  if(flowRunning)return;
+  flowRunning=true;
+  const btn=document.getElementById('flowBtn');
+  btn.style.opacity='0.5';btn.style.pointerEvents='none';
+
+  for(let i=0;i<=5;i++){
+    const el=document.getElementById('flow-'+i);
+    if(el)el.style.opacity='0.3';
+    const lbl=document.getElementById('flow-label-'+i);
+    if(lbl)lbl.style.opacity='0';
+  }
+  const inj1=document.getElementById('flow-inject-1');
+  const inj2=document.getElementById('flow-inject-2');
+  if(inj1)inj1.style.opacity='0.3';
+  if(inj2)inj2.style.opacity='0.3';
+
+  for(let i=0;i<=5;i++){
+    await new Promise(r=>setTimeout(r,600));
+    const el=document.getElementById('flow-'+i);
+    if(el){el.style.opacity='1';el.style.transition='opacity 0.5s';el.style.transform='scale(1.04)';
+      setTimeout(()=>el.style.transform='scale(1)',300)}
+    if(i===1&&inj1){inj1.style.opacity='1';inj1.style.transition='opacity 0.5s'}
+    if(i===2&&inj2){inj2.style.opacity='1';inj2.style.transition='opacity 0.5s'}
+    if(i<5){const lbl=document.getElementById('flow-label-'+i);if(lbl){lbl.style.opacity='1';lbl.style.transition='opacity 0.4s'}}
+  }
+
+  btn.style.opacity='1';btn.style.pointerEvents='auto';btn.textContent='🔄 Repetir';
+  flowRunning=false;
+}
+
+// ═══════════════════════════════════════════
+// INTERACTIVE DB — FORNECEDOR
+// ═══════════════════════════════════════════
+let fornDbData=[];
+let fornDbId=0;
+function addFornDb(nome,cnpj,email,cidade,uf){
+  fornDbId++;
+  fornDbData.push({id:fornDbId,nome,cnpj,email,cidade,uf});
+  renderFornDb();
+}
+function resetFornDb(){fornDbData=[];fornDbId=0;renderFornDb()}
+function renderFornDb(){
+  const tb=document.getElementById('fornDbTable');
+  if(fornDbData.length===0){
+    tb.innerHTML='<tr style="color:var(--text-dim);font-style:italic"><td colspan="6" style="text-align:center;padding:20px">Tabela vazia — use os botões para simular!</td></tr>';
+    return;
+  }
+  tb.innerHTML=fornDbData.map((f,i)=>`<tr class="db-row-new" style="animation-delay:${i*0.1}s"><td style="color:var(--accent5);font-weight:700">${f.id}</td><td>${f.nome}</td><td style="color:var(--text-dim);font-size:0.72rem">${f.cnpj}</td><td style="color:var(--text-dim);font-size:0.72rem">${f.email}</td><td>${f.cidade}</td><td style="font-weight:700">${f.uf}</td></tr>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// DEMO: FORNECEDOR CRUD
+// ═══════════════════════════════════════════
+async function demoFornCrud(type){
+  const body=document.getElementById('fornDemoBody');
+  body.innerHTML='';
+  let lines=[];
+
+  if(type==='post'){
+    lines=[
+      {delay:200,html:'<span class="method-post">POST</span> <span class="url">/fornecedores</span>'},
+      {delay:300,html:'<span class="dim">Content-Type: application/json</span>'},
+      {delay:200,html:''},
+      {delay:100,html:'<span class="arrow">→ Body:</span>'},
+      {delay:100,html:'{'},
+      {delay:100,html:'  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,'},
+      {delay:100,html:'  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,'},
+      {delay:100,html:'  <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,'},
+      {delay:100,html:'  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0001"</span>,'},
+      {delay:80,html:'  <span class="json-key">"cep"</span>: <span class="json-val">"01310-100"</span>,'},
+      {delay:80,html:'  <span class="json-key">"logradouro"</span>: <span class="json-val">"Avenida Paulista"</span>,'},
+      {delay:80,html:'  <span class="json-key">"numero"</span>: <span class="json-val">"1000"</span>,'},
+      {delay:80,html:'  <span class="json-key">"bairro"</span>: <span class="json-val">"Bela Vista"</span>,'},
+      {delay:80,html:'  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,'},
+      {delay:80,html:'  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>'},
+      {delay:100,html:'}'},
+      {delay:600,html:''},
+      {delay:200,html:'<span class="arrow">← Response:</span> <span class="status-created">201 Created</span> ✅'},
+      {delay:100,html:'<span class="dim">Fornecedor salvo no banco de dados!</span>'},
+    ];
+  } else if(type==='getAll'){
+    lines=[
+      {delay:200,html:'<span class="method-get">GET</span> <span class="url">/fornecedores</span>'},
+      {delay:500,html:''},
+      {delay:200,html:'<span class="arrow">← Response:</span> <span class="status-ok">200 OK</span>'},
+      {delay:100,html:'['},
+      {delay:150,html:'  {<span class="json-key">"id"</span>:<span class="json-num">1</span>, <span class="json-key">"nome"</span>:<span class="json-val">"Distribuidora ABC"</span>, <span class="json-key">"cnpj"</span>:<span class="json-val">"12.345..."</span>, ...},'},
+      {delay:150,html:'  {<span class="json-key">"id"</span>:<span class="json-num">2</span>, <span class="json-key">"nome"</span>:<span class="json-val">"Fornecedor XYZ"</span>, <span class="json-key">"cnpj"</span>:<span class="json-val">"98.765..."</span>, ...}'},
+      {delay:100,html:']'},
+    ];
+  } else if(type==='getOne'){
+    lines=[
+      {delay:200,html:'<span class="method-get">GET</span> <span class="url">/fornecedores/1</span>'},
+      {delay:500,html:''},
+      {delay:200,html:'<span class="arrow">← Response:</span> <span class="status-ok">200 OK</span>'},
+      {delay:100,html:'{'},
+      {delay:100,html:'  <span class="json-key">"id"</span>: <span class="json-num">1</span>,'},
+      {delay:100,html:'  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,'},
+      {delay:100,html:'  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,'},
+      {delay:100,html:'  <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,'},
+      {delay:80,html:'  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,'},
+      {delay:80,html:'  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>'},
+      {delay:100,html:'}'},
+    ];
+  } else if(type==='put'){
+    lines=[
+      {delay:200,html:'<span class="method-put">PUT</span> <span class="url">/fornecedores/1</span>'},
+      {delay:300,html:'<span class="dim">Content-Type: application/json</span>'},
+      {delay:200,html:''},
+      {delay:100,html:'<span class="arrow">→ Body:</span>'},
+      {delay:100,html:'{'},
+      {delay:100,html:'  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC Atualizada"</span>,'},
+      {delay:100,html:'  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,'},
+      {delay:100,html:'  <span class="json-key">"email"</span>: <span class="json-val">"novo@abc.com"</span>,'},
+      {delay:100,html:'  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,'},
+      {delay:100,html:'  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>'},
+      {delay:100,html:'}'},
+      {delay:600,html:''},
+      {delay:200,html:'<span class="arrow">← Response:</span> <span class="status-ok">204 No Content</span> ✅'},
+      {delay:100,html:'<span class="dim">Fornecedor atualizado com sucesso!</span>'},
+    ];
+  } else if(type==='delete'){
+    lines=[
+      {delay:200,html:'<span class="method-delete">DELETE</span> <span class="url">/fornecedores/1</span>'},
+      {delay:600,html:''},
+      {delay:200,html:'<span class="arrow">← Response:</span> <span class="status-ok">204 No Content</span> ✅'},
+      {delay:100,html:'<span class="dim">Fornecedor removido do banco de dados!</span>'},
+      {delay:400,html:''},
+      {delay:200,html:'<span class="dim">💡 Se tentar GET /fornecedores/1 agora, receberá 404!</span>'},
+    ];
+  }
+
+  for(const line of lines){
+    await new Promise(r=>setTimeout(r,line.delay));
+    const div=document.createElement('div');
+    div.className='demo-line';
+    div.innerHTML=line.html;
+    body.appendChild(div);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>div.classList.add('show')));
+    body.scrollTop=body.scrollHeight;
+  }
+}
+</script>
+</body>
+</html>
