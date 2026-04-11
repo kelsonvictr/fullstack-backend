@@ -1,0 +1,488 @@
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              CAPÍTULO 2: PRODUTO                            ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="chapter-divider" id="cap-prod">
+  <span class="chapter-icon">🏷️</span>
+  <div class="chapter-number">Capítulo 2</div>
+  <h2 class="grad-prod">CRUD de Produto</h2>
+  <p class="chapter-subtitle">Evoluindo para boas práticas do mercado — DTOs, Mappers, ServiceImpl e Validações</p>
+</div>
+
+<!-- PRODUTO: INTRODUÇÃO / O QUE MUDA -->
+<section class="step-section" id="prod-intro">
+  <div class="step-header">
+    <div class="step-number sn-blue">🎯</div>
+    <div>
+      <div class="step-title">O que muda em relação ao Fornecedor?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Por que evoluir o padrão? Porque o mercado exige!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="font-size:1.02rem;margin-bottom:20px">No Fornecedor, fizemos tudo da forma mais <strong style="color:var(--accent5)">simples possível</strong> — para você entender o fluxo básico. Agora vamos <strong style="color:var(--accent4)">evoluir o padrão</strong> para o que as empresas realmente usam no dia a dia. Pense assim: no Fornecedor você aprendeu a <strong>andar de bicicleta</strong>. Agora vamos <strong>colocar as marchas</strong>! 🚲→🏍️</p>
+
+    <div style="background:linear-gradient(135deg,rgba(69,183,209,0.06),rgba(78,205,196,0.06));border:1px solid rgba(69,183,209,0.15);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="color:var(--accent4);margin-bottom:16px;display:flex;align-items:center;gap:8px">🆕 Novidades do Capítulo 2</h4>
+      <div style="display:grid;gap:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(69,183,209,0.15);color:var(--accent4);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">DTO</span>
+          <div><strong style="color:var(--text)">Data Transfer Object</strong> — <span style="color:var(--text-dim)">Separa o que o front envia do que o banco armazena. Segurança e organização!</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(167,139,250,0.15);color:var(--accent6);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">Mapper</span>
+          <div><strong style="color:var(--text)">Conversor</strong> — <span style="color:var(--text-dim)">Converte DTO → Entidade e Entidade → DTO. Uma "ponte" entre as camadas.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(247,183,49,0.15);color:var(--accent5);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">ServiceImpl</span>
+          <div><strong style="color:var(--text)">Interface + Implementação</strong> — <span style="color:var(--text-dim)">Separa o "contrato" da execução. Padrão de mercado.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">Validation</span>
+          <div><strong style="color:var(--text)">Bean Validation</strong> — <span style="color:var(--text-dim)">Valida os dados automaticamente com anotações (@NotBlank, @Positive).</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(255,107,107,0.15);color:var(--accent2);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">@ManyToOne</span>
+          <div><strong style="color:var(--text)">Relacionamento</strong> — <span style="color:var(--text-dim)">Produto pertence a um Fornecedor. Chave estrangeira!</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(109,179,63,0.15);color:var(--spring);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">Lombok</span>
+          <div><strong style="color:var(--text)">Injeção pelo construtor</strong> — <span style="color:var(--text-dim)">Troca @Autowired por @RequiredArgsConstructor. Mais limpo!</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(108,99,255,0.15);color:var(--accent);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">record</span>
+          <div><strong style="color:var(--text)">Java Record</strong> — <span style="color:var(--text-dim)">Forma moderna e enxuta de criar DTOs. Menos código!</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning" style="margin-top:16px">
+      <span class="warning-icon">💼</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Por que isso importa para o mercado?</strong> Em <strong style="color:var(--text)">entrevistas de emprego</strong> para desenvolvedor Java, perguntas sobre DTOs, separação de camadas, validações e boas práticas são <strong>extremamente comuns</strong>. Um candidato que sabe explicar por que usa DTO ao invés de expor a entidade direto já se destaca. Esse capítulo é o que transforma um código de estudante em código de profissional! 🎯</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CONCEITOS NOVOS — EXPLICAÇÃO DIDÁTICA   -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="prod-conceitos">
+  <div class="step-header">
+    <div class="step-number sn-purple">📖</div>
+    <div>
+      <div class="step-title">Entendendo os Conceitos Novos</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Antes de codar, vamos entender o "porquê" de cada novidade</div>
+    </div>
+  </div>
+
+  <!-- DTO -->
+  <div class="card" id="conceito-dto">
+    <h3 style="margin-bottom:6px;color:var(--accent4);display:flex;align-items:center;gap:10px">📦 DTO — Data Transfer Object</h3>
+    <p style="color:var(--text-dim);margin-bottom:16px;font-size:0.92rem">O conceito mais importante desta aula!</p>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que é um DTO?</div>
+      <p>DTO é uma <strong style="color:var(--text)">classe simples que carrega dados de um lugar para outro</strong>. Ela serve como um "filtro" entre o que o front envia e o que o banco armazena. O front nunca conversa diretamente com a entidade do banco!</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Formulário vs A Ficha Interna</div>
+      <p style="color:var(--text-dim)">Imagine um hotel. Quando você chega, preenche um <strong style="color:var(--accent4)">formulário na recepção</strong> com nome, documento e quantos dias vai ficar. Esse formulário é o <strong>RequestDTO</strong> — só tem as informações que o hóspede precisa fornecer.</p>
+      <p style="color:var(--text-dim);margin-top:8px">Internamente, o hotel tem uma <strong style="color:var(--accent6)">ficha completa</strong> com número do quarto, data de check-in, valor total, status do pagamento. Essa ficha interna é a <strong>Entidade</strong> (Model).</p>
+      <p style="color:var(--text-dim);margin-top:8px">Quando o hotel mostra o resumo da reserva, ele não mostra TUDO da ficha interna — mostra só o necessário em um <strong style="color:var(--accent3)">comprovante bonito</strong>. Esse comprovante é o <strong>ResponseDTO</strong>! 🏨</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent2)">❌ Sem DTO (como fizemos no Fornecedor):</h4>
+    <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px">
+      <div style="background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:16px;font-size:0.85rem">
+        <p style="color:var(--text-dim)">O front envia a <strong style="color:var(--accent2)">entidade inteira</strong> (Fornecedor.java). Problemas:</p>
+        <div style="margin-top:8px;display:grid;gap:6px;color:var(--text-dim);font-size:0.82rem">
+          <div>❌ O front pode mandar o campo <code>id</code> e tentar sobrescrever</div>
+          <div>❌ Se a entidade mudar (nova coluna), a API quebra</div>
+          <div>❌ Expõe a estrutura interna do banco para quem consome</div>
+          <div>❌ Não tem validação automática dos campos</div>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:#49cc90">✅ Com DTO (como vamos fazer em Produto):</h4>
+    <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px">
+      <div style="background:rgba(73,204,144,0.06);border:1px solid rgba(73,204,144,0.15);border-radius:12px;padding:16px;font-size:0.85rem">
+        <p style="color:var(--text-dim)">O front envia um <strong style="color:#49cc90">DTO enxuto</strong>, com validações. Vantagens:</p>
+        <div style="margin-top:8px;display:grid;gap:6px;color:var(--text-dim);font-size:0.82rem">
+          <div>✅ O front só envia o que precisa (sem <code>id</code>, sem dados internos)</div>
+          <div>✅ Validações automáticas (@NotBlank, @Positive) antes de chegar no Service</div>
+          <div>✅ A entidade pode mudar sem quebrar a API</div>
+          <div>✅ O response mostra só o que o front precisa ver</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual: Fluxo Request → DTO → Entidade → DTO → Response -->
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">🔄 Fluxo com DTOs:</h4>
+    <div class="flow-container">
+      <div class="flow-box fb-client">
+        <div class="label">Front-end (React)</div>
+        📮 Envia <strong>ProdutoRequestDTO</strong>
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:var(--accent4)">JSON com dados do form</span></div>
+      <div class="flow-box fb-controller">
+        <div class="label">Controller</div>
+        🎮 Recebe <strong>RequestDTO</strong> + @Valid
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:var(--accent6)">Mapper converte DTO → Entidade</span></div>
+      <div class="flow-box fb-service">
+        <div class="label">Service</div>
+        ⚙️ Trabalha com <strong>Entidade</strong> (Produto)
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:var(--accent3)">salva no banco</span></div>
+      <div class="flow-box fb-db">
+        <div class="label">Banco de Dados</div>
+        🐘 Tabela <strong>produto</strong>
+      </div>
+      <div class="flow-arrow flow-arrow-up"><span class="flow-label right" style="color:var(--accent6)">Mapper converte Entidade → DTO</span></div>
+      <div class="flow-box fb-response">
+        <div class="label">Resposta</div>
+        ✅ Devolve <strong>ProdutoResponseDTO</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECORD -->
+  <div class="card" id="conceito-record">
+    <h3 style="margin-bottom:6px;color:var(--accent);display:flex;align-items:center;gap:10px">📝 Java Record — DTOs Modernos</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que é um Record?</div>
+      <p>O <code style="color:var(--accent)">record</code> é uma forma <strong style="color:var(--text)">moderna e enxuta</strong> do Java para criar classes que só carregam dados. É perfeito para DTOs! Em vez de escrever uma classe com atributos + getters + construtor + toString (umas 30 linhas), você escreve <strong style="color:var(--accent)">3 linhas</strong>.</p>
+    </div>
+
+    <h4 style="margin:16px 0 8px;color:var(--accent2)">❌ Classe tradicional (muitas linhas):</h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>
+<span class="cm">// Classe tradicional para DTO — MUITO código repetitivo!</span>
+<span class="kw">public class</span> <span class="tp">ProdutoRequestDTO</span> {
+    <span class="kw">private</span> <span class="tp">String</span> nome;
+    <span class="kw">private</span> <span class="tp">BigDecimal</span> preco;
+
+    <span class="cm">// Construtor</span>
+    <span class="kw">public</span> <span class="fn">ProdutoRequestDTO</span>(<span class="tp">String</span> nome, <span class="tp">BigDecimal</span> preco) {
+        <span class="kw">this</span>.nome = nome;
+        <span class="kw">this</span>.preco = preco;
+    }
+
+    <span class="cm">// Getters</span>
+    <span class="kw">public</span> <span class="tp">String</span> <span class="fn">getNome</span>() { <span class="kw">return</span> nome; }
+    <span class="kw">public</span> <span class="tp">BigDecimal</span> <span class="fn">getPreco</span>() { <span class="kw">return</span> preco; }
+
+    <span class="cm">// toString, equals, hashCode... mais 20 linhas 😴</span>
+}</pre>
+    </div>
+
+    <h4 style="margin:16px 0 8px;color:#49cc90">✅ Com Record (3 linhas!):</h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>
+<span class="cm">// Record — faz TUDO que a classe acima faz, em 3 linhas!</span>
+<span class="kw">public record</span> <span class="tp">ProdutoRequestDTO</span>(
+    <span class="tp">String</span> nome,
+    <span class="tp">BigDecimal</span> preco
+) {}</pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">
+        <strong>Diferença importante:</strong> No record, para acessar os dados, usamos <code style="color:var(--accent)">dto.nome()</code> ao invés de <code style="color:var(--accent2)">dto.getNome()</code>. Sem o "get" na frente! O record gera isso automaticamente.
+      </div>
+    </div>
+  </div>
+
+  <!-- MAPPER -->
+  <div class="card" id="conceito-mapper">
+    <h3 style="margin-bottom:6px;color:var(--accent6);display:flex;align-items:center;gap:10px">🔄 Mapper — O Tradutor</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que é um Mapper?</div>
+      <p>O Mapper é uma <strong style="color:var(--text)">classe que converte objetos de um tipo para outro</strong>. No nosso caso, converte <strong style="color:var(--accent4)">RequestDTO → Entidade</strong> (quando recebe dados do front) e <strong style="color:var(--accent3)">Entidade → ResponseDTO</strong> (quando devolve dados pro front).</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Tradutor de Idiomas</div>
+      <p style="color:var(--text-dim)">Imagine dois países que falam idiomas diferentes: o <strong style="color:var(--accent4)">País do Front</strong> (fala "DTO") e o <strong style="color:var(--accent3)">País do Banco</strong> (fala "Entidade"). O Mapper é o <strong style="color:var(--accent6)">tradutor</strong> que fica na fronteira convertendo de uma língua para outra. Quando o front manda uma mensagem (DTO), o tradutor converte para a língua do banco (Entidade). Quando o banco responde, o tradutor converte de volta para o front! 🌐</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:20px 0">
+      <div style="background:rgba(69,183,209,0.08);border:1px solid rgba(69,183,209,0.2);border-radius:14px;padding:16px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">📥</div>
+        <div style="font-weight:800;color:var(--accent4);font-size:0.88rem">RequestDTO</div>
+        <div style="font-size:0.75rem;color:var(--text-dim);margin-top:4px">O que vem do front</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:4px">🔄</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--accent6);font-weight:700">ProdutoMapper</div>
+        <div style="font-size:0.68rem;color:var(--text-dim);margin-top:2px">.toEntity() / .toResponseDTO()</div>
+      </div>
+      <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:14px;padding:16px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🗄️</div>
+        <div style="font-weight:800;color:var(--accent6);font-size:0.88rem">Entidade</div>
+        <div style="font-size:0.75rem;color:var(--text-dim);margin-top:4px">O que vai pro banco</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICE IMPL -->
+  <div class="card" id="conceito-serviceimpl">
+    <h3 style="margin-bottom:6px;color:var(--accent5);display:flex;align-items:center;gap:10px">📋 ServiceImpl — Interface + Implementação</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que é essa separação?</div>
+      <p>No Fornecedor, tínhamos apenas <code style="color:var(--accent5)">FornecedorService</code> (uma classe só). Agora vamos separar em <strong style="color:var(--text)">duas coisas</strong>: uma <strong style="color:var(--accent4)">interface</strong> (o contrato, que diz "quais métodos existem") e uma <strong style="color:var(--accent3)">implementação</strong> (a classe que realmente faz o trabalho).</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Cardápio e a Cozinha</div>
+      <p style="color:var(--text-dim)">A <strong style="color:var(--accent4)">interface</strong> <code>ProdutoService</code> é o <strong>cardápio</strong> do restaurante — diz quais pratos existem (criarProduto, listarTodos, etc). A <strong style="color:var(--accent3)">implementação</strong> <code>ProdutoServiceImpl</code> é a <strong>cozinha</strong> — é onde cada prato é realmente preparado. O cliente (Controller) olha só o cardápio, não precisa saber como a cozinha funciona! 🍽️</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0">
+      <div style="background:rgba(69,183,209,0.06);border:1px solid rgba(69,183,209,0.15);border-radius:14px;padding:18px">
+        <div style="font-weight:800;color:var(--accent4);margin-bottom:8px;font-size:0.88rem">📋 Interface (Contrato)</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.7;display:block">
+          <span style="color:var(--kw)">public interface</span> <span style="color:var(--accent4)">ProdutoService</span> {<br>
+          &nbsp;&nbsp;<span style="color:var(--text-dim)">criarProduto(...);</span><br>
+          &nbsp;&nbsp;<span style="color:var(--text-dim)">listarTodos(...);</span><br>
+          &nbsp;&nbsp;<span style="color:var(--text-dim)">buscarPorId(...);</span><br>
+          }
+        </code>
+        <p style="font-size:0.75rem;color:var(--text-dim);margin-top:8px">Diz O QUÊ fazer</p>
+      </div>
+      <div style="background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.15);border-radius:14px;padding:18px">
+        <div style="font-weight:800;color:var(--accent3);margin-bottom:8px;font-size:0.88rem">⚙️ Implementação (Execução)</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.7;display:block">
+          <span style="color:var(--kw)">public class</span> <span style="color:var(--accent3)">ProdutoServiceImpl</span><br>
+          &nbsp;&nbsp;<span style="color:var(--kw)">implements</span> <span style="color:var(--accent4)">ProdutoService</span> {<br>
+          &nbsp;&nbsp;<span style="color:var(--text-dim)">// código real aqui</span><br>
+          }
+        </code>
+        <p style="font-size:0.75rem;color:var(--text-dim);margin-top:8px">Diz COMO fazer</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEAN VALIDATION -->
+  <div class="card" id="conceito-validation">
+    <h3 style="margin-bottom:6px;color:#49cc90;display:flex;align-items:center;gap:10px">✅ Bean Validation — Validações Automáticas</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que é Bean Validation?</div>
+      <p>Bean Validation permite <strong style="color:var(--text)">validar os dados automaticamente usando anotações</strong>. Em vez de escrever <code>if (nome == null) throw ...</code> na mão, você simplesmente coloca <code style="color:#49cc90">@NotBlank</code> no campo e o Spring valida sozinho!</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Segurança da Porta</div>
+      <p style="color:var(--text-dim)">Sem validação, é como uma festa <strong style="color:var(--accent2)">sem segurança na porta</strong> — qualquer pessoa entra, com dados faltando, com preço negativo, com email inválido. Com Bean Validation, você coloca um <strong style="color:#49cc90">segurança</strong> que confere cada campo antes de deixar entrar! Se algo estiver errado, o segurança barra e devolve uma mensagem dizendo o que falta. 🚪👮</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">🏷️ Anotações que vamos usar:</h4>
+    <div class="annotation-grid">
+      <div class="annotation-card"><div class="anno-name" style="color:#49cc90"><span class="at">@</span>NotBlank</div><div class="anno-desc">Texto não pode ser vazio nem só espaços. Ideal para nomes e descrições.</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:#49cc90"><span class="at">@</span>NotNull</div><div class="anno-desc">O campo é obrigatório — não pode ser null. Para números, enums e objetos.</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:#49cc90"><span class="at">@</span>Positive</div><div class="anno-desc">O número deve ser maior que zero. Perfeito para preço!</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:#49cc90"><span class="at">@</span>PositiveOrZero</div><div class="anno-desc">Zero ou positivo. Ideal para estoque (pode ter zero em estoque).</div></div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">⚡</span>
+      <div class="tip-content">
+        <strong>Detalhe importante:</strong> As validações só funcionam se colocar <code style="color:#49cc90">@Valid</code> no parâmetro do Controller! Sem o @Valid, as anotações ficam lá mas não fazem nada. É como ligar o segurança mas esquecer de pedir pra ele conferir os ingressos!
+      </div>
+    </div>
+  </div>
+
+  <!-- @RequiredArgsConstructor -->
+  <div class="card" id="conceito-lombok-construtor">
+    <h3 style="margin-bottom:6px;color:var(--spring);display:flex;align-items:center;gap:10px">💉 @RequiredArgsConstructor — Adeus @Autowired</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que muda na injeção de dependência?</div>
+      <p>No Fornecedor, usamos <code style="color:var(--spring)">@Autowired</code> para injetar o Repository no Service. Funciona, mas o Spring <strong style="color:var(--text)">recomenda injeção pelo construtor</strong> como melhor prática. O <code style="color:var(--spring)">@RequiredArgsConstructor</code> do Lombok gera esse construtor automaticamente!</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0">
+      <div style="background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.15);border-radius:14px;padding:18px">
+        <div style="font-weight:800;color:var(--accent2);margin-bottom:10px;font-size:0.82rem">❌ Antes (Fornecedor)</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:var(--text-dim);line-height:1.8;display:block">
+          <span style="color:var(--spring)">@Autowired</span><br>
+          FornecedorRepository repo;
+        </code>
+      </div>
+      <div style="background:rgba(73,204,144,0.06);border:1px solid rgba(73,204,144,0.15);border-radius:14px;padding:18px">
+        <div style="font-weight:800;color:#49cc90;margin-bottom:10px;font-size:0.82rem">✅ Agora (Produto)</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.76rem;color:var(--text-dim);line-height:1.8;display:block">
+          <span style="color:var(--spring)">@RequiredArgsConstructor</span><br>
+          <span style="color:var(--kw)">private final</span> ProdutoRepository repo;
+        </code>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">
+        <strong>O segredo é o <code>private final</code>!</strong> O <code style="color:var(--spring)">@RequiredArgsConstructor</code> gera um construtor com todos os atributos que são <code>final</code>. O Spring vê esse construtor e injeta automaticamente. Resultado: mesma funcionalidade, código mais limpo!
+      </div>
+    </div>
+  </div>
+
+  <!-- LAMBDA E STREAM -->
+  <div class="card" id="conceito-lambda">
+    <h3 style="margin-bottom:6px;color:var(--accent2);display:flex;align-items:center;gap:10px">⚡ Lambda e Stream — Simplificando Código</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que é Lambda?</div>
+      <p>Lambda é uma forma de escrever <strong style="color:var(--text)">uma função pequena em uma linha</strong>. Em vez de criar um método inteiro, você escreve <code style="color:var(--accent2)">(parametro) -> ação</code>. Vamos usar em dois lugares: no <code>orElseThrow</code> e no <code>stream().map()</code>.</p>
+    </div>
+
+    <!-- LAMBDA NO orElseThrow -->
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">1️⃣ Lambda no <code>orElseThrow</code></h4>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Entregador</div>
+      <p style="color:var(--text-dim)">Quando você pede uma pizza, o <strong style="color:var(--accent4)">entregador vai no endereço</strong>. Se encontra alguém, entrega a pizza (retorna o produto). Se <strong style="color:var(--accent2)">não encontra ninguém</strong>, ele liga reclamando: "não tem ninguém aqui!" (lança o erro). O <code style="color:var(--accent2)">orElseThrow</code> funciona assim: "busca no banco, se não achar, reclama!" 🍕</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0">
+      <div style="background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.15);border-radius:14px;padding:18px">
+        <div style="font-weight:800;color:var(--accent2);margin-bottom:10px;font-size:0.82rem">❌ Antes (6 linhas)</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dim);line-height:1.8;display:block">
+          Optional&lt;Produto&gt; opt = repo.findById(id);<br><br>
+          <span style="color:var(--kw)">if</span> (opt.isEmpty()) {<br>
+          &nbsp;&nbsp;<span style="color:var(--kw)">throw new</span> ResponseStatusException(...);<br>
+          }<br><br>
+          Produto produto = opt.get();
+        </code>
+      </div>
+      <div style="background:rgba(73,204,144,0.06);border:1px solid rgba(73,204,144,0.15);border-radius:14px;padding:18px">
+        <div style="font-weight:800;color:#49cc90;margin-bottom:10px;font-size:0.82rem">✅ Agora (1 linha!)</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dim);line-height:1.8;display:block">
+          Produto produto = repo.findById(id)<br>
+          &nbsp;&nbsp;.orElseThrow(<span style="color:var(--accent2)">() -></span> <span style="color:var(--kw)">new</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;ResponseStatusException(...));
+        </code>
+        <p style="font-size:0.72rem;color:var(--text-dim);margin-top:12px">O <code style="color:var(--accent2)">() -></code> é a lambda!<br>"Se não achar, <strong>execute isso</strong>"</p>
+      </div>
+    </div>
+
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;margin:16px 0;border:1px solid rgba(255,255,255,0.05)">
+      <h4 style="color:var(--accent5);margin-bottom:8px;font-size:0.9rem">🔬 Decompondo a lambda:</h4>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:2.4;color:var(--text-dim)">
+        <code>repo.findById(id)</code> <span style="color:var(--text-dim);font-family:'Nunito',sans-serif;font-size:0.82rem">→ busca no banco pelo ID</span><br>
+        <code>.orElseThrow(</code> <span style="color:var(--text-dim);font-family:'Nunito',sans-serif;font-size:0.82rem">→ se não encontrou...</span><br>
+        <code>&nbsp;&nbsp;<span style="color:var(--accent2)">() -></span></code> <span style="color:var(--text-dim);font-family:'Nunito',sans-serif;font-size:0.82rem">→ <strong style="color:var(--text)">a lambda!</strong> "execute o que vem depois da seta"</span><br>
+        <code>&nbsp;&nbsp;<span style="color:var(--kw)">new</span> ResponseStatusException(NOT_FOUND, <span style="color:var(--st)">"..."</span>)</code> <span style="color:var(--text-dim);font-family:'Nunito',sans-serif;font-size:0.82rem">→ lança erro 404</span><br>
+        <code>);</code>
+      </div>
+    </div>
+
+    <!-- STREAM -->
+    <h4 style="margin:28px 0 12px;color:var(--accent5)">2️⃣ Stream + Map — Convertendo Listas</h4>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: A Esteira de Fábrica</div>
+      <p style="color:var(--text-dim)">Imagine uma <strong style="color:var(--text)">esteira de fábrica</strong> 🏭. Você coloca <strong style="color:var(--accent6)">laranjas</strong> (entidades) na esteira, e no meio do caminho tem uma <strong style="color:var(--accent4)">máquina de suco</strong> (o Mapper) que transforma cada laranja em <strong style="color:var(--accent3)">suco</strong> (DTO). No final da esteira, sai uma lista de sucos! Isso é o <code>stream().map().toList()</code>!</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0">
+      <div style="background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.15);border-radius:14px;padding:18px">
+        <div style="font-weight:800;color:var(--accent2);margin-bottom:10px;font-size:0.82rem">❌ Sem Stream (5 linhas)</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dim);line-height:1.8;display:block">
+          List&lt;Produto&gt; produtos = repo.findAll();<br>
+          List&lt;ResponseDTO&gt; lista = <span style="color:var(--kw)">new</span> ArrayList&lt;&gt;();<br><br>
+          <span style="color:var(--kw)">for</span> (Produto p : produtos) {<br>
+          &nbsp;&nbsp;lista.add(Mapper.toResponseDTO(p));<br>
+          }<br><br>
+          <span style="color:var(--kw)">return</span> lista;
+        </code>
+      </div>
+      <div style="background:rgba(73,204,144,0.06);border:1px solid rgba(73,204,144,0.15);border-radius:14px;padding:18px">
+        <div style="font-weight:800;color:#49cc90;margin-bottom:10px;font-size:0.82rem">✅ Com Stream (1 return!)</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dim);line-height:1.8;display:block">
+          <span style="color:var(--kw)">return</span> repo.findAll()<br>
+          &nbsp;&nbsp;.stream()<br>
+          &nbsp;&nbsp;.map(<span style="color:var(--accent2)">ProdutoMapper::toResponseDTO</span>)<br>
+          &nbsp;&nbsp;.toList();
+        </code>
+      </div>
+    </div>
+
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;margin:16px 0;border:1px solid rgba(255,255,255,0.05)">
+      <h4 style="color:var(--accent5);margin-bottom:8px;font-size:0.9rem">🔬 Decompondo o Stream:</h4>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:2.4;color:var(--text-dim)">
+        <code>repo.findAll()</code> <span style="color:var(--text-dim);font-family:'Nunito',sans-serif;font-size:0.82rem">→ busca todos do banco (lista de Produtos)</span><br>
+        <code>.stream()</code> <span style="color:var(--text-dim);font-family:'Nunito',sans-serif;font-size:0.82rem">→ <strong style="color:var(--text)">liga a esteira!</strong> Transforma a lista num fluxo processável</span><br>
+        <code>.map(<span style="color:var(--accent2)">ProdutoMapper::toResponseDTO</span>)</code> <span style="color:var(--text-dim);font-family:'Nunito',sans-serif;font-size:0.82rem">→ <strong style="color:var(--text)">a máquina!</strong> Aplica a conversão em cada item</span><br>
+        <code>.toList()</code> <span style="color:var(--text-dim);font-family:'Nunito',sans-serif;font-size:0.82rem">→ <strong style="color:var(--text)">empacota!</strong> Junta tudo numa lista de DTOs</span>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">
+        <strong>O <code style="color:var(--accent2)">ProdutoMapper::toResponseDTO</code></strong> é chamado de <strong style="color:var(--text)">method reference</strong>. É a mesma coisa que <code>produto -> ProdutoMapper.toResponseDTO(produto)</code>, só que mais curto. O Java e o IntelliJ preferem essa forma!
+      </div>
+    </div>
+  </div>
+
+  <!-- @ManyToOne -->
+  <div class="card" id="conceito-manytoone">
+    <h3 style="margin-bottom:6px;color:var(--accent2);display:flex;align-items:center;gap:10px">🔗 @ManyToOne — Relacionamento entre Tabelas</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que é @ManyToOne?</div>
+      <p>Essa anotação diz que <strong style="color:var(--text)">MUITOS produtos pertencem a UM fornecedor</strong>. No banco, isso cria uma <strong style="color:var(--accent5)">chave estrangeira</strong> (foreign key) — uma coluna <code>fornecedor_id</code> na tabela produto que aponta para a tabela fornecedor.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Funcionários e Empresa</div>
+      <p style="color:var(--text-dim)">Uma <strong style="color:var(--text)">empresa</strong> (fornecedor) tem <strong style="color:var(--accent4)">muitos funcionários</strong> (produtos). Cada funcionário pertence a <strong style="color:var(--text)">uma empresa só</strong>. Na ficha de cada funcionário, tem anotado "empresa: XYZ" — esse é o <code>fornecedor_id</code>! 🏢👥</p>
+    </div>
+
+    <!-- Visual das tabelas relacionadas -->
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">🗄️ Como fica no banco:</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0">
+      <div class="db-table">
+        <div class="db-table-header">📋 fornecedor</div>
+        <table>
+          <thead><tr><th>id 🔑</th><th>nome</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--accent5);font-weight:700">1</td><td>Dist. ABC</td></tr>
+            <tr><td style="color:var(--accent5);font-weight:700">2</td><td>Forn. XYZ</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="db-table">
+        <div class="db-table-header">📋 produto</div>
+        <table>
+          <thead><tr><th>id 🔑</th><th>nome</th><th>fornecedor_id 🔗</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--accent5);font-weight:700">1</td><td>Notebook</td><td style="color:var(--accent2);font-weight:700">1 → Dist. ABC</td></tr>
+            <tr><td style="color:var(--accent5);font-weight:700">2</td><td>Mouse</td><td style="color:var(--accent2);font-weight:700">1 → Dist. ABC</td></tr>
+            <tr><td style="color:var(--accent5);font-weight:700">3</td><td>Cadeira</td><td style="color:var(--accent2);font-weight:700">2 → Forn. XYZ</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p style="color:var(--text-dim);font-size:0.85rem">☝️ Os produtos 1 e 2 pertencem ao fornecedor 1 (Dist. ABC). O produto 3 pertence ao fornecedor 2 (Forn. XYZ). A coluna <code style="color:var(--accent2)">fornecedor_id</code> é a <strong>chave estrangeira</strong> que cria esse vínculo!</p>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>

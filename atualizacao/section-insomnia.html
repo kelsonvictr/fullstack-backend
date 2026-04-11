@@ -1,0 +1,203 @@
+<!-- ════════════════════════════════════════ -->
+<!-- FORNECEDOR: TUTORIAL INSOMNIA          -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn-insomnia">
+  <div class="step-header">
+    <div class="step-number" style="background:#7B68EE">🦋</div>
+    <div>
+      <div class="step-title">Testando no Insomnia</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Organizando e testando todos os endpoints</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🦋 O que é o Insomnia?</div>
+      <p>O Insomnia é uma <strong style="color:var(--text)">ferramenta para testar APIs</strong>. Ele permite enviar requisições HTTP (GET, POST, PUT, DELETE) para o seu backend e ver a resposta — sem precisar de um frontend pronto. É como um <strong style="color:#7B68EE">"controle remoto"</strong> da sua API!</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Controle Remoto da TV</div>
+      <p style="color:var(--text-dim)">Imagine que sua API é uma TV. O frontend React é o controle remoto bonito que o usuário vai usar. Mas durante o desenvolvimento, você precisa de um <strong style="color:var(--text)">controle técnico</strong> para testar todos os botões — esse é o Insomnia! Ele te permite apertar cada botão (endpoint) e ver se funciona, antes de construir o controle bonito. 📺🎮</p>
+    </div>
+
+    <!-- INSTALAÇÃO -->
+    <h4 style="margin:24px 0 12px;color:#7B68EE">📥 Instalando o Insomnia</h4>
+    <div style="background:rgba(123,104,238,0.06);border:1px solid rgba(123,104,238,0.15);border-radius:14px;padding:20px 24px;margin-bottom:16px">
+      <ol style="color:var(--text-dim);font-size:0.9rem;margin-left:20px;display:flex;flex-direction:column;gap:8px">
+        <li>Acesse <a href="https://insomnia.rest/download" target="_blank" style="color:#7B68EE;font-weight:700">insomnia.rest/download</a></li>
+        <li>Baixe e instale normalmente</li>
+        <li>Abra o Insomnia e crie um <strong style="color:var(--text)">novo projeto</strong> chamado "Sistema Gestao"</li>
+      </ol>
+    </div>
+
+    <!-- ORGANIZANDO PASTAS -->
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">📂 Organizando com Pastas</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Uma boa prática é organizar os endpoints em <strong style="color:var(--text)">pastas por entidade</strong>. Assim fica fácil encontrar o que você precisa:</p>
+
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:#7B68EE"></div>
+        <div class="roadmap-content">
+          <h4 style="color:#7B68EE">1. Criar pastas</h4>
+          <p>Clique com botão direito no painel esquerdo → <strong>"New Folder"</strong>. Crie uma pasta para cada entidade: <strong style="color:var(--text)">Fornecedor</strong>, <strong style="color:var(--text)">Produto</strong>, <strong style="color:var(--text)">Cliente</strong>.</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:#7B68EE"></div>
+        <div class="roadmap-content">
+          <h4 style="color:#7B68EE">2. Criar requests dentro das pastas</h4>
+          <p>Dentro de cada pasta, crie os requests (um para cada endpoint). O Insomnia mostra o <strong style="color:var(--text)">método HTTP com cor</strong> ao lado do nome — igual na imagem abaixo!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISUAL DA ORGANIZAÇÃO -->
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;margin:16px 0;border:1px solid rgba(255,255,255,0.06)">
+      <h4 style="margin-bottom:14px;color:var(--text);font-size:0.92rem">📁 Estrutura no Insomnia:</h4>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:2.2;color:var(--text-dim)">
+        <div>📁 <strong style="color:var(--text)">Produto</strong></div>
+        <div>📁 <strong style="color:var(--text)">Cliente</strong></div>
+        <div>📁 <strong style="color:var(--text)">Fornecedor</strong></div>
+        <div style="padding-left:24px"><span style="background:rgba(252,161,48,0.15);color:#fca130;padding:1px 8px;border-radius:4px;font-weight:700;font-size:0.7rem">PUT</span> <span style="color:var(--text)">atualizarFornecedorPorId</span></div>
+        <div style="padding-left:24px"><span style="background:rgba(97,175,254,0.15);color:#61affe;padding:1px 8px;border-radius:4px;font-weight:700;font-size:0.7rem">GET</span> <span style="color:var(--text)">buscarFornecedorPorId</span></div>
+        <div style="padding-left:24px"><span style="background:rgba(97,175,254,0.15);color:#61affe;padding:1px 8px;border-radius:4px;font-weight:700;font-size:0.7rem">GET</span> <span style="color:var(--text)">listarTodosFornecedores</span></div>
+        <div style="padding-left:24px"><span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:1px 8px;border-radius:4px;font-weight:700;font-size:0.7rem">POST</span> <span style="color:var(--text)">criarFornecedor</span></div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">
+        <strong>Dica:</strong> Nomeie cada request com o <strong style="color:var(--text)">nome do método</strong> do Controller. Assim quando você vê "criarFornecedor" no Insomnia, sabe exatamente qual método está testando no código!
+      </div>
+    </div>
+
+    <!-- CONFIGURANDO BASE URL -->
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">🔗 Configurando a Base URL</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Para não digitar <code>http://localhost:8080</code> em toda requisição, crie uma <strong style="color:var(--text)">variável de ambiente</strong>:</p>
+
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent3)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent3)">1. Acessar Environment</h4>
+          <p>Clique em <strong>"Base Environment"</strong> no painel esquerdo (ou no ícone de engrenagem ⚙️)</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent3)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent3)">2. Adicionar variável</h4>
+          <p>Adicione a variável <code style="color:var(--accent5)">baseUrl</code> com o valor <code style="color:var(--accent3)">http://localhost:8080</code></p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent3)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent3)">3. Usar nas requisições</h4>
+          <p>Na URL de cada request, use <code style="color:#7B68EE">_.baseUrl</code> seguido do endpoint. Exemplo: <code style="color:var(--text)">_.baseUrl/fornecedores</code></p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.15);border-radius:14px;padding:20px 24px;margin:16px 0">
+      <p style="color:var(--text-dim);font-size:0.88rem">Se precisar mudar a URL base (ex: quando for pra produção), é só alterar em <strong style="color:var(--text)">um lugar só</strong> — a variável de ambiente. Todos os requests atualizam automaticamente! 🎯</p>
+    </div>
+
+    <!-- PASSO A PASSO: CADA REQUEST -->
+    <h4 style="margin:28px 0 12px;color:var(--accent5)">🚀 Montando cada Request — Passo a Passo</h4>
+
+    <!-- POST -->
+    <div style="background:rgba(73,204,144,0.04);border:1px solid rgba(73,204,144,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge post" style="font-size:0.8rem;padding:4px 14px">POST</span> <span style="color:var(--text)">Criar Fornecedor</span></h4>
+      <div style="display:grid;gap:8px;font-size:0.88rem;color:var(--text-dim)">
+        <div><strong style="color:var(--text)">URL:</strong> <code>_.baseUrl/fornecedores</code></div>
+        <div><strong style="color:var(--text)">Method:</strong> POST</div>
+        <div><strong style="color:var(--text)">Body:</strong> Clique na aba <strong>"Body"</strong> → selecione <strong>"JSON"</strong></div>
+      </div>
+      <div class="code-block" style="margin:12px 0 0">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="lang-badge json">JSON</span>
+        </div>
+        <pre>{
+  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,
+  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,
+  <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,
+  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0001"</span>,
+  <span class="json-key">"cep"</span>: <span class="json-val">"01310-100"</span>,
+  <span class="json-key">"logradouro"</span>: <span class="json-val">"Avenida Paulista"</span>,
+  <span class="json-key">"numero"</span>: <span class="json-val">"1000"</span>,
+  <span class="json-key">"bairro"</span>: <span class="json-val">"Bela Vista"</span>,
+  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,
+  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>
+}</pre>
+      </div>
+      <div class="tip" style="margin:12px 0 0">
+        <span class="tip-icon">✅</span>
+        <div class="tip-content"><strong>Resposta esperada:</strong> <span style="color:#49cc90;font-weight:700">201 Created</span>. Não retorna body — mas o fornecedor foi salvo no banco!</div>
+      </div>
+    </div>
+
+    <!-- GET ALL -->
+    <div style="background:rgba(97,175,254,0.04);border:1px solid rgba(97,175,254,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge get" style="font-size:0.8rem;padding:4px 14px">GET</span> <span style="color:var(--text)">Listar Todos Fornecedores</span></h4>
+      <div style="display:grid;gap:8px;font-size:0.88rem;color:var(--text-dim)">
+        <div><strong style="color:var(--text)">URL:</strong> <code>_.baseUrl/fornecedores</code></div>
+        <div><strong style="color:var(--text)">Method:</strong> GET</div>
+        <div><strong style="color:var(--text)">Body:</strong> Nenhum — GET não envia body!</div>
+      </div>
+      <div class="tip" style="margin:12px 0 0">
+        <span class="tip-icon">✅</span>
+        <div class="tip-content"><strong>Resposta esperada:</strong> <span style="color:#61affe;font-weight:700">200 OK</span> com um array JSON contendo todos os fornecedores cadastrados.</div>
+      </div>
+    </div>
+
+    <!-- GET BY ID -->
+    <div style="background:rgba(97,175,254,0.04);border:1px solid rgba(97,175,254,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge get" style="font-size:0.8rem;padding:4px 14px">GET</span> <span style="color:var(--text)">Buscar Fornecedor Por ID</span></h4>
+      <div style="display:grid;gap:8px;font-size:0.88rem;color:var(--text-dim)">
+        <div><strong style="color:var(--text)">URL:</strong> <code>_.baseUrl/fornecedores/1</code> <span style="font-size:0.8rem">(troque o 1 pelo ID desejado)</span></div>
+        <div><strong style="color:var(--text)">Method:</strong> GET</div>
+      </div>
+      <div class="tip" style="margin:12px 0 0">
+        <span class="tip-icon">✅</span>
+        <div class="tip-content"><strong>Resposta esperada:</strong> <span style="color:#61affe;font-weight:700">200 OK</span> com o JSON de um fornecedor específico.</div>
+      </div>
+    </div>
+
+    <!-- PUT -->
+    <div style="background:rgba(252,161,48,0.04);border:1px solid rgba(252,161,48,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge put" style="font-size:0.8rem;padding:4px 14px">PUT</span> <span style="color:var(--text)">Atualizar Fornecedor</span></h4>
+      <div style="display:grid;gap:8px;font-size:0.88rem;color:var(--text-dim)">
+        <div><strong style="color:var(--text)">URL:</strong> <code>_.baseUrl/fornecedores/1</code></div>
+        <div><strong style="color:var(--text)">Method:</strong> PUT</div>
+        <div><strong style="color:var(--text)">Body:</strong> JSON com os dados atualizados (mesmo formato do POST)</div>
+      </div>
+      <div class="tip" style="margin:12px 0 0">
+        <span class="tip-icon">✅</span>
+        <div class="tip-content"><strong>Resposta esperada:</strong> <span style="color:#fca130;font-weight:700">204 No Content</span>. Sem body na resposta, mas o fornecedor foi atualizado!</div>
+      </div>
+    </div>
+
+    <!-- DELETE -->
+    <div style="background:rgba(249,62,62,0.04);border:1px solid rgba(249,62,62,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge delete" style="font-size:0.8rem;padding:4px 14px">DELETE</span> <span style="color:var(--text)">Deletar Fornecedor</span></h4>
+      <div style="display:grid;gap:8px;font-size:0.88rem;color:var(--text-dim)">
+        <div><strong style="color:var(--text)">URL:</strong> <code>_.baseUrl/fornecedores/1</code></div>
+        <div><strong style="color:var(--text)">Method:</strong> DELETE</div>
+        <div><strong style="color:var(--text)">Body:</strong> Nenhum</div>
+      </div>
+      <div class="tip" style="margin:12px 0 0">
+        <span class="tip-icon">✅</span>
+        <div class="tip-content"><strong>Resposta esperada:</strong> <span style="color:#f93e3e;font-weight:700">204 No Content</span>. Fornecedor removido do banco!</div>
+      </div>
+    </div>
+
+    <div class="warning" style="margin-top:16px">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Ordem de teste recomendada:</strong> Primeiro faça um <strong>POST</strong> para ter dados no banco, depois <strong>GET</strong> para listar, depois <strong>PUT</strong> para editar, e por último <strong>DELETE</strong> para remover. Se tentar GET sem ter criado nada, vai voltar lista vazia!</div>
+    </div>
+  </div>
+</section>
