@@ -488,8 +488,22 @@ footer .heart{color:var(--accent2);animation:pulse 2s ease-in-out infinite;displ
     <a class="sidebar-link" onclick="goTo('prod-insomnia')"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
   </div>
   <div class="sidebar-group">
+    <div class="sidebar-group-title">👤 Capítulo 3 — Cliente</div>
+    <a class="sidebar-link" onclick="goTo('cli-intro')"><span class="dot" style="background:var(--accent6)"></span>O que muda?</a>
+    <a class="sidebar-link" onclick="goTo('cli-conceitos')"><span class="dot" style="background:var(--accent)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" onclick="goTo('cli-model-endereco')"><span class="dot" style="background:var(--accent3)"></span>Model Endereco</a>
+    <a class="sidebar-link" onclick="goTo('cli-model')"><span class="dot" style="background:var(--accent6)"></span>Model Cliente</a>
+    <a class="sidebar-link" onclick="goTo('cli-dtos')"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" onclick="goTo('cli-mapper')"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" onclick="goTo('cli-repo')"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" onclick="goTo('cli-service')"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" onclick="goTo('cli-serviceimpl')"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" onclick="goTo('cli-controller')"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" onclick="goTo('cli-insomnia')"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
     <div class="sidebar-group-title">🔜 Próximos capítulos</div>
-    <a class="sidebar-link" onclick="goTo('proximos')"><span class="dot" style="background:var(--accent6)"></span>Cliente (desafio!)</a>
+    <a class="sidebar-link" onclick="goTo('proximos')"><span class="dot" style="background:var(--accent3)"></span>Refatorar Fornecedor + React</a>
   </div>
 </nav>
 
@@ -1652,15 +1666,15 @@ footer .heart{color:var(--accent2);animation:pulse 2s ease-in-out infinite;displ
       <div class="roadmap-item">
         <div class="roadmap-dot active" style="background:var(--accent4)"></div>
         <div class="roadmap-content">
-          <h4 style="color:var(--accent4)">🏷️ Fase 2 — Produto <span style="font-size:0.7rem;background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 8px;border-radius:4px;margin-left:6px">AGORA</span></h4>
+          <h4 style="color:var(--accent4)">🏷️ Fase 2 — Produto <span style="font-size:0.7rem;background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 8px;border-radius:4px;margin-left:6px">CONCLUÍDO ✅</span></h4>
           <p>Introduz DTOs, Mappers, ServiceImpl, @ManyToOne. Evolução natural das boas práticas.</p>
         </div>
       </div>
       <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent6)"></div>
+        <div class="roadmap-dot active" style="background:var(--accent6)"></div>
         <div class="roadmap-content">
-          <h4 style="color:var(--accent6)">👤 Fase 3 — Cliente</h4>
-          <p>Consolidação. O aluno aplica sozinho tudo o que aprendeu.</p>
+          <h4 style="color:var(--accent6)">👤 Fase 3 — Cliente <span style="font-size:0.7rem;background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 8px;border-radius:4px;margin-left:6px">AGORA</span></h4>
+          <p>Consolida o padrão profissional + relacionamento <strong>@OneToOne</strong> com a entidade Endereço (cascade, orphanRemoval, DTO aninhado, @CPF, @Email, @Past).</p>
         </div>
       </div>
     </div>
@@ -2012,6 +2026,7 @@ br.com.programaai.api/
 ├── 📁 <span class="an">model/</span>                   <span class="cm">← Entidades JPA (tabelas)</span>
 │   ├── Fornecedor.java
 │   ├── Produto.java            <span class="cm">← fase 2</span>
+│   ├── Endereco.java           <span class="cm">← fase 3</span>
 │   └── Cliente.java            <span class="cm">← fase 3</span>
 ├── 📁 <span class="fn">repository/</span>              <span class="cm">← Acesso ao banco</span>
 │   ├── FornecedorRepository.java
@@ -3987,9 +4002,1225 @@ br.com.sistemagestao.api/
     </div>
 
     <div class="tip" style="margin-top:20px">
-      <span class="tip-icon">🏆</span>
+      <span class="tip-icon">🚀</span>
       <div class="tip-content">
-        <strong>Desafio:</strong> Agora que você domina o padrão, tente criar o <strong style="color:var(--accent6)">CRUD de Cliente</strong> sozinho seguindo exatamente a mesma estrutura! Campos: <code>id</code>, <code>nomeCompleto</code>, <code>cpf</code>, <code>email</code>, <code>telefonePrincipal</code>, <code>telefoneSecundario</code>. Use <code>@CPF</code> do Bean Validation para validar o CPF! 💪
+        <strong>Próximo passo:</strong> Agora que você domina o padrão profissional, vamos para o <strong style="color:var(--accent6)">Capítulo 3 — Cliente</strong>, onde construímos juntos um novo CRUD aplicando esse padrão e adicionando um <strong>relacionamento @OneToOne</strong> com a entidade <code style="color:var(--accent3)">Endereco</code>. Bora! 💪
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              CAPÍTULO 3: CLIENTE COM ENDEREÇO              ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="chapter-divider" id="cap-cli">
+  <span class="chapter-icon">👤</span>
+  <div class="chapter-number">Capítulo 3</div>
+  <h2 class="grad-cli">CRUD de Cliente com Endereço</h2>
+  <p class="chapter-subtitle">Mesmo padrão do Produto, agora com um relacionamento @OneToOne para a entidade Endereço</p>
+</div>
+
+<!-- CLIENTE: INTRODUÇÃO / O QUE MUDA -->
+<section class="step-section" id="cli-intro">
+  <div class="step-header">
+    <div class="step-number sn-blue">🎯</div>
+    <div>
+      <div class="step-title">O que muda em relação ao Produto?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Mantemos o padrão profissional. A novidade é o relacionamento!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="font-size:1.02rem;margin-bottom:20px">No Produto você aprendeu o <strong style="color:var(--accent4)">padrão profissional completo</strong>: DTOs, Mapper, ServiceImpl, validações, lambdas e streams. Agora vamos <strong style="color:var(--accent6)">consolidar tudo isso</strong> em um novo CRUD — o de <strong style="color:var(--text)">Cliente</strong> — adicionando um ingrediente novo: cada cliente terá seu <strong style="color:var(--accent6)">Endereço</strong> em uma <strong>tabela separada</strong> 🏠</p>
+
+    <div style="background:linear-gradient(135deg,rgba(167,139,250,0.06),rgba(108,99,255,0.06));border:1px solid rgba(167,139,250,0.15);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="color:var(--accent6);margin-bottom:16px;display:flex;align-items:center;gap:8px">🆕 Novidades do Capítulo 3</h4>
+      <div style="display:grid;gap:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(167,139,250,0.15);color:var(--accent6);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">@OneToOne</span>
+          <div><strong style="color:var(--text)">Endereço como entidade separada</strong> — <span style="color:var(--text-dim)">Cada cliente tem UM endereço próprio em uma tabela <code>endereco</code> dedicada.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(108,99,255,0.15);color:var(--accent);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">cascade</span>
+          <div><strong style="color:var(--text)">Ciclo de vida acoplado</strong> — <span style="color:var(--text-dim)">Salvar/deletar o Cliente já salva/deleta o Endereço junto. Sem dor de cabeça!</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">@CPF</span>
+          <div><strong style="color:var(--text)">Validação de CPF</strong> — <span style="color:var(--text-dim)">Bean Validation já tem uma anotação pronta que confere se o CPF é válido!</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">@Email</span>
+          <div><strong style="color:var(--text)">Validação de e-mail</strong> — <span style="color:var(--text-dim)">Confere se o texto tem o formato de um e-mail válido.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">@Past</span>
+          <div><strong style="color:var(--text)">Data no passado</strong> — <span style="color:var(--text-dim)">Garante que a data de nascimento é anterior a hoje. Ninguém nasce no futuro!</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(69,183,209,0.15);color:var(--accent4);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">DTO aninhado</span>
+          <div><strong style="color:var(--text)">DTO dentro de DTO</strong> — <span style="color:var(--text-dim)">O <code>ClienteRequestDTO</code> vai conter um <code>EnderecoDTO</code> dentro dele. JSON aninhado!</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🔮</span>
+      <div class="tip-content">
+        <strong>Spoiler do próximo capítulo:</strong> Você vai notar que o <strong>Fornecedor</strong> tem os campos de endereço <strong style="color:var(--accent2)">flat</strong> (cep, logradouro... direto na entidade Fornecedor). Isso foi proposital — começamos simples no cap 1. <strong style="color:var(--text)">No Capítulo 4</strong> vamos refatorar o Fornecedor para também usar essa entidade <code style="color:var(--accent6)">Endereco</code> que vamos criar agora. Aí o aluno vê um <strong>refactor real</strong> com o objetivo de remover duplicação!
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CONCEITOS NOVOS                          -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-conceitos">
+  <div class="step-header">
+    <div class="step-number sn-purple">📖</div>
+    <div>
+      <div class="step-title">Entendendo os Conceitos Novos</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Antes de codar, vamos entender como esse relacionamento funciona</div>
+    </div>
+  </div>
+
+  <!-- @OneToOne -->
+  <div class="card" id="conceito-onetoone">
+    <h3 style="margin-bottom:6px;color:var(--accent6);display:flex;align-items:center;gap:10px">🔗 @OneToOne — Endereço como entidade separada</h3>
+    <p style="color:var(--text-dim);margin-bottom:16px;font-size:0.92rem">O conceito mais importante deste capítulo!</p>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que é @OneToOne?</div>
+      <p>É a anotação que diz: <strong style="color:var(--text)">UM cliente tem UM endereço, e UM endereço pertence a UM cliente</strong>. No banco, isso cria uma <strong style="color:var(--accent5)">chave estrangeira</strong> (FK) na tabela cliente que aponta para a tabela endereco. As duas tabelas existem separadas — uma <strong>linkada</strong> à outra!</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: A Pessoa e o seu CPF</div>
+      <p style="color:var(--text-dim)">Pense numa <strong style="color:var(--text)">pessoa</strong> e seu <strong style="color:var(--accent6)">CPF</strong>. Cada pessoa tem <strong style="color:var(--accent3)">um único CPF</strong>, e cada CPF pertence a <strong style="color:var(--accent3)">uma única pessoa</strong>. Eles existem como informações separadas (a Receita Federal guarda os CPFs em uma "tabela", a base de cidadãos em outra), mas estão <strong style="color:var(--text)">linkados</strong> — um aponta pro outro. Esse é o relacionamento <strong>@OneToOne</strong>! 🪪</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent2)">📦 Antes (Fornecedor — endereço flat):</h4>
+    <div style="background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:16px;font-size:0.85rem;margin-bottom:16px">
+      <p style="color:var(--text-dim)">No Capítulo 1, o Fornecedor tem os campos de endereço <strong style="color:var(--accent2)">direto na entidade</strong>:</p>
+      <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.8;display:block;margin-top:10px">
+        <span style="color:var(--accent2)">Fornecedor</span> { id, nome, cnpj, email, <strong style="color:var(--accent5)">cep, logradouro, numero, bairro, cidade, uf</strong> }
+      </code>
+      <p style="color:var(--text-dim);margin-top:10px;font-size:0.82rem">É simples e funciona, mas <strong>duplica</strong> a estrutura de endereço em todo lugar que precisar dela. 😕</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:#49cc90">✅ Agora (Cliente — endereço como entidade):</h4>
+    <div style="background:rgba(73,204,144,0.06);border:1px solid rgba(73,204,144,0.15);border-radius:12px;padding:16px;font-size:0.85rem;margin-bottom:16px">
+      <p style="color:var(--text-dim)">O Cliente terá <strong style="color:#49cc90">uma referência</strong> a um Endereço em outra tabela:</p>
+      <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.8;display:block;margin-top:10px">
+        <span style="color:var(--accent6)">Cliente</span> { id, nomeCompleto, cpf, email, telefone, dataNascimento, <strong style="color:#49cc90">endereco → Endereco</strong> }<br>
+        <span style="color:var(--accent3)">Endereco</span> { id, cep, logradouro, numero, complemento, bairro, cidade, uf }
+      </code>
+      <p style="color:var(--text-dim);margin-top:10px;font-size:0.82rem">Estrutura <strong>reutilizável</strong>! No próximo capítulo o Fornecedor vai usar essa <em>mesma</em> entidade. ✨</p>
+    </div>
+
+    <!-- Visual das tabelas relacionadas -->
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">🗄️ Como fica no banco:</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0">
+      <div class="db-table">
+        <div class="db-table-header">📋 cliente</div>
+        <table>
+          <thead><tr><th>id 🔑</th><th>nomeCompleto</th><th>endereco_id 🔗</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--accent5);font-weight:700">1</td><td>Maria Silva</td><td style="color:var(--accent2);font-weight:700">10 → ...</td></tr>
+            <tr><td style="color:var(--accent5);font-weight:700">2</td><td>João Souza</td><td style="color:var(--accent2);font-weight:700">11 → ...</td></tr>
+            <tr><td style="color:var(--accent5);font-weight:700">3</td><td>Ana Lima</td><td style="color:var(--accent2);font-weight:700">12 → ...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="db-table">
+        <div class="db-table-header">📋 endereco</div>
+        <table>
+          <thead><tr><th>id 🔑</th><th>cidade</th><th>uf</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--accent5);font-weight:700">10</td><td>João Pessoa</td><td style="font-weight:700">PB</td></tr>
+            <tr><td style="color:var(--accent5);font-weight:700">11</td><td>Recife</td><td style="font-weight:700">PE</td></tr>
+            <tr><td style="color:var(--accent5);font-weight:700">12</td><td>Natal</td><td style="font-weight:700">RN</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p style="color:var(--text-dim);font-size:0.85rem">☝️ Cada cliente tem <strong>seu próprio</strong> endereço. A coluna <code style="color:var(--accent2)">endereco_id</code> é a <strong>chave estrangeira</strong> que linka as duas tabelas!</p>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">
+        <strong>Diferença pro @ManyToOne do Produto:</strong> Lá, <strong>muitos</strong> produtos podem apontar pro <strong>mesmo</strong> fornecedor (compartilham o ID). Aqui, cada cliente tem <strong>seu próprio</strong> endereço — ninguém compartilha a mesma linha de endereço com outro cliente!
+      </div>
+    </div>
+  </div>
+
+  <!-- CASCADE + ORPHAN REMOVAL -->
+  <div class="card" id="conceito-cascade">
+    <h3 style="margin-bottom:6px;color:var(--accent);display:flex;align-items:center;gap:10px">🌊 cascade + orphanRemoval — Ciclo de vida acoplado</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 Pra que servem?</div>
+      <p>Quando você tem dois objetos linkados (Cliente ↔ Endereço), surge a pergunta: <strong style="color:var(--text)">"quando eu salvar o Cliente, o Endereço também é salvo?"</strong> e <strong style="color:var(--text)">"quando eu deletar o Cliente, o Endereço também é apagado?"</strong>. Por padrão, o JPA <strong style="color:var(--accent2)">não faz nada disso</strong> — você teria que salvar e deletar cada um manualmente! O <code style="color:var(--accent)">cascade</code> e o <code style="color:var(--accent)">orphanRemoval</code> resolvem isso.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Caderno e a Capa</div>
+      <p style="color:var(--text-dim)">Imagine um <strong style="color:var(--text)">caderno</strong> com sua <strong style="color:var(--accent6)">capa personalizada</strong>. Quando você compra o caderno, a capa <strong>vem junto</strong> (não compra separado). Quando joga o caderno fora, a capa <strong>vai junto</strong> (não vai guardar uma capa solta na gaveta!). Essa é a ideia do <code style="color:var(--accent)">cascade = ALL</code> e <code style="color:var(--accent)">orphanRemoval = true</code>: a vida do Endereço está <strong>colada</strong> à vida do Cliente. 📓</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">🔬 Decompondo:</h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;margin:16px 0;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:12px">
+        <div>
+          <code style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:700">cascade = CascadeType.ALL</code>
+          <p style="color:var(--text-dim);font-size:0.88rem;margin-top:4px">"Toda operação que eu fizer no Cliente — salvar, atualizar, deletar — <strong>propaga</strong> para o Endereço também."</p>
+        </div>
+        <div>
+          <code style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:700">orphanRemoval = true</code>
+          <p style="color:var(--text-dim);font-size:0.88rem;margin-top:4px">"Se o Endereço ficar <strong>órfão</strong> (sem cliente apontando pra ele), apaga ele do banco automaticamente."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">⚡</span>
+      <div class="tip-content">
+        <strong>Resultado prático:</strong> Você só vai precisar de <code>clienteRepository.save(cliente)</code> e o JPA salva o Endereço junto. Você só vai precisar de <code>clienteRepository.deleteById(id)</code> e o Endereço some também. Não precisa nem de <code>EnderecoRepository</code> nesse capítulo! 🎉
+      </div>
+    </div>
+  </div>
+
+  <!-- DTO ANINHADO -->
+  <div class="card" id="conceito-dto-aninhado">
+    <h3 style="margin-bottom:6px;color:var(--accent4);display:flex;align-items:center;gap:10px">📦 DTO Aninhado — DTO dentro de DTO</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 O que é um DTO aninhado?</div>
+      <p>É um DTO que <strong style="color:var(--text)">contém outro DTO dentro dele</strong>. No nosso caso, o <code>ClienteRequestDTO</code> vai ter um campo do tipo <code>EnderecoDTO</code>. Isso reflete o <strong style="color:var(--accent4)">JSON aninhado</strong> que o front vai enviar — onde o endereço é um sub-objeto.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Formulário com Sub-formulário</div>
+      <p style="color:var(--text-dim)">Já preencheu um cadastro online onde tem o <strong style="color:var(--text)">formulário principal</strong> (nome, CPF, e-mail) e, no meio dele, um <strong style="color:var(--accent4)">bloco separado de "Endereço"</strong> com seus próprios campos? Esse bloco é o sub-formulário! O <code>EnderecoDTO</code> dentro do <code>ClienteRequestDTO</code> é exatamente isso. 📝</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">📤 Como o JSON chega do front:</h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge json">JSON</span>
+      </div>
+      <pre>{
+  <span class="json-key">"nomeCompleto"</span>: <span class="json-val">"Maria Silva"</span>,
+  <span class="json-key">"cpf"</span>: <span class="json-val">"123.456.789-09"</span>,
+  <span class="json-key">"email"</span>: <span class="json-val">"maria@email.com"</span>,
+  <span class="json-key">"telefone"</span>: <span class="json-val">"(83) 99999-1234"</span>,
+  <span class="json-key">"dataNascimento"</span>: <span class="json-val">"1995-08-22"</span>,
+  <span class="json-key">"endereco"</span>: {                          <span class="cm">// ← sub-objeto!</span>
+    <span class="json-key">"cep"</span>: <span class="json-val">"58000-000"</span>,
+    <span class="json-key">"logradouro"</span>: <span class="json-val">"Rua das Flores"</span>,
+    <span class="json-key">"numero"</span>: <span class="json-val">"123"</span>,
+    <span class="json-key">"complemento"</span>: <span class="json-val">"Apto 201"</span>,
+    <span class="json-key">"bairro"</span>: <span class="json-val">"Centro"</span>,
+    <span class="json-key">"cidade"</span>: <span class="json-val">"João Pessoa"</span>,
+    <span class="json-key">"uf"</span>: <span class="json-val">"PB"</span>
+  }
+}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🔑</span>
+      <div class="tip-content">
+        <strong>Detalhe crucial — <code style="color:#49cc90">@Valid</code> em campo aninhado:</strong> Para o Spring validar os campos <strong>de dentro</strong> do EnderecoDTO (cep, logradouro, etc), você precisa colocar <code style="color:#49cc90">@Valid</code> no campo <code>endereco</code> do ClienteRequestDTO! Sem isso, ele só valida os campos do "nível de fora" e ignora os de dentro. 🚨
+      </div>
+    </div>
+  </div>
+
+  <!-- VALIDAÇÕES NOVAS -->
+  <div class="card" id="conceito-validacoes-cli">
+    <h3 style="margin-bottom:6px;color:#49cc90;display:flex;align-items:center;gap:10px">✅ Validações Novas — @CPF, @Email, @Past</h3>
+
+    <div class="concept">
+      <div class="concept-title">🤔 Mais anotações prontas?</div>
+      <p>O Bean Validation tem <strong style="color:var(--text)">muitas</strong> anotações prontas além das que vimos no Produto (@NotBlank, @Positive...). Para Cliente, vamos usar três novas que cobrem casos super comuns no mundo real!</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Os Especialistas da Portaria</div>
+      <p style="color:var(--text-dim)">No Produto vimos o <strong style="color:#49cc90">segurança</strong> que confere coisas básicas (não está vazio, é positivo). Agora chegaram <strong style="color:var(--accent4)">três especialistas</strong> na portaria: o <strong style="color:var(--text)">despachante</strong> que confere CPFs, o <strong style="color:var(--text)">analista de e-mail</strong> que valida formato, e o <strong style="color:var(--text)">cronista</strong> que confere se a data é mesmo do passado! 🕵️‍♂️</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">🏷️ Anotações novas:</h4>
+    <div class="annotation-grid">
+      <div class="annotation-card"><div class="anno-name" style="color:#49cc90"><span class="at">@</span>CPF</div><div class="anno-desc">Valida se a string é um CPF brasileiro válido (algoritmo dos dígitos verificadores). Aceita com ou sem máscara!</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:#49cc90"><span class="at">@</span>Email</div><div class="anno-desc">Valida o formato de e-mail (tem @, tem domínio, etc). Não confere se o e-mail existe de verdade — só o formato.</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:#49cc90"><span class="at">@</span>Past</div><div class="anno-desc">A data deve ser <strong>anterior</strong> à data atual. Perfeito para data de nascimento (ninguém nasce no futuro!).</div></div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">📦</span>
+      <div class="tip-content">
+        <strong>Importante:</strong> O <code style="color:#49cc90">@CPF</code> vem do pacote <code>org.hibernate.validator.constraints.br.CPF</code> — é uma extensão BR do Hibernate Validator. Mas <strong style="color:var(--text)">já vem incluído</strong> com a dependência <code>spring-boot-starter-validation</code> que adicionamos no Produto! Não precisa instalar nada novo. 🎉
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: MODEL ENDERECO                  -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-model-endereco">
+  <div class="step-header">
+    <div class="step-number sn-red">3.1</div>
+    <div>
+      <div class="step-title">Model — Endereco.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A entidade que representa a tabela endereco</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">Vamos criar o <strong style="color:var(--text)">Endereço como uma entidade JPA completa</strong>, exatamente como fizemos com Fornecedor e Produto. Ele terá sua própria tabela <code>endereco</code> no banco.</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">model/Endereco.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.model;</span>
+
+<span class="pkg">import jakarta.persistence.*;</span>
+<span class="pkg">import lombok.AllArgsConstructor;</span>
+<span class="pkg">import lombok.Data;</span>
+<span class="pkg">import lombok.NoArgsConstructor;</span>
+
+<span class="an">@NoArgsConstructor</span>
+<span class="an">@AllArgsConstructor</span>
+<span class="an">@Data</span>
+<span class="an">@Table</span>(name = <span class="st">"endereco"</span>)
+<span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="tp">Endereco</span> {
+
+    <span class="an">@Id</span>
+    <span class="an">@GeneratedValue</span>(strategy = <span class="tp">GenerationType</span>.<span class="nb">IDENTITY</span>)
+    <span class="kw">private</span> <span class="tp">Long</span> id;
+
+    <span class="an">@Column</span>(name = <span class="st">"cep"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> cep;
+
+    <span class="an">@Column</span>(name = <span class="st">"logradouro"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> logradouro;
+
+    <span class="an">@Column</span>(name = <span class="st">"numero"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> numero;
+
+    <span class="an">@Column</span>(name = <span class="st">"complemento"</span>)  <span class="cm">// pode ser null!</span>
+    <span class="kw">private</span> <span class="tp">String</span> complemento;
+
+    <span class="an">@Column</span>(name = <span class="st">"bairro"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> bairro;
+
+    <span class="an">@Column</span>(name = <span class="st">"cidade"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> cidade;
+
+    <span class="an">@Column</span>(name = <span class="st">"uf"</span>, nullable = <span class="bool">false</span>, length = <span class="nb">2</span>)
+    <span class="kw">private</span> <span class="tp">String</span> uf;
+}</pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">
+        <strong>Repare:</strong> Endereco é uma entidade <strong>idêntica</strong> em estrutura ao Fornecedor — tem <code>@Entity</code>, <code>@Table</code>, <code>@Id</code> com geração automática, Lombok... <strong style="color:var(--text)">Nada de novo</strong>! A novidade vai ser no Cliente, onde vamos <em>linkar</em> ele a esse Endereco.
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:12px">
+      <span class="tip-icon">🤏</span>
+      <div class="tip-content">
+        <strong>Por que <code>length = 2</code> no UF?</strong> Estados brasileiros têm sempre <strong>2 letras</strong> (PB, SP, RJ...). Definir o tamanho da coluna é uma boa prática — economiza espaço no banco e impede inserções inválidas como "São Paulo" no campo UF.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: MODEL CLIENTE                   -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-model">
+  <div class="step-header">
+    <div class="step-number sn-red">3.2</div>
+    <div>
+      <div class="step-title">Model — Cliente.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A entidade Cliente com @OneToOne para Endereco</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">Aqui vem a <strong style="color:var(--text)">grande novidade</strong>! O Cliente terá um campo do tipo <code>Endereco</code> com a anotação <code style="color:var(--accent6)">@OneToOne</code> + cascade + orphanRemoval.</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">model/Cliente.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.model;</span>
+
+<span class="pkg">import jakarta.persistence.*;</span>
+<span class="pkg">import lombok.AllArgsConstructor;</span>
+<span class="pkg">import lombok.Data;</span>
+<span class="pkg">import lombok.NoArgsConstructor;</span>
+
+<span class="pkg">import java.time.LocalDate;</span>
+
+<span class="an">@NoArgsConstructor</span>
+<span class="an">@AllArgsConstructor</span>
+<span class="an">@Data</span>
+<span class="an">@Table</span>(name = <span class="st">"cliente"</span>)
+<span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="tp">Cliente</span> {
+
+    <span class="an">@Id</span>
+    <span class="an">@GeneratedValue</span>(strategy = <span class="tp">GenerationType</span>.<span class="nb">IDENTITY</span>)
+    <span class="kw">private</span> <span class="tp">Long</span> id;
+
+    <span class="an">@Column</span>(name = <span class="st">"nome_completo"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> nomeCompleto;
+
+<span class="anno-line">    <span class="an">@Column</span>(name = <span class="st">"cpf"</span>, nullable = <span class="bool">false</span>, unique = <span class="bool">true</span>)  <span class="cm">// não pode repetir!</span><span class="anno-tooltip"><strong>unique = true</strong>Cria uma constraint UNIQUE no banco — não permite dois clientes com o mesmo CPF. Se tentar, o banco já barra com erro.</span></span>
+    <span class="kw">private</span> <span class="tp">String</span> cpf;
+
+    <span class="an">@Column</span>(name = <span class="st">"email"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> email;
+
+    <span class="an">@Column</span>(name = <span class="st">"telefone"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> telefone;
+
+    <span class="an">@Column</span>(name = <span class="st">"data_nascimento"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">LocalDate</span> dataNascimento;
+
+<span class="anno-line">    <span class="an">@OneToOne</span>(cascade = <span class="tp">CascadeType</span>.<span class="nb">ALL</span>, orphanRemoval = <span class="bool">true</span>)  <span class="cm">// 🌊 vida acoplada!</span><span class="anno-tooltip"><strong>@OneToOne(cascade = ALL, orphanRemoval = true)</strong>UM cliente tem UM endereço próprio. Salvar o cliente salva o endereço junto. Deletar o cliente deleta o endereço junto.</span></span>
+<span class="anno-line">    <span class="an">@JoinColumn</span>(name = <span class="st">"endereco_id"</span>, nullable = <span class="bool">false</span>)  <span class="cm">// FK na tabela cliente</span><span class="anno-tooltip"><strong>@JoinColumn(name = "endereco_id")</strong>Define o nome da coluna FK na tabela cliente que aponta para o id da tabela endereco.</span></span>
+    <span class="kw">private</span> <span class="tp">Endereco</span> endereco;
+}</pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">📅</span>
+      <div class="tip-content">
+        <strong>Por que <code>LocalDate</code> e não <code>Date</code>?</strong> A classe <code>java.util.Date</code> é antiga e cheia de problemas. O <code style="color:var(--accent6)">LocalDate</code> (Java 8+) é a forma <strong>moderna e segura</strong> de representar uma data sem horário. Para data de nascimento, ele é perfeito!
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:12px">
+      <span class="tip-icon">🔍</span>
+      <div class="tip-content">
+        <strong>Compare com o @ManyToOne do Produto:</strong> Lá usamos <code>@ManyToOne</code> porque <strong>vários produtos</strong> apontam pro <strong>mesmo</strong> fornecedor. Aqui usamos <code>@OneToOne</code> porque cada cliente tem <strong>seu próprio</strong> endereço, não compartilhado!
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: DTOs                            -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-dtos">
+  <div class="step-header">
+    <div class="step-number sn-blue">3.3</div>
+    <div>
+      <div class="step-title">DTOs — Endereco e Cliente</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Records com Bean Validation e DTO aninhado</div>
+    </div>
+  </div>
+
+  <!-- ENDERECO DTO -->
+  <div class="card">
+    <h3 style="margin-bottom:6px;color:var(--accent3)">📍 EnderecoDTO — DTO reutilizável</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Esse DTO é <strong style="color:var(--text)">único</strong> — vai ser usado tanto no <em>request</em> (entrada) quanto no <em>response</em> (saída). Ele fica numa pasta separada porque é <strong style="color:var(--accent6)">reutilizável</strong> (no Capítulo 4 o Fornecedor também vai usar!).</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/endereco/EnderecoDTO.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.dto.endereco;</span>
+
+<span class="pkg">import jakarta.validation.constraints.NotBlank;</span>
+<span class="pkg">import jakarta.validation.constraints.Size;</span>
+
+<span class="kw">public record</span> <span class="tp">EnderecoDTO</span>(
+
+        <span class="tp">Long</span> id,                           <span class="cm">// vem null no request, preenchido no response</span>
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O CEP é obrigatório"</span>)
+        <span class="tp">String</span> cep,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O logradouro é obrigatório"</span>)
+        <span class="tp">String</span> logradouro,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O número é obrigatório"</span>)
+        <span class="tp">String</span> numero,
+
+        <span class="tp">String</span> complemento,                 <span class="cm">// opcional — sem validação!</span>
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O bairro é obrigatório"</span>)
+        <span class="tp">String</span> bairro,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"A cidade é obrigatória"</span>)
+        <span class="tp">String</span> cidade,
+
+<span class="anno-line">        <span class="an">@NotBlank</span>(message = <span class="st">"A UF é obrigatória"</span>)<span class="anno-tooltip"><strong>@NotBlank + @Size</strong>Aqui combinamos duas validações: a string não pode ser vazia E precisa ter exatamente 2 caracteres.</span></span>
+        <span class="an">@Size</span>(min = <span class="nb">2</span>, max = <span class="nb">2</span>, message = <span class="st">"A UF deve ter 2 letras"</span>)
+        <span class="tp">String</span> uf
+) {}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🔄</span>
+      <div class="tip-content">
+        <strong>Por que um DTO só, sem separar Request/Response?</strong> Para Endereço, os campos são os mesmos nos dois sentidos — só muda o <code>id</code> (vazio no request, preenchido no response). Como o Endereço sempre vem aninhado dentro de outro DTO, dá pra usar o mesmo nos dois lados sem perder clareza. <strong>Menos código repetido!</strong> 🎯
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENTE REQUEST DTO -->
+  <div class="card" style="margin-top:24px">
+    <h3 style="margin-bottom:6px;color:var(--accent4)">📥 ClienteRequestDTO — O que o front envia</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Aqui está a <strong style="color:var(--text)">estrela do capítulo</strong>: um DTO com EnderecoDTO aninhado e novas validações!</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/cliente/ClienteRequestDTO.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.dto.cliente;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;</span>
+<span class="pkg">import jakarta.validation.Valid;</span>
+<span class="pkg">import jakarta.validation.constraints.*;</span>
+<span class="pkg">import org.hibernate.validator.constraints.br.CPF;</span>
+
+<span class="pkg">import java.time.LocalDate;</span>
+
+<span class="kw">public record</span> <span class="tp">ClienteRequestDTO</span>(
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O nome completo é obrigatório"</span>)
+        <span class="tp">String</span> nomeCompleto,
+
+<span class="anno-line">        <span class="an">@NotBlank</span>(message = <span class="st">"O CPF é obrigatório"</span>)<span class="anno-tooltip"><strong>@CPF</strong>Valida o algoritmo dos dígitos verificadores do CPF brasileiro. Aceita "12345678909" ou "123.456.789-09".</span></span>
+        <span class="an">@CPF</span>(message = <span class="st">"CPF inválido"</span>)
+        <span class="tp">String</span> cpf,
+
+<span class="anno-line">        <span class="an">@NotBlank</span>(message = <span class="st">"O e-mail é obrigatório"</span>)<span class="anno-tooltip"><strong>@Email</strong>Verifica se a string tem o formato de e-mail (algo@algo.algo). Não confere se o e-mail existe!</span></span>
+        <span class="an">@Email</span>(message = <span class="st">"E-mail inválido"</span>)
+        <span class="tp">String</span> email,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O telefone é obrigatório"</span>)
+        <span class="tp">String</span> telefone,
+
+<span class="anno-line">        <span class="an">@NotNull</span>(message = <span class="st">"A data de nascimento é obrigatória"</span>)<span class="anno-tooltip"><strong>@Past</strong>A data deve ser anterior a hoje. Evita data futura ou data atual.</span></span>
+        <span class="an">@Past</span>(message = <span class="st">"A data de nascimento deve ser no passado"</span>)
+        <span class="tp">LocalDate</span> dataNascimento,
+
+<span class="anno-line">        <span class="an">@NotNull</span>(message = <span class="st">"O endereço é obrigatório"</span>)<span class="anno-tooltip"><strong>@Valid</strong>É a chave do DTO aninhado! Sem o @Valid aqui, as validações de DENTRO do EnderecoDTO seriam ignoradas.</span></span>
+        <span class="an">@Valid</span>  <span class="cm">// ← ATIVA as validações DENTRO do EnderecoDTO!</span>
+        <span class="tp">EnderecoDTO</span> endereco
+) {}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content">
+        <strong>O <code style="color:#49cc90">@Valid</code> no campo aninhado é OBRIGATÓRIO.</strong> Repare que no Controller temos <code>@Valid @RequestBody ClienteRequestDTO dto</code> — esse @Valid valida o nível "de fora" (nomeCompleto, cpf, email, dataNascimento). Mas para validar os campos <strong style="color:var(--text)">de dentro</strong> do EnderecoDTO, precisamos de <strong>outro @Valid</strong> no campo <code>endereco</code>! É como abrir uma "porta" para a validação descer um nível. 🚪
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENTE RESPONSE DTO -->
+  <div class="card" style="margin-top:24px">
+    <h3 style="margin-bottom:6px;color:var(--accent3)">📤 ClienteResponseDTO — O que o front recebe</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">No response devolvemos o <code>id</code> gerado e o EnderecoDTO completo (já com seu id).</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/cliente/ClienteResponseDTO.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.dto.cliente;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;</span>
+
+<span class="pkg">import java.time.LocalDate;</span>
+
+<span class="kw">public record</span> <span class="tp">ClienteResponseDTO</span>(
+        <span class="tp">Long</span> id,
+        <span class="tp">String</span> nomeCompleto,
+        <span class="tp">String</span> cpf,
+        <span class="tp">String</span> email,
+        <span class="tp">String</span> telefone,
+        <span class="tp">LocalDate</span> dataNascimento,
+        <span class="tp">EnderecoDTO</span> endereco          <span class="cm">// EnderecoDTO aninhado de novo!</span>
+) {}</pre>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: MAPPER                          -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-mapper">
+  <div class="step-header">
+    <div class="step-number sn-purple">3.4</div>
+    <div>
+      <div class="step-title">Mapper — ClienteMapper.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Convertendo DTOs aninhados em entidades aninhadas</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">O Mapper agora precisa converter <strong style="color:var(--text)">duas entidades</strong>: o Cliente e o Endereço aninhado dentro dele. Vamos criar métodos auxiliares para o Endereço — código mais organizado!</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">mapper/ClienteMapper.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65<br>66<br>67<br>68<br>69<br>70</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.mapper;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Cliente;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Endereco;</span>
+
+<span class="kw">public class</span> <span class="tp">ClienteMapper</span> {
+
+    <span class="cm">// ───── CLIENTE ─────</span>
+
+    <span class="cm">// Converte RequestDTO → Entidade (criando o Endereco junto!)</span>
+    <span class="kw">public static</span> <span class="tp">Cliente</span> <span class="fn">toEntity</span>(<span class="tp">ClienteRequestDTO</span> dto) {
+
+        <span class="tp">Cliente</span> cliente = <span class="kw">new</span> <span class="tp">Cliente</span>();
+
+        cliente.<span class="fn">setNomeCompleto</span>(dto.<span class="fn">nomeCompleto</span>());
+        cliente.<span class="fn">setCpf</span>(dto.<span class="fn">cpf</span>());
+        cliente.<span class="fn">setEmail</span>(dto.<span class="fn">email</span>());
+        cliente.<span class="fn">setTelefone</span>(dto.<span class="fn">telefone</span>());
+        cliente.<span class="fn">setDataNascimento</span>(dto.<span class="fn">dataNascimento</span>());
+
+        <span class="cm">// Cria o Endereco a partir do DTO aninhado e seta no cliente</span>
+        cliente.<span class="fn">setEndereco</span>(<span class="fn">toEnderecoEntity</span>(dto.<span class="fn">endereco</span>()));
+
+        <span class="kw">return</span> cliente;
+    }
+
+    <span class="cm">// Converte Entidade → ResponseDTO</span>
+    <span class="kw">public static</span> <span class="tp">ClienteResponseDTO</span> <span class="fn">toResponseDTO</span>(<span class="tp">Cliente</span> cliente) {
+
+        <span class="kw">return new</span> <span class="tp">ClienteResponseDTO</span>(
+                cliente.<span class="fn">getId</span>(),
+                cliente.<span class="fn">getNomeCompleto</span>(),
+                cliente.<span class="fn">getCpf</span>(),
+                cliente.<span class="fn">getEmail</span>(),
+                cliente.<span class="fn">getTelefone</span>(),
+                cliente.<span class="fn">getDataNascimento</span>(),
+                <span class="fn">toEnderecoDTO</span>(cliente.<span class="fn">getEndereco</span>())  <span class="cm">// converte o Endereco aninhado</span>
+        );
+    }
+
+    <span class="cm">// ───── ENDERECO (auxiliares) ─────</span>
+
+    <span class="cm">// EnderecoDTO → Endereco (entidade)</span>
+    <span class="kw">public static</span> <span class="tp">Endereco</span> <span class="fn">toEnderecoEntity</span>(<span class="tp">EnderecoDTO</span> dto) {
+
+        <span class="tp">Endereco</span> endereco = <span class="kw">new</span> <span class="tp">Endereco</span>();
+
+        endereco.<span class="fn">setCep</span>(dto.<span class="fn">cep</span>());
+        endereco.<span class="fn">setLogradouro</span>(dto.<span class="fn">logradouro</span>());
+        endereco.<span class="fn">setNumero</span>(dto.<span class="fn">numero</span>());
+        endereco.<span class="fn">setComplemento</span>(dto.<span class="fn">complemento</span>());
+        endereco.<span class="fn">setBairro</span>(dto.<span class="fn">bairro</span>());
+        endereco.<span class="fn">setCidade</span>(dto.<span class="fn">cidade</span>());
+        endereco.<span class="fn">setUf</span>(dto.<span class="fn">uf</span>());
+
+        <span class="kw">return</span> endereco;
+    }
+
+    <span class="cm">// Endereco (entidade) → EnderecoDTO</span>
+    <span class="kw">public static</span> <span class="tp">EnderecoDTO</span> <span class="fn">toEnderecoDTO</span>(<span class="tp">Endereco</span> endereco) {
+
+        <span class="kw">return new</span> <span class="tp">EnderecoDTO</span>(
+                endereco.<span class="fn">getId</span>(),
+                endereco.<span class="fn">getCep</span>(),
+                endereco.<span class="fn">getLogradouro</span>(),
+                endereco.<span class="fn">getNumero</span>(),
+                endereco.<span class="fn">getComplemento</span>(),
+                endereco.<span class="fn">getBairro</span>(),
+                endereco.<span class="fn">getCidade</span>(),
+                endereco.<span class="fn">getUf</span>()
+        );
+    }
+}</pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🧩</span>
+      <div class="tip-content">
+        <strong>Por que separar em métodos auxiliares?</strong> Os métodos <code>toEnderecoEntity</code> e <code>toEnderecoDTO</code> são <strong style="color:var(--text)">públicos</strong> de propósito — assim, quando o Fornecedor for refatorado no Capítulo 4 para também usar Endereço, ele <strong>reaproveita</strong> esses métodos! Código bem organizado paga dividendos no futuro. 💰
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: REPOSITORY                      -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-repo">
+  <div class="step-header">
+    <div class="step-number sn-green">3.5</div>
+    <div>
+      <div class="step-title">Repository — ClienteRepository.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Igualzinho aos outros!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">Sem novidade aqui — interface vazia herdando de JpaRepository. <strong style="color:var(--text)">E olha que legal:</strong> não precisamos nem de um <code>EnderecoRepository</code>! Como o cascade cuida de salvar/deletar o Endereço junto com o Cliente, não precisamos acessar a tabela endereço diretamente.</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">repository/ClienteRepository.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.repository;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.model.Cliente;</span>
+<span class="pkg">import org.springframework.data.jpa.repository.JpaRepository;</span>
+<span class="pkg">import org.springframework.stereotype.Repository;</span>
+
+<span class="an">@Repository</span>
+<span class="kw">public interface</span> <span class="tp">ClienteRepository</span> <span class="kw">extends</span> <span class="tp">JpaRepository</span>&lt;<span class="tp">Cliente</span>, <span class="tp">Long</span>&gt; {
+}</pre>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: SERVICE INTERFACE               -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-service">
+  <div class="step-header">
+    <div class="step-number sn-yellow">3.6</div>
+    <div>
+      <div class="step-title">Service — Interface ClienteService.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">O contrato — quais métodos existem</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">Mesmo padrão do Produto: a interface tem só as <strong style="color:var(--text)">assinaturas</strong> dos 5 métodos do CRUD, todos trabalhando com DTOs.</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/ClienteService.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.service;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="kw">public interface</span> <span class="tp">ClienteService</span> {
+
+    <span class="tp">ClienteResponseDTO</span> <span class="fn">criarCliente</span>(<span class="tp">ClienteRequestDTO</span> dto);
+
+    <span class="tp">List</span>&lt;<span class="tp">ClienteResponseDTO</span>&gt; <span class="fn">listarTodosClientes</span>();
+
+    <span class="tp">ClienteResponseDTO</span> <span class="fn">buscarClientePorId</span>(<span class="tp">Long</span> id);
+
+    <span class="tp">ClienteResponseDTO</span> <span class="fn">atualizarClientePorId</span>(<span class="tp">Long</span> id, <span class="tp">ClienteRequestDTO</span> dto);
+
+    <span class="kw">void</span> <span class="fn">deletarClientePorId</span>(<span class="tp">Long</span> id);
+}</pre>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: SERVICE IMPL                    -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-serviceimpl">
+  <div class="step-header">
+    <div class="step-number sn-yellow">3.7</div>
+    <div>
+      <div class="step-title">ServiceImpl — ClienteServiceImpl.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A implementação — repare como o cascade simplifica tudo!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">Implementação <strong style="color:var(--text)">mais simples</strong> que a do Produto — só precisamos de <strong>um</strong> Repository (não tem o segundo Repository do "fornecedor" como o Produto tinha). O cascade do JPA cuida do Endereço!</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/impl/ClienteServiceImpl.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65<br>66<br>67<br>68<br>69<br>70<br>71<br>72<br>73<br>74<br>75<br>76<br>77<br>78<br>79<br>80<br>81<br>82<br>83<br>84<br>85<br>86<br>87<br>88<br>89</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.service.impl;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.mapper.ClienteMapper;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Cliente;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Endereco;</span>
+<span class="pkg">import br.com.sistemagestao.api.repository.ClienteRepository;</span>
+<span class="pkg">import br.com.sistemagestao.api.service.ClienteService;</span>
+<span class="pkg">import lombok.RequiredArgsConstructor;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.stereotype.Service;</span>
+<span class="pkg">import org.springframework.web.server.ResponseStatusException;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="an">@Service</span>
+<span class="an">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="tp">ClienteServiceImpl</span> <span class="kw">implements</span> <span class="tp">ClienteService</span> {
+
+    <span class="cm">// Só um Repository! O cascade cuida do Endereco.</span>
+    <span class="kw">private final</span> <span class="tp">ClienteRepository</span> clienteRepository;
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">ClienteResponseDTO</span> <span class="fn">criarCliente</span>(<span class="tp">ClienteRequestDTO</span> dto) {
+
+        <span class="cm">// Mapper cria Cliente + Endereco aninhado</span>
+        <span class="tp">Cliente</span> cliente = <span class="tp">ClienteMapper</span>.<span class="fn">toEntity</span>(dto);
+
+        <span class="cm">// 🌊 Salva o Cliente — o Endereco é salvo junto via cascade!</span>
+        clienteRepository.<span class="fn">save</span>(cliente);
+
+        <span class="kw">return</span> <span class="tp">ClienteMapper</span>.<span class="fn">toResponseDTO</span>(cliente);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">ClienteResponseDTO</span>&gt; <span class="fn">listarTodosClientes</span>() {
+
+        <span class="kw">return</span> clienteRepository.<span class="fn">findAll</span>()
+                .<span class="fn">stream</span>()
+                .<span class="fn">map</span>(<span class="tp">ClienteMapper</span>::<span class="fn">toResponseDTO</span>)
+                .<span class="fn">toList</span>();
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">ClienteResponseDTO</span> <span class="fn">buscarClientePorId</span>(<span class="tp">Long</span> id) {
+
+        <span class="tp">Cliente</span> cliente = clienteRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Cliente não encontrado"</span>));
+
+        <span class="kw">return</span> <span class="tp">ClienteMapper</span>.<span class="fn">toResponseDTO</span>(cliente);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">ClienteResponseDTO</span> <span class="fn">atualizarClientePorId</span>(<span class="tp">Long</span> id, <span class="tp">ClienteRequestDTO</span> dto) {
+
+        <span class="tp">Cliente</span> cliente = clienteRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Cliente não encontrado"</span>));
+
+        <span class="cm">// Atualiza os campos simples do cliente</span>
+        cliente.<span class="fn">setNomeCompleto</span>(dto.<span class="fn">nomeCompleto</span>());
+        cliente.<span class="fn">setCpf</span>(dto.<span class="fn">cpf</span>());
+        cliente.<span class="fn">setEmail</span>(dto.<span class="fn">email</span>());
+        cliente.<span class="fn">setTelefone</span>(dto.<span class="fn">telefone</span>());
+        cliente.<span class="fn">setDataNascimento</span>(dto.<span class="fn">dataNascimento</span>());
+
+        <span class="cm">// Atualiza os campos do Endereco que JÁ EXISTE (mantemos o mesmo id!)</span>
+        <span class="tp">Endereco</span> endereco = cliente.<span class="fn">getEndereco</span>();
+        endereco.<span class="fn">setCep</span>(dto.<span class="fn">endereco</span>().<span class="fn">cep</span>());
+        endereco.<span class="fn">setLogradouro</span>(dto.<span class="fn">endereco</span>().<span class="fn">logradouro</span>());
+        endereco.<span class="fn">setNumero</span>(dto.<span class="fn">endereco</span>().<span class="fn">numero</span>());
+        endereco.<span class="fn">setComplemento</span>(dto.<span class="fn">endereco</span>().<span class="fn">complemento</span>());
+        endereco.<span class="fn">setBairro</span>(dto.<span class="fn">endereco</span>().<span class="fn">bairro</span>());
+        endereco.<span class="fn">setCidade</span>(dto.<span class="fn">endereco</span>().<span class="fn">cidade</span>());
+        endereco.<span class="fn">setUf</span>(dto.<span class="fn">endereco</span>().<span class="fn">uf</span>());
+
+        clienteRepository.<span class="fn">save</span>(cliente);
+
+        <span class="kw">return</span> <span class="tp">ClienteMapper</span>.<span class="fn">toResponseDTO</span>(cliente);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">deletarClientePorId</span>(<span class="tp">Long</span> id) {
+
+        <span class="tp">Cliente</span> cliente = clienteRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Cliente não encontrado"</span>));
+
+        <span class="cm">// 🗑️ Deleta o Cliente — o Endereco é deletado junto via orphanRemoval!</span>
+        clienteRepository.<span class="fn">deleteById</span>(cliente.<span class="fn">getId</span>());
+    }
+}</pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🤔</span>
+      <div class="tip-content">
+        <strong>Por que no <code>atualizar</code> mexemos no Endereço existente em vez de criar um novo?</strong> Para <strong style="color:var(--text)">manter o mesmo <code>endereco_id</code></strong> no banco. Se criássemos um Endereço novo, geraria uma linha nova na tabela endereco e o orphanRemoval apagaria a antiga. Funcionaria, mas seria uma operação a mais. Atualizar a instância existente é mais eficiente! ⚡
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: CONTROLLER                      -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-controller">
+  <div class="step-header">
+    <div class="step-number sn-main">3.8</div>
+    <div>
+      <div class="step-title">Controller — ClienteController.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Endpoints REST com @Valid (igual ao Produto)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">O Controller é praticamente <strong style="color:var(--text)">idêntico</strong> ao do Produto — mesmo padrão com <code>@RequiredArgsConstructor</code> e <code>@Valid</code>.</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">controller/ClienteController.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.controller;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.service.ClienteService;</span>
+<span class="pkg">import jakarta.validation.Valid;</span>
+<span class="pkg">import lombok.RequiredArgsConstructor;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.web.bind.annotation.*;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="an">@RestController</span>
+<span class="an">@RequestMapping</span>(<span class="st">"/clientes"</span>)
+<span class="an">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="tp">ClienteController</span> {
+
+    <span class="kw">private final</span> <span class="tp">ClienteService</span> clienteService;
+
+    <span class="an">@PostMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">CREATED</span>)
+    <span class="kw">public</span> <span class="tp">ClienteResponseDTO</span> <span class="fn">criarCliente</span>(<span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">ClienteRequestDTO</span> dto) {
+        <span class="kw">return</span> clienteService.<span class="fn">criarCliente</span>(dto);
+    }
+
+    <span class="an">@GetMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">ClienteResponseDTO</span>&gt; <span class="fn">listarTodosClientes</span>() {
+        <span class="kw">return</span> clienteService.<span class="fn">listarTodosClientes</span>();
+    }
+
+    <span class="an">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">ClienteResponseDTO</span> <span class="fn">buscarClientePorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        <span class="kw">return</span> clienteService.<span class="fn">buscarClientePorId</span>(id);
+    }
+
+    <span class="an">@PutMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">ClienteResponseDTO</span> <span class="fn">atualizarClientePorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id,
+                                                     <span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">ClienteRequestDTO</span> dto) {
+        <span class="kw">return</span> clienteService.<span class="fn">atualizarClientePorId</span>(id, dto);
+    }
+
+    <span class="an">@DeleteMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">NO_CONTENT</span>)
+    <span class="kw">public void</span> <span class="fn">deletarClientePorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        clienteService.<span class="fn">deletarClientePorId</span>(id);
+    }
+}</pre>
+    </div>
+
+    <!-- Endpoint Table -->
+    <h4 style="margin:20px 0 10px;color:var(--accent6)">📍 Endpoints do Cliente</h4>
+    <table class="endpoint-table">
+      <thead><tr><th>Método</th><th>URL</th><th>Ação</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-badge post">POST</span></td><td><code>/clientes</code></td><td>Criar cliente (com endereço)</td><td>201 Created</td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/clientes</code></td><td>Listar todos</td><td>200 OK</td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/clientes/{id}</code></td><td>Buscar por ID</td><td>200 OK</td></tr>
+        <tr><td><span class="method-badge put">PUT</span></td><td><code>/clientes/{id}</code></td><td>Atualizar cliente</td><td>200 OK</td></tr>
+        <tr><td><span class="method-badge delete">DELETE</span></td><td><code>/clientes/{id}</code></td><td>Deletar cliente (e endereço)</td><td>204 No Content</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: INSOMNIA                        -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-insomnia">
+  <div class="step-header">
+    <div class="step-number" style="background:#7B68EE">🦋</div>
+    <div>
+      <div class="step-title">Testando Cliente no Insomnia</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Agora com JSON aninhado!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">Crie uma pasta <strong style="color:var(--text)">Cliente</strong> no Insomnia e prepare-se: o JSON tem um <strong style="color:var(--accent6)">sub-objeto</strong> dentro!</p>
+
+    <!-- POST -->
+    <div style="background:rgba(73,204,144,0.04);border:1px solid rgba(73,204,144,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge post" style="font-size:0.8rem;padding:4px 14px">POST</span> <span style="color:var(--text)">Criar Cliente</span></h4>
+      <div style="font-size:0.88rem;color:var(--text-dim);margin-bottom:8px"><strong style="color:var(--text)">URL:</strong> <code>_.baseUrl/clientes</code></div>
+      <div class="code-block" style="margin:8px 0 0">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="lang-badge json">JSON</span>
+        </div>
+        <pre>{
+  <span class="json-key">"nomeCompleto"</span>: <span class="json-val">"Maria Silva Souza"</span>,
+  <span class="json-key">"cpf"</span>: <span class="json-val">"123.456.789-09"</span>,
+  <span class="json-key">"email"</span>: <span class="json-val">"maria@email.com"</span>,
+  <span class="json-key">"telefone"</span>: <span class="json-val">"(83) 99999-1234"</span>,
+  <span class="json-key">"dataNascimento"</span>: <span class="json-val">"1995-08-22"</span>,
+  <span class="json-key">"endereco"</span>: {
+    <span class="json-key">"cep"</span>: <span class="json-val">"58000-000"</span>,
+    <span class="json-key">"logradouro"</span>: <span class="json-val">"Rua das Flores"</span>,
+    <span class="json-key">"numero"</span>: <span class="json-val">"123"</span>,
+    <span class="json-key">"complemento"</span>: <span class="json-val">"Apto 201"</span>,
+    <span class="json-key">"bairro"</span>: <span class="json-val">"Centro"</span>,
+    <span class="json-key">"cidade"</span>: <span class="json-val">"João Pessoa"</span>,
+    <span class="json-key">"uf"</span>: <span class="json-val">"PB"</span>
+  }
+}</pre>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">✅</span>
+      <div class="tip-content">
+        <strong>Resposta esperada:</strong> <span style="color:#49cc90;font-weight:700">201 Created</span> com o JSON de volta — agora com o <code>id</code> do cliente <strong>e</strong> o <code>id</code> do endereço (gerado automaticamente pelo cascade)!
+      </div>
+    </div>
+
+    <!-- Testando validação CPF -->
+    <h4 style="margin:28px 0 12px;color:var(--accent2)">🧪 Testando @CPF</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Tente enviar com um <strong>CPF inválido</strong> (qualquer sequência aleatória):</p>
+
+    <div class="code-block" style="margin:8px 0">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">JSON com CPF inválido</span><span class="lang-badge json">JSON</span></div>
+      </div>
+      <pre>{
+  <span class="json-key">"nomeCompleto"</span>: <span class="json-val">"Teste"</span>,
+  <span class="json-key">"cpf"</span>: <span class="json-val">"111.111.111-11"</span>,    <span class="cm">// ← CPF inválido!</span>
+  <span class="json-key">"email"</span>: <span class="json-val">"teste@email.com"</span>,
+  <span class="json-key">"telefone"</span>: <span class="json-val">"(83) 99999-1234"</span>,
+  <span class="json-key">"dataNascimento"</span>: <span class="json-val">"1995-08-22"</span>,
+  <span class="json-key">"endereco"</span>: { ... }
+}</pre>
+    </div>
+
+    <!-- Testando @Email -->
+    <h4 style="margin:24px 0 12px;color:var(--accent2)">🧪 Testando @Email</h4>
+    <div class="code-block" style="margin:8px 0">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">JSON com e-mail inválido</span><span class="lang-badge json">JSON</span></div>
+      </div>
+      <pre>{
+  <span class="cm">// ...</span>
+  <span class="json-key">"email"</span>: <span class="json-val">"isso-nao-e-email"</span>,    <span class="cm">// ← falta @ e domínio</span>
+  <span class="cm">// ...</span>
+}</pre>
+    </div>
+
+    <!-- Testando @Past -->
+    <h4 style="margin:24px 0 12px;color:var(--accent2)">🧪 Testando @Past</h4>
+    <div class="code-block" style="margin:8px 0">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">JSON com data futura</span><span class="lang-badge json">JSON</span></div>
+      </div>
+      <pre>{
+  <span class="cm">// ...</span>
+  <span class="json-key">"dataNascimento"</span>: <span class="json-val">"2099-01-01"</span>,    <span class="cm">// ← futuro!</span>
+  <span class="cm">// ...</span>
+}</pre>
+    </div>
+
+    <!-- Testando @Valid aninhado -->
+    <h4 style="margin:24px 0 12px;color:var(--accent2)">🧪 Testando @Valid no DTO aninhado</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Tente enviar com o <strong>endereço com campos vazios</strong> — para confirmar que o @Valid aninhado funciona:</p>
+
+    <div class="code-block" style="margin:8px 0">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">JSON com endereço incompleto</span><span class="lang-badge json">JSON</span></div>
+      </div>
+      <pre>{
+  <span class="cm">// ...campos do cliente OK...</span>
+  <span class="json-key">"endereco"</span>: {
+    <span class="json-key">"cep"</span>: <span class="json-val">""</span>,            <span class="cm">// ← vazio!</span>
+    <span class="json-key">"logradouro"</span>: <span class="json-val">""</span>,     <span class="cm">// ← vazio!</span>
+    <span class="json-key">"numero"</span>: <span class="json-val">"123"</span>,
+    <span class="json-key">"bairro"</span>: <span class="json-val">"Centro"</span>,
+    <span class="json-key">"cidade"</span>: <span class="json-val">"João Pessoa"</span>,
+    <span class="json-key">"uf"</span>: <span class="json-val">"PB"</span>
+  }
+}</pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content">
+        <strong>Resultado esperado em todos os testes:</strong> <span style="color:var(--accent2);font-weight:700">400 Bad Request</span> com a mensagem específica que você escreveu na anotação. Isso prova que o Spring está validando <strong>todos</strong> os níveis — inclusive os campos aninhados! 🎉
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: ESTRUTURA DE PASTAS             -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="cli-estrutura">
+  <div class="step-header">
+    <div class="step-number sn-blue">📂</div>
+    <div>
+      <div class="step-title">Estrutura Final de Pastas</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Como ficou o projeto após o Cliente</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="filename">Estrutura do projeto — atualizada</span>
+      </div>
+      <pre>
+br.com.sistemagestao.api/
+├── 📄 ApiApplication.java
+├── 📁 <span class="an">model/</span>
+│   ├── Fornecedor.java
+│   ├── Produto.java
+│   ├── <span style="color:var(--accent3);font-weight:700">Endereco.java</span>                  <span class="cm">← 🆕</span>
+│   └── <span style="color:var(--accent6);font-weight:700">Cliente.java</span>                   <span class="cm">← 🆕</span>
+├── 📁 <span style="color:var(--accent5)">enums/</span>
+│   └── CategoriaProdutoEnum.java
+├── 📁 <span style="color:var(--accent4)">dto/</span>
+│   ├── 📁 <span style="color:var(--accent4)">produto/</span>
+│   │   ├── ProdutoRequestDTO.java
+│   │   └── ProdutoResponseDTO.java
+│   ├── 📁 <span style="color:var(--accent3)">endereco/</span>                       <span class="cm">← 🆕 pacote novo!</span>
+│   │   └── <span style="color:var(--accent3);font-weight:700">EnderecoDTO.java</span>             <span class="cm">← 🆕</span>
+│   └── 📁 <span style="color:var(--accent6)">cliente/</span>                        <span class="cm">← 🆕 pacote novo!</span>
+│       ├── <span style="color:var(--accent6);font-weight:700">ClienteRequestDTO.java</span>      <span class="cm">← 🆕</span>
+│       └── <span style="color:var(--accent6);font-weight:700">ClienteResponseDTO.java</span>     <span class="cm">← 🆕</span>
+├── 📁 <span style="color:var(--accent6)">mapper/</span>
+│   ├── ProdutoMapper.java
+│   └── <span style="color:var(--accent6);font-weight:700">ClienteMapper.java</span>             <span class="cm">← 🆕</span>
+├── 📁 <span class="fn">repository/</span>
+│   ├── FornecedorRepository.java
+│   ├── ProdutoRepository.java
+│   └── <span style="color:var(--accent3);font-weight:700">ClienteRepository.java</span>         <span class="cm">← 🆕</span>
+├── 📁 <span class="tp">service/</span>
+│   ├── FornecedorService.java
+│   ├── ProdutoService.java
+│   ├── <span style="color:var(--accent5);font-weight:700">ClienteService.java</span>            <span class="cm">← 🆕 (interface)</span>
+│   └── 📁 <span style="color:var(--accent5)">impl/</span>
+│       ├── ProdutoServiceImpl.java
+│       └── <span style="color:var(--accent5);font-weight:700">ClienteServiceImpl.java</span>    <span class="cm">← 🆕</span>
+└── 📁 <span class="kw">controller/</span>
+    ├── FornecedorController.java
+    ├── ProdutoController.java
+    └── <span style="color:var(--accent);font-weight:700">ClienteController.java</span>         <span class="cm">← 🆕</span></pre>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CLIENTE: RESUMO FINAL                    -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" style="text-align:center;padding:60px 20px">
+  <div style="font-size:3.5rem;margin-bottom:16px;animation:bounce 2s ease-in-out infinite;display:inline-block">👤</div>
+  <h2 style="font-size:2rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--accent6),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Cliente Completo!</h2>
+  <p style="color:var(--text-dim);max-width:550px;margin:0 auto 30px;font-size:1.05rem">Você consolidou o padrão profissional <strong style="color:var(--accent6)">e</strong> aprendeu seu primeiro relacionamento <strong style="color:var(--accent3)">@OneToOne</strong> com cascade!</p>
+
+  <div class="card" style="text-align:left;max-width:640px;margin:0 auto">
+    <h3 style="margin-bottom:16px;color:var(--accent6)">📋 O que você aprendeu neste capítulo</h3>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.92rem">
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">@OneToOne</strong> — Relacionamento "um para um" entre entidades</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">cascade = ALL</strong> — Operações propagam pra entidade relacionada</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">orphanRemoval = true</strong> — Remove entidades órfãs automaticamente</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">DTO aninhado</strong> — DTO contendo outro DTO (JSON aninhado)</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">@Valid em campo aninhado</strong> — Ativar validação no nível interno</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">@CPF</strong> — Validar CPF brasileiro</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">@Email</strong> — Validar formato de e-mail</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">@Past</strong> — Garantir data anterior ao presente</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">unique = true</strong> — Constraint de unicidade no banco</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">LocalDate</strong> — Tipo moderno do Java para datas</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Mapper com auxiliares</strong> — Funções reutilizáveis para outros mapeamentos</div>
+    </div>
+
+    <div class="tip" style="margin-top:20px">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-content">
+        <strong>Próximo passo (Capítulo 4):</strong> Vamos <strong style="color:var(--text)">refatorar o Fornecedor</strong> para também usar essa entidade <code style="color:var(--accent3)">Endereco</code>! Você vai ver um <strong>refactor real</strong> de código — remover duplicação e ganhar consistência. É o momento "ahá!" do curso. 🎯
       </div>
     </div>
   </div>
@@ -4017,17 +5248,10 @@ br.com.sistemagestao.api/
 
     <div class="roadmap" style="text-align:left">
       <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent6)"></div>
-        <div class="roadmap-content">
-          <h4 style="color:var(--accent6)">👤 Capítulo 3 — Cliente</h4>
-          <p>Consolidação de tudo que aprendemos. Mesma estrutura do Produto (DTOs, Mapper, ServiceImpl), com validação de CPF usando <code style="color:#49cc90">@CPF</code> do Bean Validation. O aluno aplica sozinho!</p>
-        </div>
-      </div>
-      <div class="roadmap-item">
         <div class="roadmap-dot" style="background:var(--accent3)"></div>
         <div class="roadmap-content">
-          <h4 style="color:var(--accent3)">📍 Capítulo 4 — Endereço</h4>
-          <p>Tabela compartilhada entre Fornecedor e Cliente. Relacionamentos mais avançados.</p>
+          <h4 style="color:var(--accent3)">🔧 Capítulo 4 — Refatorando Fornecedor para usar Endereço</h4>
+          <p>Vamos eliminar a duplicação! O Fornecedor (que hoje tem o endereço <em>flat</em> dentro da entidade) vai passar a usar a <strong>mesma</strong> entidade <code>Endereco</code> que criamos no cap 3. Refactor real, com migração de dados e remoção de código duplicado. O momento "ahá!" do curso. 💡</p>
         </div>
       </div>
       <div class="roadmap-item">
