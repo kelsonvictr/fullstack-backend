@@ -4287,6 +4287,72 @@ br.com.sistemagestao.api/
     <p style="color:var(--text-dim);font-size:0.92rem">Vai baixar um <code>.zip</code>. Descompacte, abra a pasta no IntelliJ e <strong>aguarde o Maven baixar tudo</strong> (você vai ver a barrinha embaixo carregando — pode demorar 1-2 minutos na primeira vez).</p>
   </div>
 
+  <!-- Project Structure -->
+  <div class="card" style="margin-top:24px">
+    <h3 style="margin-bottom:8px;color:var(--accent5)">🔧 Conferindo o SDK no IntelliJ — File &gt; Project Structure</h3>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px"><strong style="color:var(--accent2)">Passo MUITO importante!</strong> Mesmo escolhendo "Java 21" no Spring Initializr, o IntelliJ pode abrir o projeto com outro SDK instalado na sua máquina. Se isso acontecer, <strong style="color:var(--text)">nada de records, lambdas ou Spring Boot vai funcionar</strong>! Vamos garantir que o IntelliJ está usando Java 21 mesmo.</p>
+
+    <h4 style="margin:16px 0 12px;color:var(--accent6)">Como abrir</h4>
+    <div style="display:grid;gap:14px;margin-bottom:20px">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(247,183,49,0.18);color:var(--accent5);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">1</span>
+        <div style="color:var(--text-dim);font-size:0.92rem">No IntelliJ, abra o menu <strong style="color:var(--text)">File</strong> → <strong style="color:var(--text)">Project Structure...</strong></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(247,183,49,0.18);color:var(--accent5);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">2</span>
+        <div style="color:var(--text-dim);font-size:0.92rem">Atalho rápido: <code style="background:var(--surface2);padding:3px 8px;border-radius:6px;color:var(--accent5)">⌘ ;</code> (Mac) ou <code style="background:var(--surface2);padding:3px 8px;border-radius:6px;color:var(--accent5)">Ctrl + Alt + Shift + S</code> (Windows/Linux)</div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(247,183,49,0.18);color:var(--accent5);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">3</span>
+        <div style="color:var(--text-dim);font-size:0.92rem">Na barra lateral esquerda, clique em <strong style="color:var(--text)">Project</strong>. Deve aparecer essa tela:</div>
+      </div>
+    </div>
+
+    <!-- Print do IntelliJ -->
+    <div style="border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;margin:16px 0;background:#1e1e1e">
+      <img src="images/intellij-project-structure.png" alt="IntelliJ — File > Project Structure > Project com SDK corretto-21 e Language level 21" style="display:block;width:100%;height:auto">
+    </div>
+    <p style="text-align:center;color:var(--text-dim);font-size:0.82rem;margin-top:-8px;margin-bottom:20px;font-style:italic">☝️ Assim que tem que estar a sua tela!</p>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent3)">✅ Confira esses 2 campos:</h4>
+    <div class="annotation-grid">
+      <div class="annotation-card" style="border-color:rgba(73,204,144,0.3);background:rgba(73,204,144,0.04)">
+        <div class="anno-name" style="color:#49cc90">📦 SDK</div>
+        <div class="anno-desc"><strong style="color:var(--text)">corretto-21</strong> (ou qualquer Java 21 — pode ser <code>temurin-21</code>, <code>openjdk-21</code> etc). Se aparecer Java 8, 11 ou 17, <strong style="color:var(--accent2)">tem que trocar!</strong></div>
+      </div>
+      <div class="annotation-card" style="border-color:rgba(73,204,144,0.3);background:rgba(73,204,144,0.04)">
+        <div class="anno-name" style="color:#49cc90">🎯 Language level</div>
+        <div class="anno-desc"><strong style="color:var(--text)">21 — Record patterns, pattern matching for switch</strong>. Se aparecer outro número, <strong style="color:var(--accent2)">tem que trocar!</strong></div>
+      </div>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent4)">🔧 E se estiver errado? Como corrigir:</h4>
+    <div style="display:grid;gap:12px">
+      <div style="background:var(--surface2);border-radius:12px;padding:14px 18px;border:1px solid rgba(255,255,255,0.05)">
+        <strong style="color:var(--accent5)">SDK errado?</strong>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:4px">Clique no dropdown do SDK → <strong>Add SDK</strong> → <strong>Download JDK...</strong>. Em "Version" escolha <strong>21</strong> e em "Vendor" escolha <strong>Amazon Corretto</strong> (ou Eclipse Temurin). Clique em Download e aguarde.</p>
+      </div>
+      <div style="background:var(--surface2);border-radius:12px;padding:14px 18px;border:1px solid rgba(255,255,255,0.05)">
+        <strong style="color:var(--accent5)">Language level errado?</strong>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:4px">Clique no dropdown do Language level e selecione <strong>"21 - Record patterns, pattern matching for switch"</strong>. Pronto.</p>
+      </div>
+      <div style="background:var(--surface2);border-radius:12px;padding:14px 18px;border:1px solid rgba(255,255,255,0.05)">
+        <strong style="color:var(--accent5)">Depois de ajustar:</strong>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:4px">Clique em <strong>Apply</strong> → <strong>OK</strong>. O IntelliJ vai reindexar o projeto (espere a barrinha embaixo terminar) e tudo já passa a funcionar com Java 21!</p>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:20px">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content"><strong>Por que isso é tão importante?</strong> Java 21 traz <code>record</code>, <code>switch expressions</code>, <code>text blocks</code> e várias outras features modernas que vamos usar. Se o IntelliJ estiver configurado para uma versão antiga, ele vai <strong style="color:var(--accent2)">marcar tudo isso como erro</strong> mesmo que o código esteja correto. Por isso confira ANTES de começar a codar!</div>
+    </div>
+
+    <div class="warning" style="margin-top:12px">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Vale para todo projeto novo!</strong> Toda vez que você criar um novo projeto Spring (ou abrir um projeto que veio do colega), confira o Project Structure. É costume profissional!</div>
+    </div>
+  </div>
+
   <!-- application.properties -->
   <div class="card" style="margin-top:24px">
     <h3 style="margin-bottom:8px;color:var(--accent3)">⚙️ Configurando o application.properties</h3>
