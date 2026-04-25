@@ -21,6 +21,7 @@
   --accent7:#06d6a0;
   --java:#f89820;
   --spring:#6db33f;
+  --petshop:#ff9f43;
   --text:#eef0f8;
   --text-dim:#8892b0;
   --code-bg:#0d0d1a;
@@ -94,6 +95,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);line
 .chapter-divider h2.grad-forn{background:linear-gradient(135deg,var(--accent5),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .chapter-divider h2.grad-prod{background:linear-gradient(135deg,var(--accent4),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .chapter-divider h2.grad-cli{background:linear-gradient(135deg,var(--accent6),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.chapter-divider h2.grad-pet{background:linear-gradient(135deg,var(--petshop),var(--accent5));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .chapter-subtitle{color:var(--text-dim);font-size:1rem;max-width:500px;margin:0 auto}
 
 /* === SECTION STEP === */
@@ -108,6 +110,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);line
 .sn-yellow{background:var(--accent5)}
 .sn-purple{background:var(--accent6)}
 .sn-main{background:var(--accent)}
+.sn-pet{background:var(--petshop)}
 .step-title{font-size:1.45rem;font-weight:800}
 
 /* === CARDS === */
@@ -223,6 +226,37 @@ pre{padding:20px;margin:0;overflow-x:auto;font-family:'JetBrains Mono',monospace
 .toggler-header.open .toggler-arrow{transform:rotate(180deg)}
 .toggler-body{max-height:0;overflow:hidden;transition:max-height 0.5s ease;padding:0 24px}
 .toggler-body.open{max-height:8000px;padding:0 24px 24px}
+
+/* === CHALLENGE BANNER (DESAFIO PETSHOP) === */
+.challenge-banner{
+  background:linear-gradient(135deg,rgba(255,159,67,0.12),rgba(247,183,49,0.06));
+  border:2px solid rgba(255,159,67,0.3);
+  border-radius:24px;padding:40px 32px;
+  margin:30px 0;
+  position:relative;overflow:hidden;text-align:center;
+}
+.challenge-banner::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--petshop),var(--accent5),var(--petshop));
+}
+.challenge-banner::after{
+  content:'';position:absolute;top:-50%;right:-10%;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(255,159,67,0.08),transparent 70%);
+  border-radius:50%;pointer-events:none;
+}
+.challenge-icons{font-size:3.5rem;margin-bottom:16px;position:relative;z-index:1;letter-spacing:8px}
+.challenge-title{font-size:2rem;font-weight:900;margin-bottom:12px;position:relative;z-index:1;background:linear-gradient(135deg,var(--petshop),var(--accent5));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.challenge-subtitle{color:var(--text-dim);font-size:1.05rem;max-width:560px;margin:0 auto;position:relative;z-index:1;line-height:1.5}
+
+/* === SOLUTION BOX === */
+.solution-box{background:linear-gradient(135deg,rgba(73,204,144,0.06),rgba(78,205,196,0.04));border:1px solid rgba(73,204,144,0.2);border-radius:14px;padding:18px 22px;margin:16px 0}
+.solution-title{font-weight:800;color:#49cc90;margin-bottom:8px;font-size:0.95rem}
+
+/* === TRY-FIRST BOX (lembrete pro aluno tentar antes) === */
+.try-first{background:linear-gradient(135deg,rgba(255,159,67,0.08),rgba(247,183,49,0.04));border:1px solid rgba(255,159,67,0.25);border-radius:14px;padding:16px 22px;margin:14px 0;display:flex;gap:14px;align-items:flex-start}
+.try-first-icon{font-size:1.6rem;flex-shrink:0;line-height:1}
+.try-first-content{color:var(--text-dim);font-size:0.92rem;line-height:1.55}
+.try-first-content strong{color:var(--petshop)}
 
 /* === TERMINAL DEMO === */
 .demo-terminal{background:#080816;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);margin:16px 0}
@@ -486,6 +520,24 @@ footer .heart{color:var(--accent2);animation:pulse 2s ease-in-out infinite;displ
     <a class="sidebar-link" onclick="goTo('prod-serviceimpl')"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
     <a class="sidebar-link" onclick="goTo('prod-controller')"><span class="dot" style="background:var(--accent)"></span>Controller</a>
     <a class="sidebar-link" onclick="goTo('prod-insomnia')"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐶 Desafio — PetShop</div>
+    <a class="sidebar-link" onclick="goTo('petshop-intro')"><span class="dot" style="background:var(--petshop)"></span>O Desafio</a>
+    <a class="sidebar-link" onclick="goTo('petshop-setup')"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+    <a class="sidebar-link" onclick="goTo('petshop-bd')"><span class="dot" style="background:var(--accent4)"></span>Criar banco no DBeaver</a>
+    <a class="sidebar-link" onclick="goTo('petshop-enum')"><span class="dot" style="background:var(--accent5)"></span>Enum EspeciePet</a>
+    <a class="sidebar-link" onclick="goTo('petshop-tutor-model')"><span class="dot" style="background:var(--accent2)"></span>Model Tutor</a>
+    <a class="sidebar-link" onclick="goTo('petshop-pet-model')"><span class="dot" style="background:var(--petshop)"></span>Model Pet</a>
+    <a class="sidebar-link" onclick="goTo('petshop-tutor-dtos')"><span class="dot" style="background:var(--accent4)"></span>DTOs Tutor</a>
+    <a class="sidebar-link" onclick="goTo('petshop-pet-dtos')"><span class="dot" style="background:var(--accent4)"></span>DTOs Pet</a>
+    <a class="sidebar-link" onclick="goTo('petshop-tutor-mapper')"><span class="dot" style="background:var(--accent6)"></span>TutorMapper</a>
+    <a class="sidebar-link" onclick="goTo('petshop-pet-mapper')"><span class="dot" style="background:var(--accent6)"></span>PetMapper</a>
+    <a class="sidebar-link" onclick="goTo('petshop-repos')"><span class="dot" style="background:var(--accent3)"></span>Repositories</a>
+    <a class="sidebar-link" onclick="goTo('petshop-services')"><span class="dot" style="background:var(--accent5)"></span>Services (interfaces)</a>
+    <a class="sidebar-link" onclick="goTo('petshop-impls')"><span class="dot" style="background:var(--accent5)"></span>ServiceImpls</a>
+    <a class="sidebar-link" onclick="goTo('petshop-controllers')"><span class="dot" style="background:var(--accent)"></span>Controllers</a>
+    <a class="sidebar-link" onclick="goTo('petshop-insomnia')"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">👤 Capítulo 3 — Cliente</div>
@@ -1668,6 +1720,13 @@ footer .heart{color:var(--accent2);animation:pulse 2s ease-in-out infinite;displ
         <div class="roadmap-content">
           <h4 style="color:var(--accent4)">🏷️ Fase 2 — Produto <span style="font-size:0.7rem;background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 8px;border-radius:4px;margin-left:6px">CONCLUÍDO ✅</span></h4>
           <p>Introduz DTOs, Mappers, ServiceImpl, @ManyToOne. Evolução natural das boas práticas.</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot active" style="background:var(--petshop)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--petshop)">🐶 Desafio PetShop <span style="font-size:0.7rem;background:rgba(255,159,67,0.15);color:var(--petshop);padding:2px 8px;border-radius:4px;margin-left:6px">PRÁTICA</span></h4>
+          <p>Antes do Cliente, exercite TUDO do Produto num novo domínio: API de PetShop com Tutor + Pet (@ManyToOne). <strong>Sem nada novo</strong> — só fixação para virar muscle memory!</p>
         </div>
       </div>
       <div class="roadmap-item">
@@ -4002,10 +4061,1536 @@ br.com.sistemagestao.api/
     </div>
 
     <div class="tip" style="margin-top:20px">
-      <span class="tip-icon">🚀</span>
+      <span class="tip-icon">🐶</span>
       <div class="tip-content">
-        <strong>Próximo passo:</strong> Agora que você domina o padrão profissional, vamos para o <strong style="color:var(--accent6)">Capítulo 3 — Cliente</strong>, onde construímos juntos um novo CRUD aplicando esse padrão e adicionando um <strong>relacionamento @OneToOne</strong> com a entidade <code style="color:var(--accent3)">Endereco</code>. Bora! 💪
+        <strong>Próximo passo — Desafio PetShop:</strong> Antes de avançar para o cap 3, vamos <strong style="color:var(--petshop)">PRATICAR</strong>! No próximo capítulo você vai construir uma <strong style="color:var(--text)">API de PetShop sozinho</strong>, aplicando tudo que aprendeu em Produto. <strong style="color:var(--text)">Não tem nada novo</strong> — é puro reforço para virar muscle memory. É o exercício mais importante até aqui. Não pule! 💪
       </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║                CAPÍTULO DESAFIO: PETSHOP API                ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="chapter-divider" id="cap-petshop">
+  <span class="chapter-icon">🐶</span>
+  <div class="chapter-number">Desafio</div>
+  <h2 class="grad-pet">Desafio Prático: PetShop API</h2>
+  <p class="chapter-subtitle">Hora de voar com as próprias asas! Aplique TUDO do Produto em um domínio novo. Tente sozinho antes de espiar!</p>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: INTRO                           -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-intro">
+  <div class="challenge-banner">
+    <div class="challenge-icons">🐶 🐱 🦜 🐰</div>
+    <div class="challenge-title">Sistema de PetShop</div>
+    <div class="challenge-subtitle">Você vai construir uma API REST para gerenciar <strong style="color:var(--text)">Tutores</strong> e seus <strong style="color:var(--text)">Pets</strong>, aplicando exatamente o mesmo padrão profissional que aprendeu no <strong style="color:var(--accent4)">Produto</strong>!</div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:16px;color:var(--petshop)">🎯 O que você vai construir</h3>
+
+    <div class="concept">
+      <div class="concept-title">📋 Entidades do sistema</div>
+      <p>Duas entidades simples com um relacionamento <strong>@ManyToOne</strong> — exatamente como Produto e Fornecedor!</p>
+    </div>
+
+    <div class="annotation-grid">
+      <div class="annotation-card">
+        <div class="anno-name" style="color:var(--accent2)">🧑 Tutor</div>
+        <div class="anno-desc">
+          <strong>id, nomeCompleto, email, telefone</strong><br>
+          <span style="color:var(--text-dim);font-size:0.75rem;margin-top:4px;display:block">A pessoa dona dos pets — equivalente ao Fornecedor</span>
+        </div>
+      </div>
+      <div class="annotation-card">
+        <div class="anno-name" style="color:var(--petshop)">🐶 Pet</div>
+        <div class="anno-desc">
+          <strong>id, nome, raca, idade, especie, tutor (FK)</strong><br>
+          <span style="color:var(--text-dim);font-size:0.75rem;margin-top:4px;display:block">Cada pet pertence a um tutor — @ManyToOne, igual Produto → Fornecedor!</span>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent4)">📍 Endpoints que você vai implementar</h4>
+
+    <table class="endpoint-table">
+      <thead><tr><th colspan="4" style="color:var(--accent2);padding-top:14px">🧑 Tutor</th></tr><tr><th>Método</th><th>URL</th><th>Ação</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-badge post">POST</span></td><td><code>/tutores</code></td><td>Cadastrar tutor</td><td>201</td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/tutores</code></td><td>Listar todos</td><td>200</td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/tutores/{id}</code></td><td>Buscar por id</td><td>200</td></tr>
+        <tr><td><span class="method-badge put">PUT</span></td><td><code>/tutores/{id}</code></td><td>Atualizar tutor</td><td>200</td></tr>
+        <tr><td><span class="method-badge delete">DELETE</span></td><td><code>/tutores/{id}</code></td><td>Deletar tutor</td><td>204</td></tr>
+      </tbody>
+      <thead><tr><th colspan="4" style="color:var(--petshop);padding-top:20px">🐶 Pet</th></tr><tr><th>Método</th><th>URL</th><th>Ação</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-badge post">POST</span></td><td><code>/pets</code></td><td>Cadastrar pet</td><td>201</td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/pets</code></td><td>Listar todos</td><td>200</td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/pets/{id}</code></td><td>Buscar por id</td><td>200</td></tr>
+        <tr><td><span class="method-badge put">PUT</span></td><td><code>/pets/{id}</code></td><td>Atualizar pet</td><td>200</td></tr>
+        <tr><td><span class="method-badge delete">DELETE</span></td><td><code>/pets/{id}</code></td><td>Deletar pet</td><td>204</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip" style="margin-top:20px">
+      <span class="tip-icon">💪</span>
+      <div class="tip-content"><strong>Você JÁ SABE TUDO ISSO!</strong> Não tem <strong>NADA</strong> novo neste capítulo — só vamos repetir o padrão do Produto em um domínio diferente. Essa repetição é o que vai consolidar o conhecimento.</div>
+    </div>
+  </div>
+
+  <!-- Como aproveitar o desafio -->
+  <div class="card" style="background:linear-gradient(135deg,rgba(255,159,67,0.05),rgba(247,183,49,0.03));border-color:rgba(255,159,67,0.15)">
+    <h3 style="margin-bottom:16px;color:var(--petshop)">📌 Como aproveitar este desafio (LEIA com atenção!)</h3>
+    <p style="color:var(--text-dim);margin-bottom:16px;font-size:0.95rem">Cada seção daqui pra frente segue a <strong style="color:var(--text)">mesma estrutura</strong>:</p>
+
+    <div style="display:grid;gap:14px">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(73,204,144,0.18);color:#49cc90;font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">1</span>
+        <div><strong style="color:var(--text)">📖 LEIA a Dica</strong> — cada seção começa com uma dica curta explicando <strong>O QUE</strong> fazer, com referência direta ao código equivalente em Produto/Fornecedor.</div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(69,183,209,0.18);color:var(--accent4);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">2</span>
+        <div><strong style="color:var(--text)">📂 ABRA o material do Produto numa aba ao lado</strong> — use ele como <strong>referência</strong>. Não decore, COMPARE!</div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(255,159,67,0.18);color:var(--petshop);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">3</span>
+        <div><strong style="color:var(--text)">⌨️ TENTE escrever sozinho</strong> — abra o IntelliJ e escreva o seu código. Errar é parte do processo!</div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(167,139,250,0.18);color:var(--accent6);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">4</span>
+        <div><strong style="color:var(--text)">👀 SÓ DEPOIS clique em "Ver código completo"</strong> — pra conferir e ajustar. Quem espia antes de tentar perde a maior parte do aprendizado!</div>
+      </div>
+    </div>
+
+    <div class="warning" style="margin-top:20px;border-left-color:var(--petshop)">
+      <span class="warning-icon">🚨</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--petshop)">Promessa para você mesmo:</strong> "Vou tentar TODA seção antes de abrir o toggler. Se travar, releio o capítulo de Produto antes de espiar a resposta!" 🤝</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: SETUP                           -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-setup">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--spring)">🍃</div>
+    <div>
+      <div class="step-title">Setup do Projeto PetShop</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Spring Initializr + application.properties</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:16px">Esse é um <strong style="color:var(--text)">projeto NOVO</strong>, separado do que viemos fazendo! Você vai criá-lo do zero — exatamente como fez no início do curso para o sistema de gestão.</p>
+
+    <h4 style="margin:16px 0 12px;color:var(--accent6)">1️⃣ Acesse o Spring Initializr</h4>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:12px">Abra <a href="https://start.spring.io" target="_blank" style="color:var(--spring);font-weight:700">start.spring.io</a> e preencha exatamente assim:</p>
+
+    <div class="annotation-grid" style="margin:16px 0">
+      <div class="annotation-card"><div class="anno-name">📦 Project</div><div class="anno-desc">Maven</div></div>
+      <div class="annotation-card"><div class="anno-name">☕ Language</div><div class="anno-desc">Java</div></div>
+      <div class="annotation-card"><div class="anno-name">🍃 Spring Boot</div><div class="anno-desc">Versão estável mais recente (não SNAPSHOT!)</div></div>
+      <div class="annotation-card"><div class="anno-name">📂 Group</div><div class="anno-desc"><code>br.com.petshop</code></div></div>
+      <div class="annotation-card"><div class="anno-name">📄 Artifact</div><div class="anno-desc"><code>api</code></div></div>
+      <div class="annotation-card"><div class="anno-name">🏷️ Name</div><div class="anno-desc"><code>api</code></div></div>
+      <div class="annotation-card"><div class="anno-name">📝 Description</div><div class="anno-desc">PetShop API</div></div>
+      <div class="annotation-card" style="border-color:rgba(255,159,67,0.4);background:rgba(255,159,67,0.05)"><div class="anno-name" style="color:var(--petshop)">📦 Packaging</div><div class="anno-desc"><strong style="color:var(--text)">Jar</strong> ⚠️ não esqueça!</div></div>
+      <div class="annotation-card" style="border-color:rgba(255,159,67,0.4);background:rgba(255,159,67,0.05)"><div class="anno-name" style="color:var(--petshop)">☕ Java</div><div class="anno-desc"><strong style="color:var(--text)">21</strong></div></div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">📦</span>
+      <div class="tip-content"><strong>Por que Packaging = Jar?</strong> Aplicações Spring Boot rodam como um Jar executável (com servidor embutido). É o padrão moderno — não escolha War, que é para deploy em servidores externos antigos.</div>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">2️⃣ Selecione as Dependências</h4>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:12px">No botão <strong>"Add Dependencies"</strong>, adicione <strong style="color:var(--text)">5 dependências</strong>:</p>
+
+    <div class="annotation-grid">
+      <div class="annotation-card"><div class="anno-name" style="color:var(--spring)">Spring Web</div><div class="anno-desc">Para criar endpoints REST</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">Spring Data JPA</div><div class="anno-desc">Para acessar o banco</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">PostgreSQL Driver</div><div class="anno-desc">Driver do PostgreSQL</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent2)">Lombok</div><div class="anno-desc">Gera getters/setters automaticamente</div></div>
+      <div class="annotation-card" style="border-color:rgba(73,204,144,0.4);background:rgba(73,204,144,0.05)"><div class="anno-name" style="color:#49cc90">Validation</div><div class="anno-desc">Bean Validation (@NotBlank, @Positive...)</div></div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">✨</span>
+      <div class="tip-content"><strong>Diferença esperta:</strong> No projeto do sistema de gestão a gente adicionou o <code>spring-boot-starter-validation</code> manualmente no <code>pom.xml</code> depois (no cap 2). Aqui já vamos pedir tudo de uma vez no Initializr — é mais prático!</div>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent6)">3️⃣ Clique em "Generate" e abra no IntelliJ</h4>
+    <p style="color:var(--text-dim);font-size:0.92rem">Vai baixar um <code>.zip</code>. Descompacte, abra a pasta no IntelliJ e <strong>aguarde o Maven baixar tudo</strong> (você vai ver a barrinha embaixo carregando — pode demorar 1-2 minutos na primeira vez).</p>
+  </div>
+
+  <!-- application.properties -->
+  <div class="card" style="margin-top:24px">
+    <h3 style="margin-bottom:8px;color:var(--accent3)">⚙️ Configurando o application.properties</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">É o arquivo que diz para o Spring <strong>como conectar ao banco</strong> e outras configurações. Fica em <code>src/main/resources/application.properties</code>.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="filename">src/main/resources/application.properties</span>
+      </div>
+      <pre>
+<span class="cm"># Nome da aplicação</span>
+<span class="an">spring.application.name</span>=<span class="st">petshop-api</span>
+
+<span class="cm"># Conexão com PostgreSQL</span>
+<span class="an">spring.datasource.url</span>=<span class="st">jdbc:postgresql://localhost:5432/petshop</span>
+<span class="an">spring.datasource.username</span>=<span class="st">postgres</span>
+<span class="an">spring.datasource.password</span>=<span class="st">postgres</span>
+<span class="an">spring.datasource.driver-class-name</span>=<span class="st">org.postgresql.Driver</span>
+
+<span class="cm"># Hibernate (cria/atualiza tabelas automaticamente)</span>
+<span class="an">spring.jpa.database-platform</span>=<span class="st">org.hibernate.dialect.PostgreSQLDialect</span>
+<span class="an">spring.jpa.hibernate.ddl-auto</span>=<span class="st">update</span>
+<span class="an">spring.jpa.show-sql</span>=<span class="st">true</span></pre>
+    </div>
+
+    <div class="warning" style="margin-top:16px">
+      <span class="warning-icon">🔑</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Atenção na senha!</strong> Coloque a <strong style="color:var(--text)">senha que você usou</strong> ao instalar o PostgreSQL — pode ser <code>postgres</code>, <code>123</code>, <code>admin</code>, etc. Se o app não conectar, o erro vai ser de autenticação.</div>
+    </div>
+
+    <div class="tip" style="margin-top:12px">
+      <span class="tip-icon">🐳</span>
+      <div class="tip-content"><strong>Está usando Docker?</strong> Se subiu o PostgreSQL com docker-compose, use a senha que você definiu no docker-compose.yml. A URL <code>localhost:5432</code> funciona normalmente.</div>
+    </div>
+  </div>
+
+  <!-- Estrutura de pastas -->
+  <div class="card" style="margin-top:24px">
+    <h3 style="margin-bottom:8px;color:var(--accent6)">📂 Estrutura de pacotes que você vai montar</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Esta é a estrutura final do projeto — você vai criar os arquivos passo a passo. <strong style="color:var(--text)">É a MESMA estrutura</strong> do projeto sistema-gestao no cap 2!</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="filename">Dentro de br.com.petshop.api</span>
+      </div>
+      <pre>
+br.com.petshop.api/
+├── 📄 ApiApplication.java       <span class="cm">← já vem pronto!</span>
+├── 📁 <span style="color:var(--accent5)">enums/</span>
+│   └── EspeciePetEnum.java
+├── 📁 <span class="an">model/</span>
+│   ├── Tutor.java
+│   └── Pet.java
+├── 📁 <span style="color:var(--accent4)">dto/</span>
+│   ├── 📁 <span style="color:var(--accent4)">tutor/</span>
+│   │   ├── TutorRequestDTO.java
+│   │   └── TutorResponseDTO.java
+│   └── 📁 <span style="color:var(--accent4)">pet/</span>
+│       ├── PetRequestDTO.java
+│       └── PetResponseDTO.java
+├── 📁 <span style="color:var(--accent6)">mapper/</span>
+│   ├── TutorMapper.java
+│   └── PetMapper.java
+├── 📁 <span class="fn">repository/</span>
+│   ├── TutorRepository.java
+│   └── PetRepository.java
+├── 📁 <span class="tp">service/</span>
+│   ├── TutorService.java
+│   ├── PetService.java
+│   └── 📁 <span style="color:var(--accent5)">impl/</span>
+│       ├── TutorServiceImpl.java
+│       └── PetServiceImpl.java
+└── 📁 <span class="kw">controller/</span>
+    ├── TutorController.java
+    └── PetController.java</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content"><strong>Repare na repetição:</strong> a estrutura é <strong style="color:var(--text)">idêntica</strong> ao projeto sistema-gestao após o cap 2. Os pacotes <code>enums</code>, <code>dto</code>, <code>mapper</code>, <code>service/impl</code> são o "padrão profissional" que você está aprendendo a aplicar em qualquer projeto Spring!</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: CRIAR BANCO NO DBEAVER          -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-bd">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent4)">🦫</div>
+    <div>
+      <div class="step-title">Criar o banco "petshop" no DBeaver</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Antes de rodar — sem isso, NADA funciona!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="warning" style="margin-bottom:20px">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent2)">Erro mais comum aqui:</strong> rodar a aplicação sem ter criado o banco antes. O Spring cria as <strong>tabelas</strong> automaticamente, mas <strong style="color:var(--text)">NÃO cria o banco</strong>! É como ter um armário lindo mas esquecer de comprar o armário primeiro. 🪑</div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-title">🔁 Lembra do início do curso?</div>
+      <p>No tour do PostgreSQL, criamos o banco <code>bd_sistema_gestao</code>. Aqui é a <strong style="color:var(--text)">mesma coisa</strong>, só muda o nome: <code style="color:var(--petshop)">petshop</code>!</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">📋 Passo a passo no DBeaver</h4>
+    <div style="display:grid;gap:14px">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(69,183,209,0.18);color:var(--accent4);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">1</span>
+        <div style="color:var(--text-dim);font-size:0.92rem"><strong style="color:var(--text)">Abra o DBeaver</strong> e conecte na sua instância PostgreSQL local (a mesma que você usa pro projeto sistema-gestao).</div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(69,183,209,0.18);color:var(--accent4);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">2</span>
+        <div style="color:var(--text-dim);font-size:0.92rem">Na árvore lateral, expanda a conexão e clique com o <strong style="color:var(--text)">botão direito em "Databases"</strong> → <strong style="color:var(--text)">Create New Database</strong>.</div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(69,183,209,0.18);color:var(--accent4);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">3</span>
+        <div style="color:var(--text-dim);font-size:0.92rem">Em <strong>Database name</strong>, digite <code style="color:var(--petshop)">petshop</code> (tudo minúsculo, sem espaços). Clique em <strong>OK</strong>.</div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="background:rgba(69,183,209,0.18);color:var(--accent4);font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">4</span>
+        <div style="color:var(--text-dim);font-size:0.92rem">O banco aparece na lista. Pronto! Agora pode rodar a aplicação Spring que ela vai conectar e <strong style="color:var(--text)">criar as tabelas sozinha</strong> via <code>ddl-auto=update</code>.</div>
+      </div>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">💻 Alternativa: criar via SQL</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Se preferir, abra um <strong>SQL Editor</strong> no DBeaver (clicando na conexão e indo em "SQL Editor") e rode:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge" style="background:rgba(69,183,209,0.15);color:var(--accent4)">SQL</span>
+      </div>
+      <pre>
+<span class="kw">CREATE DATABASE</span> petshop;</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🎬</span>
+      <div class="tip-content"><strong>Conferiu que criou?</strong> Clique com o botão direito em "Databases" → "Refresh". O <code>petshop</code> deve aparecer na lista. Se aparecer, partiu codar! 🚀</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: ENUM ESPECIE                    -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-enum">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 1</div>
+    <div>
+      <div class="step-title">Enum — EspeciePetEnum</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Os tipos de pet aceitos no sistema</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>É <strong>EXATAMENTE</strong> igual ao <code style="color:var(--accent5)">CategoriaProdutoEnum</code> que você criou em <strong style="color:var(--accent4)">Produto (cap 2.1)</strong>! Crie o pacote <code>enums</code> (<strong>fora</strong> de model), e dentro coloque um arquivo <code>EspeciePetEnum.java</code>. É um <code style="color:var(--kw)">public enum</code> com os valores <code>CACHORRO, GATO, PASSARO, ROEDOR, OUTROS</code> separados por vírgula. Tudo MAIÚSCULAS. Sem método nenhum dentro!</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>PARE! Tente sozinho primeiro.</strong> Abra o cap 2.1 numa aba ao lado e use o <code>CategoriaProdutoEnum</code> como referência. Você consegue — é só trocar os nomes!</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">enums/EspeciePetEnum.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.enums;</span>
+
+<span class="kw">public enum</span> <span class="tp">EspeciePetEnum</span> {
+
+    <span class="nb">CACHORRO</span>,
+    <span class="nb">GATO</span>,
+    <span class="nb">PASSARO</span>,
+    <span class="nb">ROEDOR</span>,
+    <span class="nb">OUTROS</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: TUTOR MODEL                     -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-tutor-model">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 2</div>
+    <div>
+      <div class="step-title">Model — Tutor.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A entidade da pessoa dona dos pets</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>O Tutor segue o <strong>MESMO PADRÃO</strong> do <code style="color:var(--accent5)">Fornecedor</code> do <strong>cap 1</strong>! Crie a classe com <code>@NoArgsConstructor</code>, <code>@AllArgsConstructor</code>, <code>@Data</code>, <code>@Table(name="tutor")</code> e <code>@Entity</code>. Os campos: <strong>id</strong> (Long, com <code>@Id</code> e <code>@GeneratedValue(strategy = IDENTITY)</code>), <strong>nomeCompleto</strong>, <strong>email</strong>, <strong>telefone</strong> (todos String, com <code>@Column(nullable = false)</code>).</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>NÃO clique no toggler ainda!</strong> Abra <code>Fornecedor.java</code> do cap 1.1 e use como base — basicamente é trocar os nomes dos campos!</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">model/Tutor.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.model;</span>
+
+<span class="pkg">import jakarta.persistence.*;</span>
+<span class="pkg">import lombok.AllArgsConstructor;</span>
+<span class="pkg">import lombok.Data;</span>
+<span class="pkg">import lombok.NoArgsConstructor;</span>
+
+<span class="an">@NoArgsConstructor</span>
+<span class="an">@AllArgsConstructor</span>
+<span class="an">@Data</span>
+<span class="an">@Table</span>(name = <span class="st">"tutor"</span>)
+<span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="tp">Tutor</span> {
+
+    <span class="an">@Id</span>
+    <span class="an">@GeneratedValue</span>(strategy = <span class="tp">GenerationType</span>.<span class="nb">IDENTITY</span>)
+    <span class="kw">private</span> <span class="tp">Long</span> id;
+
+    <span class="an">@Column</span>(name = <span class="st">"nome_completo"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> nomeCompleto;
+
+    <span class="an">@Column</span>(name = <span class="st">"email"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> email;
+
+    <span class="an">@Column</span>(name = <span class="st">"telefone"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> telefone;
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: PET MODEL                       -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-pet-model">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 3</div>
+    <div>
+      <div class="step-title">Model — Pet.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A entidade Pet com Enum e @ManyToOne pro Tutor</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>O Pet é o <strong>"Produto"</strong> deste desafio — segue <strong>EXATAMENTE</strong> a estrutura de <code style="color:var(--accent4)">Produto.java</code> do <strong>cap 2.2</strong>! Os campos: <strong>id</strong>, <strong>nome</strong>, <strong>raca</strong>, <strong>idade</strong> (Integer), <strong>especie</strong> (EspeciePetEnum com <code>@Enumerated(EnumType.STRING)</code>) e <strong>tutor</strong> (Tutor com <code>@ManyToOne</code> + <code>@JoinColumn(name = "tutor_id")</code>).</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>Pare!</strong> Abra <code>Produto.java</code> do cap 2.2 — você vai ver que o Pet é literalmente uma cópia trocando: <code>preco/quantidadeEstoque</code> por <code>raca/idade</code>, <code>CategoriaProdutoEnum</code> por <code>EspeciePetEnum</code>, e <code>Fornecedor</code> por <code>Tutor</code>!</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">model/Pet.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.model;</span>
+
+<span class="pkg">import br.com.petshop.api.enums.EspeciePetEnum;</span>
+<span class="pkg">import jakarta.persistence.*;</span>
+<span class="pkg">import lombok.AllArgsConstructor;</span>
+<span class="pkg">import lombok.Data;</span>
+<span class="pkg">import lombok.NoArgsConstructor;</span>
+
+<span class="an">@NoArgsConstructor</span>
+<span class="an">@AllArgsConstructor</span>
+<span class="an">@Data</span>
+<span class="an">@Table</span>(name = <span class="st">"pet"</span>)
+<span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="tp">Pet</span> {
+
+    <span class="an">@Id</span>
+    <span class="an">@GeneratedValue</span>(strategy = <span class="tp">GenerationType</span>.<span class="nb">IDENTITY</span>)
+    <span class="kw">private</span> <span class="tp">Long</span> id;
+
+    <span class="an">@Column</span>(name = <span class="st">"nome"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> nome;
+
+    <span class="an">@Column</span>(name = <span class="st">"raca"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> raca;
+
+    <span class="an">@Column</span>(name = <span class="st">"idade"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">Integer</span> idade;
+
+    <span class="an">@Enumerated</span>(<span class="tp">EnumType</span>.<span class="nb">STRING</span>)
+    <span class="an">@Column</span>(name = <span class="st">"especie"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">EspeciePetEnum</span> especie;
+
+    <span class="an">@ManyToOne</span>
+    <span class="an">@JoinColumn</span>(name = <span class="st">"tutor_id"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">Tutor</span> tutor;
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: TUTOR DTOs                      -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-tutor-dtos">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 4</div>
+    <div>
+      <div class="step-title">DTOs — TutorRequestDTO e TutorResponseDTO</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Records com Bean Validation</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>Crie <code>dto/tutor/TutorRequestDTO.java</code> e <code>dto/tutor/TutorResponseDTO.java</code> como <strong style="color:var(--text)">records</strong>. Para o Request, <strong>não inclua o id</strong> e use <code>@NotBlank</code> em <code>nomeCompleto</code>, <code>email</code> e <code>telefone</code>. Para o Response, <strong>inclua o id</strong>. É <strong>identicamente</strong> o que você fez em <code style="color:var(--accent4)">ProdutoRequestDTO/ResponseDTO</code> no cap 2.3.</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>Lembre-se:</strong> em record o nome dos campos é só o tipo + nome, separado por vírgula. <code>public record TutorRequestDTO(String nomeCompleto, ...)</code>.</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/tutor/TutorRequestDTO.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.dto.tutor;</span>
+
+<span class="pkg">import jakarta.validation.constraints.NotBlank;</span>
+
+<span class="kw">public record</span> <span class="tp">TutorRequestDTO</span>(
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O nome completo é obrigatório"</span>)
+        <span class="tp">String</span> nomeCompleto,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O e-mail é obrigatório"</span>)
+        <span class="tp">String</span> email,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O telefone é obrigatório"</span>)
+        <span class="tp">String</span> telefone
+) {}</pre>
+        </div>
+
+        <div class="code-block with-lines" style="margin-top:16px">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/tutor/TutorResponseDTO.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.dto.tutor;</span>
+
+<span class="kw">public record</span> <span class="tp">TutorResponseDTO</span>(
+        <span class="tp">Long</span> id,
+        <span class="tp">String</span> nomeCompleto,
+        <span class="tp">String</span> email,
+        <span class="tp">String</span> telefone
+) {}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: PET DTOs                        -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-pet-dtos">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 5</div>
+    <div>
+      <div class="step-title">DTOs — PetRequestDTO e PetResponseDTO</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Com tutorId e tutorNomeCompleto extra (igual fornecedorId/Nome do Produto!)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>Idêntico ao <code style="color:var(--accent4)">ProdutoRequestDTO/ResponseDTO</code>! No <strong>Request</strong>: <code>nome</code>, <code>raca</code>, <code>idade</code>, <code>especie</code> e <code>tutorId</code> (Long, <strong>não o objeto Tutor</strong>). Use <code>@NotBlank</code> nas Strings, <code>@NotNull</code> + <code>@PositiveOrZero</code> em idade, <code>@NotNull</code> em especie e tutorId. No <strong>Response</strong>: id, todos os campos + <strong>tutorNomeCompleto</strong> (extra, igual <code>fornecedorNome</code> no Produto!).</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>Abra o <code>ProdutoRequestDTO</code> e o <code>ProdutoResponseDTO</code> do cap 2.3</strong> — você está fazendo a mesma coisa, só trocando os nomes!</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/pet/PetRequestDTO.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.dto.pet;</span>
+
+<span class="pkg">import br.com.petshop.api.enums.EspeciePetEnum;</span>
+<span class="pkg">import jakarta.validation.constraints.*;</span>
+
+<span class="kw">public record</span> <span class="tp">PetRequestDTO</span>(
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O nome do pet é obrigatório"</span>)
+        <span class="tp">String</span> nome,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"A raça é obrigatória"</span>)
+        <span class="tp">String</span> raca,
+
+        <span class="an">@NotNull</span>(message = <span class="st">"A idade é obrigatória"</span>)
+        <span class="an">@PositiveOrZero</span>(message = <span class="st">"A idade não pode ser negativa"</span>)
+        <span class="tp">Integer</span> idade,
+
+        <span class="an">@NotNull</span>(message = <span class="st">"A espécie é obrigatória"</span>)
+        <span class="tp">EspeciePetEnum</span> especie,
+
+        <span class="an">@NotNull</span>(message = <span class="st">"O ID do tutor é obrigatório"</span>)
+        <span class="tp">Long</span> tutorId
+) {}</pre>
+        </div>
+
+        <div class="code-block with-lines" style="margin-top:16px">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/pet/PetResponseDTO.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.dto.pet;</span>
+
+<span class="pkg">import br.com.petshop.api.enums.EspeciePetEnum;</span>
+
+<span class="kw">public record</span> <span class="tp">PetResponseDTO</span>(
+        <span class="tp">Long</span> id,
+        <span class="tp">String</span> nome,
+        <span class="tp">String</span> raca,
+        <span class="tp">Integer</span> idade,
+        <span class="tp">EspeciePetEnum</span> especie,
+        <span class="tp">Long</span> tutorId,
+        <span class="tp">String</span> tutorNomeCompleto
+) {}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="solution-box">
+      <div class="solution-title">✨ Por que <code>tutorId</code> e não o objeto Tutor inteiro?</div>
+      <p style="color:var(--text-dim)">É o <strong>mesmo motivo</strong> do <code>fornecedorId</code> no ProdutoRequestDTO! O front só envia o <strong style="color:var(--text)">ID</strong> (um número). Quem busca o objeto Tutor completo no banco é o <strong style="color:var(--accent5)">PetServiceImpl</strong>. E o <code>tutorNomeCompleto</code> no Response é a mesma ideia do <code>fornecedorNome</code>: dado extra pra facilitar a vida do front!</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: TUTOR MAPPER                    -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-tutor-mapper">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 6</div>
+    <div>
+      <div class="step-title">Mapper — TutorMapper.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Convertendo DTO ↔ Entidade</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>Use o <code style="color:var(--accent6)">ProdutoMapper</code> do cap 2.4 como referência! Dois métodos <strong style="color:var(--text)">estáticos</strong>: <code>toEntity(TutorRequestDTO dto)</code> que retorna um Tutor, e <code>toResponseDTO(Tutor tutor)</code> que retorna um TutorResponseDTO. <strong>Aqui é até mais simples</strong> que o ProdutoMapper, porque o Tutor não tem entidade relacionada (não tem o "Fornecedor" do meio)!</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>Lembrete:</strong> no record usamos <code>dto.nome()</code> (sem "get"), na entidade com Lombok usamos <code>tutor.getNome()</code> (com "get"). Não confunda!</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">mapper/TutorMapper.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.mapper;</span>
+
+<span class="pkg">import br.com.petshop.api.dto.tutor.TutorRequestDTO;</span>
+<span class="pkg">import br.com.petshop.api.dto.tutor.TutorResponseDTO;</span>
+<span class="pkg">import br.com.petshop.api.model.Tutor;</span>
+
+<span class="kw">public class</span> <span class="tp">TutorMapper</span> {
+
+    <span class="cm">// RequestDTO → Entidade</span>
+    <span class="kw">public static</span> <span class="tp">Tutor</span> <span class="fn">toEntity</span>(<span class="tp">TutorRequestDTO</span> dto) {
+
+        <span class="tp">Tutor</span> tutor = <span class="kw">new</span> <span class="tp">Tutor</span>();
+
+        tutor.<span class="fn">setNomeCompleto</span>(dto.<span class="fn">nomeCompleto</span>());
+        tutor.<span class="fn">setEmail</span>(dto.<span class="fn">email</span>());
+        tutor.<span class="fn">setTelefone</span>(dto.<span class="fn">telefone</span>());
+
+        <span class="kw">return</span> tutor;
+    }
+
+    <span class="cm">// Entidade → ResponseDTO</span>
+    <span class="kw">public static</span> <span class="tp">TutorResponseDTO</span> <span class="fn">toResponseDTO</span>(<span class="tp">Tutor</span> tutor) {
+
+        <span class="kw">return new</span> <span class="tp">TutorResponseDTO</span>(
+                tutor.<span class="fn">getId</span>(),
+                tutor.<span class="fn">getNomeCompleto</span>(),
+                tutor.<span class="fn">getEmail</span>(),
+                tutor.<span class="fn">getTelefone</span>()
+        );
+    }
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: PET MAPPER                      -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-pet-mapper">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 7</div>
+    <div>
+      <div class="step-title">Mapper — PetMapper.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Igualzinho ao ProdutoMapper!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>Esse é <strong>cópia carbono</strong> do <code style="color:var(--accent6)">ProdutoMapper</code> do cap 2.4! O <code>toEntity</code> recebe <strong>dois</strong> parâmetros: <code>(PetRequestDTO dto, Tutor tutor)</code> — porque o DTO só tem o tutorId, mas a entidade Pet precisa do objeto Tutor inteiro. O <code>toResponseDTO</code> usa <code>pet.getTutor().getId()</code> e <code>pet.getTutor().getNomeCompleto()</code> pra extrair o id e nome do tutor.</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>É EXATAMENTE o ProdutoMapper trocando palavras!</strong> Abre lá e segue a estrutura — você já fez isso uma vez, lembra como é!</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">mapper/PetMapper.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.mapper;</span>
+
+<span class="pkg">import br.com.petshop.api.dto.pet.PetRequestDTO;</span>
+<span class="pkg">import br.com.petshop.api.dto.pet.PetResponseDTO;</span>
+<span class="pkg">import br.com.petshop.api.model.Pet;</span>
+<span class="pkg">import br.com.petshop.api.model.Tutor;</span>
+
+<span class="kw">public class</span> <span class="tp">PetMapper</span> {
+
+    <span class="cm">// RequestDTO + Tutor → Pet (entidade)</span>
+    <span class="kw">public static</span> <span class="tp">Pet</span> <span class="fn">toEntity</span>(<span class="tp">PetRequestDTO</span> dto, <span class="tp">Tutor</span> tutor) {
+
+        <span class="tp">Pet</span> pet = <span class="kw">new</span> <span class="tp">Pet</span>();
+
+        pet.<span class="fn">setNome</span>(dto.<span class="fn">nome</span>());
+        pet.<span class="fn">setRaca</span>(dto.<span class="fn">raca</span>());
+        pet.<span class="fn">setIdade</span>(dto.<span class="fn">idade</span>());
+        pet.<span class="fn">setEspecie</span>(dto.<span class="fn">especie</span>());
+        pet.<span class="fn">setTutor</span>(tutor);   <span class="cm">// objeto completo, não o ID!</span>
+
+        <span class="kw">return</span> pet;
+    }
+
+    <span class="cm">// Pet (entidade) → ResponseDTO</span>
+    <span class="kw">public static</span> <span class="tp">PetResponseDTO</span> <span class="fn">toResponseDTO</span>(<span class="tp">Pet</span> pet) {
+
+        <span class="kw">return new</span> <span class="tp">PetResponseDTO</span>(
+                pet.<span class="fn">getId</span>(),
+                pet.<span class="fn">getNome</span>(),
+                pet.<span class="fn">getRaca</span>(),
+                pet.<span class="fn">getIdade</span>(),
+                pet.<span class="fn">getEspecie</span>(),
+                pet.<span class="fn">getTutor</span>().<span class="fn">getId</span>(),
+                pet.<span class="fn">getTutor</span>().<span class="fn">getNomeCompleto</span>()
+        );
+    }
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: REPOSITORIES                    -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-repos">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 8</div>
+    <div>
+      <div class="step-title">Repositories — TutorRepository e PetRepository</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Você já faz isso de olhos fechados!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>Duas <strong>interfaces</strong> (não classes!) com <code>@Repository</code> que <code>extends JpaRepository</code>. Os tipos genéricos: a entidade e o tipo do id. Ou seja: <code>extends JpaRepository&lt;Tutor, Long&gt;</code> e <code>extends JpaRepository&lt;Pet, Long&gt;</code>. <strong style="color:var(--text)">Vazias por dentro</strong> — exatamente como FornecedorRepository e ProdutoRepository!</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content">São <strong>literalmente</strong> 9 linhas cada. Abra <code>ProdutoRepository.java</code> do cap 2.5 e duplique trocando os nomes. Você consegue!</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">repository/TutorRepository.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.repository;</span>
+
+<span class="pkg">import br.com.petshop.api.model.Tutor;</span>
+<span class="pkg">import org.springframework.data.jpa.repository.JpaRepository;</span>
+<span class="pkg">import org.springframework.stereotype.Repository;</span>
+
+<span class="an">@Repository</span>
+<span class="kw">public interface</span> <span class="tp">TutorRepository</span> <span class="kw">extends</span> <span class="tp">JpaRepository</span>&lt;<span class="tp">Tutor</span>, <span class="tp">Long</span>&gt; {
+}</pre>
+        </div>
+
+        <div class="code-block with-lines" style="margin-top:16px">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">repository/PetRepository.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.repository;</span>
+
+<span class="pkg">import br.com.petshop.api.model.Pet;</span>
+<span class="pkg">import org.springframework.data.jpa.repository.JpaRepository;</span>
+<span class="pkg">import org.springframework.stereotype.Repository;</span>
+
+<span class="an">@Repository</span>
+<span class="kw">public interface</span> <span class="tp">PetRepository</span> <span class="kw">extends</span> <span class="tp">JpaRepository</span>&lt;<span class="tp">Pet</span>, <span class="tp">Long</span>&gt; {
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: SERVICES (INTERFACES)           -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-services">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 9</div>
+    <div>
+      <div class="step-title">Services — TutorService e PetService (interfaces)</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Os contratos — apenas as assinaturas dos métodos</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>Duas <strong>interfaces</strong> (não classes!) com 5 métodos cada — <strong style="color:var(--text)">criar, listar, buscar por id, atualizar, deletar</strong>. Trabalhando com <strong>DTOs</strong>, não entidades. Exatamente como <code style="color:var(--accent5)">ProdutoService</code> do cap 2.6!</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>Atenção:</strong> interface não tem corpo de método nem <code>@Service</code> — só as assinaturas e <code>;</code> no final. Olhe ProdutoService.java pra confirmar!</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/TutorService.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.service;</span>
+
+<span class="pkg">import br.com.petshop.api.dto.tutor.TutorRequestDTO;</span>
+<span class="pkg">import br.com.petshop.api.dto.tutor.TutorResponseDTO;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="kw">public interface</span> <span class="tp">TutorService</span> {
+
+    <span class="tp">TutorResponseDTO</span> <span class="fn">criarTutor</span>(<span class="tp">TutorRequestDTO</span> dto);
+
+    <span class="tp">List</span>&lt;<span class="tp">TutorResponseDTO</span>&gt; <span class="fn">listarTodosTutores</span>();
+
+    <span class="tp">TutorResponseDTO</span> <span class="fn">buscarTutorPorId</span>(<span class="tp">Long</span> id);
+
+    <span class="tp">TutorResponseDTO</span> <span class="fn">atualizarTutorPorId</span>(<span class="tp">Long</span> id, <span class="tp">TutorRequestDTO</span> dto);
+
+    <span class="kw">void</span> <span class="fn">deletarTutorPorId</span>(<span class="tp">Long</span> id);
+}</pre>
+        </div>
+
+        <div class="code-block with-lines" style="margin-top:16px">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/PetService.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.service;</span>
+
+<span class="pkg">import br.com.petshop.api.dto.pet.PetRequestDTO;</span>
+<span class="pkg">import br.com.petshop.api.dto.pet.PetResponseDTO;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="kw">public interface</span> <span class="tp">PetService</span> {
+
+    <span class="tp">PetResponseDTO</span> <span class="fn">criarPet</span>(<span class="tp">PetRequestDTO</span> dto);
+
+    <span class="tp">List</span>&lt;<span class="tp">PetResponseDTO</span>&gt; <span class="fn">listarTodosPets</span>();
+
+    <span class="tp">PetResponseDTO</span> <span class="fn">buscarPetPorId</span>(<span class="tp">Long</span> id);
+
+    <span class="tp">PetResponseDTO</span> <span class="fn">atualizarPetPorId</span>(<span class="tp">Long</span> id, <span class="tp">PetRequestDTO</span> dto);
+
+    <span class="kw">void</span> <span class="fn">deletarPetPorId</span>(<span class="tp">Long</span> id);
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: SERVICE IMPLS                   -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-impls">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 10</div>
+    <div>
+      <div class="step-title">ServiceImpls — onde a mágica acontece</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Igualzinho aos do Produto!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>Coloque ambos em <code>service/impl/</code>. Use <code>@Service</code>, <code>@RequiredArgsConstructor</code> e <code>private final</code> nos repositórios. <strong>TutorServiceImpl</strong> é simples (só 1 repo, sem segundo). <strong>PetServiceImpl</strong> tem 2 repos (PetRepository + TutorRepository) — porque busca o Tutor pelo ID que veio no DTO. Use <code>orElseThrow</code> com lambda e <code>stream().map()</code> na listagem. <strong style="color:var(--text)">É EXATAMENTE</strong> o ProdutoServiceImpl do cap 2.7!</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>Esta é a parte mais importante do desafio!</strong> Abra o <code>ProdutoServiceImpl</code> e tente reproduzir a estrutura inteira pro Pet. Em <code>orElseThrow(() -> new ResponseStatusException(...))</code>, troque "Produto não encontrado" por "Pet não encontrado".</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/impl/TutorServiceImpl.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65<br>66<br>67<br>68<br>69<br>70<br>71<br>72<br>73<br>74</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.service.impl;</span>
+
+<span class="pkg">import br.com.petshop.api.dto.tutor.TutorRequestDTO;</span>
+<span class="pkg">import br.com.petshop.api.dto.tutor.TutorResponseDTO;</span>
+<span class="pkg">import br.com.petshop.api.mapper.TutorMapper;</span>
+<span class="pkg">import br.com.petshop.api.model.Tutor;</span>
+<span class="pkg">import br.com.petshop.api.repository.TutorRepository;</span>
+<span class="pkg">import br.com.petshop.api.service.TutorService;</span>
+<span class="pkg">import lombok.RequiredArgsConstructor;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.stereotype.Service;</span>
+<span class="pkg">import org.springframework.web.server.ResponseStatusException;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="an">@Service</span>
+<span class="an">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="tp">TutorServiceImpl</span> <span class="kw">implements</span> <span class="tp">TutorService</span> {
+
+    <span class="kw">private final</span> <span class="tp">TutorRepository</span> tutorRepository;
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">TutorResponseDTO</span> <span class="fn">criarTutor</span>(<span class="tp">TutorRequestDTO</span> dto) {
+
+        <span class="tp">Tutor</span> tutor = <span class="tp">TutorMapper</span>.<span class="fn">toEntity</span>(dto);
+        tutorRepository.<span class="fn">save</span>(tutor);
+
+        <span class="kw">return</span> <span class="tp">TutorMapper</span>.<span class="fn">toResponseDTO</span>(tutor);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">TutorResponseDTO</span>&gt; <span class="fn">listarTodosTutores</span>() {
+
+        <span class="kw">return</span> tutorRepository.<span class="fn">findAll</span>()
+                .<span class="fn">stream</span>()
+                .<span class="fn">map</span>(<span class="tp">TutorMapper</span>::<span class="fn">toResponseDTO</span>)
+                .<span class="fn">toList</span>();
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">TutorResponseDTO</span> <span class="fn">buscarTutorPorId</span>(<span class="tp">Long</span> id) {
+
+        <span class="tp">Tutor</span> tutor = tutorRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Tutor não encontrado"</span>));
+
+        <span class="kw">return</span> <span class="tp">TutorMapper</span>.<span class="fn">toResponseDTO</span>(tutor);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">TutorResponseDTO</span> <span class="fn">atualizarTutorPorId</span>(<span class="tp">Long</span> id, <span class="tp">TutorRequestDTO</span> dto) {
+
+        <span class="tp">Tutor</span> tutor = tutorRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Tutor não encontrado"</span>));
+
+        tutor.<span class="fn">setNomeCompleto</span>(dto.<span class="fn">nomeCompleto</span>());
+        tutor.<span class="fn">setEmail</span>(dto.<span class="fn">email</span>());
+        tutor.<span class="fn">setTelefone</span>(dto.<span class="fn">telefone</span>());
+
+        tutorRepository.<span class="fn">save</span>(tutor);
+
+        <span class="kw">return</span> <span class="tp">TutorMapper</span>.<span class="fn">toResponseDTO</span>(tutor);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">deletarTutorPorId</span>(<span class="tp">Long</span> id) {
+
+        <span class="tp">Tutor</span> tutor = tutorRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Tutor não encontrado"</span>));
+
+        tutorRepository.<span class="fn">deleteById</span>(tutor.<span class="fn">getId</span>());
+    }
+}</pre>
+        </div>
+
+        <div class="code-block with-lines" style="margin-top:16px">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/impl/PetServiceImpl.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65<br>66<br>67<br>68<br>69<br>70<br>71<br>72<br>73<br>74<br>75<br>76<br>77<br>78<br>79<br>80<br>81</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.service.impl;</span>
+
+<span class="pkg">import br.com.petshop.api.dto.pet.PetRequestDTO;</span>
+<span class="pkg">import br.com.petshop.api.dto.pet.PetResponseDTO;</span>
+<span class="pkg">import br.com.petshop.api.mapper.PetMapper;</span>
+<span class="pkg">import br.com.petshop.api.model.Pet;</span>
+<span class="pkg">import br.com.petshop.api.model.Tutor;</span>
+<span class="pkg">import br.com.petshop.api.repository.PetRepository;</span>
+<span class="pkg">import br.com.petshop.api.repository.TutorRepository;</span>
+<span class="pkg">import br.com.petshop.api.service.PetService;</span>
+<span class="pkg">import lombok.RequiredArgsConstructor;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.stereotype.Service;</span>
+<span class="pkg">import org.springframework.web.server.ResponseStatusException;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="an">@Service</span>
+<span class="an">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="tp">PetServiceImpl</span> <span class="kw">implements</span> <span class="tp">PetService</span> {
+
+    <span class="kw">private final</span> <span class="tp">PetRepository</span> petRepository;
+    <span class="kw">private final</span> <span class="tp">TutorRepository</span> tutorRepository;
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">PetResponseDTO</span> <span class="fn">criarPet</span>(<span class="tp">PetRequestDTO</span> dto) {
+
+        <span class="tp">Tutor</span> tutor = tutorRepository.<span class="fn">findById</span>(dto.<span class="fn">tutorId</span>())
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Tutor não encontrado"</span>));
+
+        <span class="tp">Pet</span> pet = <span class="tp">PetMapper</span>.<span class="fn">toEntity</span>(dto, tutor);
+        petRepository.<span class="fn">save</span>(pet);
+
+        <span class="kw">return</span> <span class="tp">PetMapper</span>.<span class="fn">toResponseDTO</span>(pet);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">PetResponseDTO</span>&gt; <span class="fn">listarTodosPets</span>() {
+
+        <span class="kw">return</span> petRepository.<span class="fn">findAll</span>()
+                .<span class="fn">stream</span>()
+                .<span class="fn">map</span>(<span class="tp">PetMapper</span>::<span class="fn">toResponseDTO</span>)
+                .<span class="fn">toList</span>();
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">PetResponseDTO</span> <span class="fn">buscarPetPorId</span>(<span class="tp">Long</span> id) {
+
+        <span class="tp">Pet</span> pet = petRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Pet não encontrado"</span>));
+
+        <span class="kw">return</span> <span class="tp">PetMapper</span>.<span class="fn">toResponseDTO</span>(pet);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">PetResponseDTO</span> <span class="fn">atualizarPetPorId</span>(<span class="tp">Long</span> id, <span class="tp">PetRequestDTO</span> dto) {
+
+        <span class="tp">Pet</span> pet = petRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Pet não encontrado"</span>));
+
+        <span class="tp">Tutor</span> tutor = tutorRepository.<span class="fn">findById</span>(dto.<span class="fn">tutorId</span>())
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Tutor não encontrado"</span>));
+
+        pet.<span class="fn">setNome</span>(dto.<span class="fn">nome</span>());
+        pet.<span class="fn">setRaca</span>(dto.<span class="fn">raca</span>());
+        pet.<span class="fn">setIdade</span>(dto.<span class="fn">idade</span>());
+        pet.<span class="fn">setEspecie</span>(dto.<span class="fn">especie</span>());
+        pet.<span class="fn">setTutor</span>(tutor);
+
+        petRepository.<span class="fn">save</span>(pet);
+
+        <span class="kw">return</span> <span class="tp">PetMapper</span>.<span class="fn">toResponseDTO</span>(pet);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">deletarPetPorId</span>(<span class="tp">Long</span> id) {
+
+        <span class="tp">Pet</span> pet = petRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Pet não encontrado"</span>));
+
+        petRepository.<span class="fn">deleteById</span>(pet.<span class="fn">getId</span>());
+    }
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="solution-box">
+      <div class="solution-title">✨ Por que o PetServiceImpl precisa do TutorRepository?</div>
+      <p style="color:var(--text-dim)">Mesmo motivo do <code>ProdutoServiceImpl</code> precisar do <code>FornecedorRepository</code>! O DTO traz só o <code>tutorId</code> (um Long), mas a entidade Pet precisa do <strong>objeto Tutor inteiro</strong> pra gravar o relacionamento. Por isso buscamos o Tutor antes — e se ele não existir, devolvemos <strong>404 Not Found</strong> automaticamente via <code>orElseThrow</code>!</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: CONTROLLERS                     -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-controllers">
+  <div class="step-header">
+    <div class="step-number sn-pet">🐾 11</div>
+    <div>
+      <div class="step-title">Controllers — TutorController e PetController</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Endpoints REST com @Valid</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">💡 Dica para fazer sozinho</div>
+      <p>Use <code>@RestController</code>, <code>@RequestMapping("/tutores")</code> e <code>@RequestMapping("/pets")</code>, <code>@RequiredArgsConstructor</code> e <code>private final</code> nos Services. Nos métodos POST e PUT use <code>@Valid @RequestBody</code> para ativar as validações. <strong style="color:var(--text)">Idêntico ao ProdutoController</strong> do cap 2.8!</p>
+    </div>
+
+    <div class="try-first">
+      <div class="try-first-icon">🚨</div>
+      <div class="try-first-content"><strong>Não esqueça do @Valid!</strong> Sem ele, todas aquelas suas validações @NotBlank, @PositiveOrZero, @NotNull não fazem nada. É como ligar o segurança e esquecer de pedir pra ele conferir os ingressos!</div>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>👀 Só clique aqui DEPOIS de tentar — Ver código completo</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div class="code-block with-lines">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">controller/TutorController.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.controller;</span>
+
+<span class="pkg">import br.com.petshop.api.dto.tutor.TutorRequestDTO;</span>
+<span class="pkg">import br.com.petshop.api.dto.tutor.TutorResponseDTO;</span>
+<span class="pkg">import br.com.petshop.api.service.TutorService;</span>
+<span class="pkg">import jakarta.validation.Valid;</span>
+<span class="pkg">import lombok.RequiredArgsConstructor;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.web.bind.annotation.*;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="an">@RestController</span>
+<span class="an">@RequestMapping</span>(<span class="st">"/tutores"</span>)
+<span class="an">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="tp">TutorController</span> {
+
+    <span class="kw">private final</span> <span class="tp">TutorService</span> tutorService;
+
+    <span class="an">@PostMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">CREATED</span>)
+    <span class="kw">public</span> <span class="tp">TutorResponseDTO</span> <span class="fn">criarTutor</span>(<span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">TutorRequestDTO</span> dto) {
+        <span class="kw">return</span> tutorService.<span class="fn">criarTutor</span>(dto);
+    }
+
+    <span class="an">@GetMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">TutorResponseDTO</span>&gt; <span class="fn">listarTodosTutores</span>() {
+        <span class="kw">return</span> tutorService.<span class="fn">listarTodosTutores</span>();
+    }
+
+    <span class="an">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">TutorResponseDTO</span> <span class="fn">buscarTutorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        <span class="kw">return</span> tutorService.<span class="fn">buscarTutorPorId</span>(id);
+    }
+
+    <span class="an">@PutMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">TutorResponseDTO</span> <span class="fn">atualizarTutorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id,
+                                                   <span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">TutorRequestDTO</span> dto) {
+        <span class="kw">return</span> tutorService.<span class="fn">atualizarTutorPorId</span>(id, dto);
+    }
+
+    <span class="an">@DeleteMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">NO_CONTENT</span>)
+    <span class="kw">public void</span> <span class="fn">deletarTutorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        tutorService.<span class="fn">deletarTutorPorId</span>(id);
+    }
+}</pre>
+        </div>
+
+        <div class="code-block with-lines" style="margin-top:16px">
+          <div class="code-header">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="filename">controller/PetController.java</span><span class="lang-badge java">Java</span></div>
+          </div>
+          <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48</div>
+          <pre>
+<span class="pkg">package br.com.petshop.api.controller;</span>
+
+<span class="pkg">import br.com.petshop.api.dto.pet.PetRequestDTO;</span>
+<span class="pkg">import br.com.petshop.api.dto.pet.PetResponseDTO;</span>
+<span class="pkg">import br.com.petshop.api.service.PetService;</span>
+<span class="pkg">import jakarta.validation.Valid;</span>
+<span class="pkg">import lombok.RequiredArgsConstructor;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.web.bind.annotation.*;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="an">@RestController</span>
+<span class="an">@RequestMapping</span>(<span class="st">"/pets"</span>)
+<span class="an">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="tp">PetController</span> {
+
+    <span class="kw">private final</span> <span class="tp">PetService</span> petService;
+
+    <span class="an">@PostMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">CREATED</span>)
+    <span class="kw">public</span> <span class="tp">PetResponseDTO</span> <span class="fn">criarPet</span>(<span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">PetRequestDTO</span> dto) {
+        <span class="kw">return</span> petService.<span class="fn">criarPet</span>(dto);
+    }
+
+    <span class="an">@GetMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">PetResponseDTO</span>&gt; <span class="fn">listarTodosPets</span>() {
+        <span class="kw">return</span> petService.<span class="fn">listarTodosPets</span>();
+    }
+
+    <span class="an">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">PetResponseDTO</span> <span class="fn">buscarPetPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        <span class="kw">return</span> petService.<span class="fn">buscarPetPorId</span>(id);
+    }
+
+    <span class="an">@PutMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">PetResponseDTO</span> <span class="fn">atualizarPetPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id,
+                                               <span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">PetRequestDTO</span> dto) {
+        <span class="kw">return</span> petService.<span class="fn">atualizarPetPorId</span>(id, dto);
+    }
+
+    <span class="an">@DeleteMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">NO_CONTENT</span>)
+    <span class="kw">public void</span> <span class="fn">deletarPetPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        petService.<span class="fn">deletarPetPorId</span>(id);
+    }
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: TESTANDO NO INSOMNIA            -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="petshop-insomnia">
+  <div class="step-header">
+    <div class="step-number" style="background:#7B68EE">🦋</div>
+    <div>
+      <div class="step-title">Testando tudo no Insomnia</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Hora de ver o PetShop funcionando!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:16px">Rode a aplicação Spring (botão verde no IntelliJ ▶️) e abra o Insomnia. Crie uma pasta <strong style="color:var(--text)">PetShop</strong> e prepare os requests com a URL base <code>http://localhost:8080</code>.</p>
+
+    <div class="warning" style="margin-bottom:20px">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Ordem importa:</strong> crie o <strong style="color:var(--text)">Tutor primeiro</strong>! O Pet precisa apontar pra um <code>tutorId</code> que já existe no banco.</div>
+    </div>
+
+    <!-- 1. Criar Tutor -->
+    <div style="background:rgba(255,107,107,0.04);border:1px solid rgba(255,107,107,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge post" style="font-size:0.8rem;padding:4px 14px">POST</span> <span style="color:var(--text)">1. Criar Tutor</span></h4>
+      <div style="font-size:0.88rem;color:var(--text-dim);margin-bottom:8px"><strong style="color:var(--text)">URL:</strong> <code>http://localhost:8080/tutores</code></div>
+      <div class="code-block" style="margin:8px 0 0">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="lang-badge json">JSON</span>
+        </div>
+        <pre>{
+  <span class="json-key">"nomeCompleto"</span>: <span class="json-val">"Ana Silva"</span>,
+  <span class="json-key">"email"</span>: <span class="json-val">"ana@email.com"</span>,
+  <span class="json-key">"telefone"</span>: <span class="json-val">"(83) 99999-0000"</span>
+}</pre>
+      </div>
+      <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px"><strong style="color:#49cc90">Resposta:</strong> 201 Created com o Tutor + id gerado. Anote o id! 📝</p>
+    </div>
+
+    <!-- 2. Criar Pet -->
+    <div style="background:rgba(255,159,67,0.04);border:1px solid rgba(255,159,67,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge post" style="font-size:0.8rem;padding:4px 14px">POST</span> <span style="color:var(--text)">2. Criar Pet (do Tutor id=1)</span></h4>
+      <div style="font-size:0.88rem;color:var(--text-dim);margin-bottom:8px"><strong style="color:var(--text)">URL:</strong> <code>http://localhost:8080/pets</code></div>
+      <div class="code-block" style="margin:8px 0 0">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="lang-badge json">JSON</span>
+        </div>
+        <pre>{
+  <span class="json-key">"nome"</span>: <span class="json-val">"Rex"</span>,
+  <span class="json-key">"raca"</span>: <span class="json-val">"Golden Retriever"</span>,
+  <span class="json-key">"idade"</span>: <span class="json-num">3</span>,
+  <span class="json-key">"especie"</span>: <span class="json-val">"CACHORRO"</span>,
+  <span class="json-key">"tutorId"</span>: <span class="json-num">1</span>
+}</pre>
+      </div>
+      <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px"><strong style="color:#49cc90">Resposta:</strong> 201 Created com o Pet + tutorNomeCompleto preenchido. ✨</p>
+    </div>
+
+    <!-- 3. Listar -->
+    <div style="background:rgba(73,204,144,0.04);border:1px solid rgba(73,204,144,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge get" style="font-size:0.8rem;padding:4px 14px">GET</span> <span style="color:var(--text)">3. Listar tudo</span></h4>
+      <div style="font-size:0.88rem;color:var(--text-dim);margin-bottom:4px"><code>GET /tutores</code> — todos os tutores</div>
+      <div style="font-size:0.88rem;color:var(--text-dim)"><code>GET /pets</code> — todos os pets (com tutorNomeCompleto!)</div>
+      <div style="font-size:0.88rem;color:var(--text-dim);margin-top:4px"><code>GET /tutores/1</code> e <code>GET /pets/1</code> — buscar por id</div>
+    </div>
+
+    <!-- 4. Atualizar -->
+    <div style="background:rgba(247,183,49,0.04);border:1px solid rgba(247,183,49,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge put" style="font-size:0.8rem;padding:4px 14px">PUT</span> <span style="color:var(--text)">4. Atualizar Pet</span></h4>
+      <div style="font-size:0.88rem;color:var(--text-dim);margin-bottom:8px"><strong style="color:var(--text)">URL:</strong> <code>http://localhost:8080/pets/1</code></div>
+      <div class="code-block" style="margin:8px 0 0">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="lang-badge json">JSON</span>
+        </div>
+        <pre>{
+  <span class="json-key">"nome"</span>: <span class="json-val">"Rex"</span>,
+  <span class="json-key">"raca"</span>: <span class="json-val">"Labrador"</span>,        <span class="cm">// mudou a raça!</span>
+  <span class="json-key">"idade"</span>: <span class="json-num">4</span>,                <span class="cm">// fez aniversário!</span>
+  <span class="json-key">"especie"</span>: <span class="json-val">"CACHORRO"</span>,
+  <span class="json-key">"tutorId"</span>: <span class="json-num">1</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- 5. Testando validação -->
+    <h4 style="margin:28px 0 12px;color:var(--accent2)">🧪 Testando as validações</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Tente um POST com campos vazios e idade negativa:</p>
+    <div class="code-block" style="margin:8px 0">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">JSON com erros</span><span class="lang-badge json">JSON</span></div>
+      </div>
+      <pre>{
+  <span class="json-key">"nome"</span>: <span class="json-val">""</span>,                  <span class="cm">// ← vazio! @NotBlank vai barrar</span>
+  <span class="json-key">"raca"</span>: <span class="json-val">""</span>,                  <span class="cm">// ← vazio!</span>
+  <span class="json-key">"idade"</span>: <span class="json-num">-2</span>                 <span class="cm">// ← negativo! @PositiveOrZero vai barrar</span>
+}</pre>
+    </div>
+    <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px"><strong style="color:var(--accent2)">Resposta:</strong> 400 Bad Request com as mensagens que você escreveu nas anotações! 🎯</p>
+
+    <div class="tip" style="margin-top:24px">
+      <span class="tip-icon">🎉</span>
+      <div class="tip-content"><strong>Funcionou tudo?</strong> Parabéns — você acabou de construir uma API REST completa do zero, sozinho! Esse é o nível profissional. Tira um print, manda no grupo, comemora! 🎊</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DESAFIO: RESUMO FINAL                    -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" style="text-align:center;padding:60px 20px">
+  <div style="font-size:3.5rem;margin-bottom:16px;animation:bounce 2s ease-in-out infinite;display:inline-block">🎓</div>
+  <h2 style="font-size:2rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--petshop),var(--accent5));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Desafio Concluído!</h2>
+  <p style="color:var(--text-dim);max-width:560px;margin:0 auto 30px;font-size:1.05rem">Você construiu uma <strong style="color:var(--text)">API REST profissional inteira do zero</strong> aplicando o padrão que aprendeu em Produto. Isso é <strong style="color:var(--accent3)">enorme</strong>!</p>
+
+  <div class="card" style="text-align:left;max-width:640px;margin:0 auto">
+    <h3 style="margin-bottom:16px;color:var(--petshop)">📋 O que você consolidou neste desafio</h3>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.92rem">
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Setup do zero</strong> — Spring Initializr, packaging Jar, Java 21, dependências</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">application.properties</strong> — configurando conexão com o PostgreSQL</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Criação do banco</strong> — DBeaver e CREATE DATABASE</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Enum</strong> — EspeciePetEnum com @Enumerated(EnumType.STRING)</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Models</strong> — Tutor e Pet com Lombok + @ManyToOne</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">DTOs com record</strong> — Request e Response separados</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Bean Validation</strong> — @NotBlank, @NotNull, @PositiveOrZero, @Valid</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Mappers</strong> — métodos estáticos toEntity/toResponseDTO</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Repositories</strong> — JpaRepository</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Service Interface + Impl</strong> — separação contrato/execução</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">@RequiredArgsConstructor</strong> — injeção pelo construtor (private final)</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">orElseThrow + lambda</strong> — 404 elegante quando não encontra</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">stream + map + toList</strong> — converter listas com elegância</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Controllers REST</strong> — POST, GET, PUT, DELETE com @Valid</div>
+    </div>
+
+    <div class="tip" style="margin-top:20px">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-content"><strong>Você está pronto para o Capítulo 3!</strong> Com o padrão profissional já consolidado, agora vamos aprender uma novidade real: o relacionamento <strong style="color:var(--accent6)">@OneToOne</strong> com a entidade <code style="color:var(--accent3)">Endereço</code>. Vamos lá! 👤</div>
     </div>
   </div>
 </section>
