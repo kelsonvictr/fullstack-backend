@@ -300,6 +300,145 @@ pre{padding:20px;margin:0;overflow-x:auto;font-family:'JetBrains Mono',monospace
 .entity-divider-emoji{font-size:1.5rem}
 .entity-divider-sub{color:var(--text-dim);font-size:0.85rem;margin-top:10px}
 
+/* ═══════════════════════════════════════════════════════
+   WEB DEMO — animação didática "front usa o DTO/Controller"
+   ═══════════════════════════════════════════════════════ */
+.web-demo{background:linear-gradient(135deg,rgba(108,99,255,0.04),rgba(78,205,196,0.03));border:1px solid rgba(108,99,255,0.18);border-radius:20px;padding:28px;margin:24px 0;position:relative;overflow:hidden}
+.web-demo::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3),var(--accent5),var(--accent));background-size:200% 100%;animation:gradMove 4s linear infinite}
+@keyframes gradMove{0%{background-position:0% 0%}100%{background-position:200% 0%}}
+.web-demo-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.web-demo-title{font-weight:900;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px}
+.web-demo-replay{background:linear-gradient(135deg,var(--accent),var(--accent6));color:white;border:none;padding:8px 18px;border-radius:50px;font-weight:700;font-size:0.82rem;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;display:flex;align-items:center;gap:6px}
+.web-demo-replay:hover{transform:scale(1.05);box-shadow:0 4px 14px rgba(108,99,255,0.4)}
+.web-demo-replay:active{transform:scale(0.97)}
+
+/* Browser mockup realista */
+.browser-mock{background:#0a0a14;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,0.5);flex:1;min-width:0;position:relative;font-family:'Inter','Nunito',sans-serif}
+.browser-bar{background:linear-gradient(180deg,#1a1a26,#13131e);padding:10px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.browser-traffic{display:flex;gap:6px}
+.traffic-light{width:12px;height:12px;border-radius:50%;display:block}
+.traffic-light.tl-red{background:#ff5f56;box-shadow:inset 0 0 0 0.5px rgba(0,0,0,0.2)}
+.traffic-light.tl-yellow{background:#ffbd2e;box-shadow:inset 0 0 0 0.5px rgba(0,0,0,0.2)}
+.traffic-light.tl-green{background:#27c93f;box-shadow:inset 0 0 0 0.5px rgba(0,0,0,0.2)}
+.browser-url{flex:1;background:rgba(255,255,255,0.04);border-radius:8px;padding:5px 12px;font-size:0.75rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.browser-url-lock{color:#49cc90;font-size:0.7rem;flex-shrink:0}
+.browser-content{padding:20px 22px;min-height:200px;background:linear-gradient(180deg,#0c0c18,#0a0a14)}
+
+/* Form web (RequestDTO) */
+.web-form-title{font-size:0.95rem;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.web-form-group{margin-bottom:10px}
+.web-form-label{display:block;font-size:0.7rem;color:var(--text-dim);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700}
+.web-form-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:var(--text);font-size:0.82rem;font-family:'JetBrains Mono',monospace;transition:border-color 0.3s,background 0.3s,box-shadow 0.3s;box-sizing:border-box}
+.web-form-input.typing{border-color:var(--accent);background:rgba(108,99,255,0.08);box-shadow:0 0 0 3px rgba(108,99,255,0.1)}
+.web-form-input.filled{border-color:rgba(73,204,144,0.4);background:rgba(73,204,144,0.04)}
+.web-form-input::after{content:'|';color:var(--accent);animation:blinkCursor 1s steps(1) infinite}
+.web-form-submit{margin-top:10px;background:linear-gradient(135deg,var(--accent),var(--accent6));color:white;border:none;padding:9px 20px;border-radius:8px;font-weight:800;font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:100%;justify-content:center;transition:all 0.3s}
+.web-form-submit.pulse{animation:btnPulse 0.5s ease}
+@keyframes btnPulse{0%,100%{transform:scale(1)}50%{transform:scale(0.95);box-shadow:0 0 0 8px rgba(108,99,255,0.2)}}
+@keyframes blinkCursor{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Lista web (ResponseDTO) */
+.web-list-title{font-size:0.95rem;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.web-list-table{width:100%;border-collapse:collapse;font-size:0.78rem}
+.web-list-table thead th{text-align:left;padding:7px 8px;color:var(--text-dim);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:800;border-bottom:1px solid rgba(255,255,255,0.08)}
+.web-list-table tbody tr{opacity:0;transform:translateY(8px);transition:opacity 0.4s,transform 0.4s}
+.web-list-table tbody tr.appeared{opacity:1;transform:translateY(0)}
+.web-list-table tbody td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.78rem}
+.web-list-table tbody td.col-id{color:var(--accent5);font-weight:700}
+.web-list-empty{text-align:center;color:var(--text-dim);font-style:italic;padding:30px;font-size:0.82rem;opacity:0.6;border:1px dashed rgba(255,255,255,0.08);border-radius:8px}
+
+/* DTO mockup (caixa do DTO Java) */
+.dto-mock{background:#0d0d1a;border:1px solid rgba(78,205,196,0.25);border-radius:12px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,0.4);flex:1;min-width:0;position:relative}
+.dto-mock-header{background:linear-gradient(180deg,rgba(78,205,196,0.12),rgba(78,205,196,0.04));padding:10px 16px;font-weight:800;color:var(--accent3);font-size:0.85rem;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(78,205,196,0.18);font-family:'JetBrains Mono',monospace}
+.dto-mock-body{padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.7;color:var(--text-dim);margin:0;overflow-x:auto;background:transparent}
+.dto-mock-body .dto-kw{color:var(--kw,#c792ea)}
+.dto-mock-body .dto-tp{color:var(--accent4)}
+.dto-mock-body .dto-name{color:var(--accent3);font-weight:700}
+.dto-mock-body .dto-field{color:var(--text);position:relative;padding:1px 4px;border-radius:4px;transition:background 0.4s,color 0.4s,box-shadow 0.4s}
+.dto-mock-body .dto-field.lit{background:rgba(108,99,255,0.18);color:#fff;box-shadow:0 0 14px rgba(108,99,255,0.45)}
+.dto-mock-body .dto-value{color:var(--accent5);font-weight:700;opacity:0;transition:opacity 0.3s}
+.dto-mock-body .dto-value.shown{opacity:1}
+
+/* Layout linhas do demo (form ↔ DTO) */
+.web-demo-row{display:flex;align-items:center;gap:18px;margin:14px 0;flex-wrap:wrap}
+.web-demo-row > *{min-width:240px}
+@media (max-width:760px){
+  .web-demo-row{flex-direction:column;align-items:stretch}
+  .web-demo-arrow{transform:rotate(90deg);height:60px;width:auto}
+}
+
+/* Seta animada (canal de dados) */
+.web-demo-arrow{flex:0 0 110px;height:80px;position:relative;display:flex;align-items:center;justify-content:center}
+.web-demo-arrow .arrow-line{position:absolute;top:50%;left:8px;right:8px;height:2px;background:linear-gradient(90deg,rgba(108,99,255,0.3),rgba(78,205,196,0.3));transform:translateY(-50%);border-radius:2px}
+.web-demo-arrow .arrow-tip{position:absolute;top:50%;right:6px;transform:translateY(-50%);width:0;height:0;border-left:10px solid var(--accent3);border-top:7px solid transparent;border-bottom:7px solid transparent}
+.web-demo-arrow .arrow-label{position:absolute;top:-2px;left:0;right:0;text-align:center;font-size:0.68rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
+.web-demo-arrow .arrow-method{position:absolute;bottom:-2px;left:0;right:0;text-align:center;font-size:0.7rem;font-weight:900}
+.web-demo-arrow .arrow-method.method-post{color:#49cc90}
+.web-demo-arrow .arrow-method.method-get{color:#61affe}
+.web-demo-arrow .arrow-method.method-put{color:#fca130}
+.web-demo-arrow .arrow-method.method-delete{color:var(--accent2)}
+.web-demo-arrow.reverse{transform:scaleX(-1)}
+.web-demo-arrow.reverse .arrow-label,.web-demo-arrow.reverse .arrow-method{transform:scaleX(-1)}
+
+/* Partículas voadoras (dados em trânsito) */
+.particle{position:absolute;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,var(--accent),rgba(108,99,255,0.2));box-shadow:0 0 12px var(--accent);pointer-events:none;z-index:5;opacity:0}
+.particle.flying{animation:particleFly 0.9s cubic-bezier(0.4,0.0,0.2,1) forwards}
+.particle.kind-data{background:radial-gradient(circle,var(--accent3),rgba(78,205,196,0.2));box-shadow:0 0 12px var(--accent3)}
+.particle.kind-resp{background:radial-gradient(circle,var(--accent5),rgba(247,183,49,0.2));box-shadow:0 0 12px var(--accent5)}
+@keyframes particleFly{0%{opacity:0;transform:scale(0.4)}10%{opacity:1;transform:scale(1)}90%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(0.6)}}
+
+/* Divisor "backend processa" entre as duas fileiras */
+.web-demo-divider{text-align:center;margin:18px 0;position:relative;padding:6px 0}
+.web-demo-divider::before{content:'';position:absolute;top:50%;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);z-index:0}
+.web-demo-divider span{position:relative;background:var(--bg);padding:6px 18px;color:var(--text-dim);font-size:0.82rem;font-weight:700;border-radius:50px;border:1px solid rgba(255,255,255,0.06);display:inline-flex;align-items:center;gap:8px}
+
+/* Pipeline (Tipo 3: Controller→Página) */
+.pipeline-flow{display:flex;flex-direction:column;align-items:center;gap:0;margin:20px 0;position:relative}
+.pipeline-step{background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:14px 22px;min-width:300px;max-width:520px;width:100%;display:flex;align-items:center;gap:16px;position:relative;opacity:0.35;transition:opacity 0.5s,transform 0.5s,box-shadow 0.5s,border-color 0.5s;box-sizing:border-box}
+.pipeline-step.active{opacity:1;transform:scale(1.02);box-shadow:0 8px 24px rgba(0,0,0,0.3);border-color:var(--accent-color,var(--accent))}
+.pipeline-step.done{opacity:0.7}
+.pipeline-icon{width:42px;height:42px;border-radius:12px;background:var(--accent-color,var(--surface3));color:white;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;font-weight:900}
+.pipeline-text{flex:1}
+.pipeline-name{font-weight:800;color:var(--text);font-size:0.96rem;line-height:1.2}
+.pipeline-desc{font-size:0.78rem;color:var(--text-dim);margin-top:3px;font-family:'JetBrains Mono',monospace}
+.pipeline-arrow{font-size:1.4rem;color:var(--text-dim);opacity:0.4;line-height:1;margin:4px 0;transition:opacity 0.3s}
+.pipeline-arrow.active{opacity:1;color:var(--accent3);animation:arrowFlow 1s ease infinite}
+@keyframes arrowFlow{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.pipeline-step.ps-page{--accent-color:var(--accent4)}
+.pipeline-step.ps-controller{--accent-color:var(--accent)}
+.pipeline-step.ps-service{--accent-color:var(--accent5)}
+.pipeline-step.ps-db{--accent-color:#336791}
+.pipeline-step.ps-mapper{--accent-color:var(--accent6)}
+.pipeline-step.ps-response{--accent-color:#49cc90}
+
+/* Insomnia vs Página (Tipo 4) */
+.compare-tools{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+@media (max-width:760px){.compare-tools{grid-template-columns:1fr}}
+.compare-tool{background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:16px;text-align:center;transition:transform 0.3s,box-shadow 0.3s}
+.compare-tool.tool-insomnia{border-color:rgba(123,104,238,0.25)}
+.compare-tool.tool-react{border-color:rgba(97,218,251,0.25)}
+.compare-tool-icon{font-size:2rem;margin-bottom:8px}
+.compare-tool-name{font-weight:900;font-size:1rem;margin-bottom:6px}
+.compare-tool.tool-insomnia .compare-tool-name{color:#7B68EE}
+.compare-tool.tool-react .compare-tool-name{color:#61dafb}
+.compare-tool-action{background:#0c0c18;border-radius:8px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text-dim);border:1px solid rgba(255,255,255,0.04);margin-bottom:8px;line-height:1.5}
+.compare-tool-action.firing{animation:firePulse 0.8s ease}
+@keyframes firePulse{0%,100%{transform:scale(1);box-shadow:none}50%{transform:scale(1.04);box-shadow:0 0 0 6px rgba(73,204,144,0.15)}}
+.compare-merge{text-align:center;margin:14px 0;padding:14px;background:linear-gradient(135deg,rgba(73,204,144,0.06),rgba(78,205,196,0.03));border:1px dashed rgba(73,204,144,0.25);border-radius:12px;font-size:0.88rem;color:var(--text-dim)}
+.compare-merge strong{color:#49cc90}
+.http-pulse{display:inline-block;margin:8px 6px;padding:4px 12px;background:rgba(73,204,144,0.15);color:#49cc90;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;font-weight:800;opacity:0.4;transition:opacity 0.3s}
+.http-pulse.firing{opacity:1;animation:httpFlash 0.6s ease}
+@keyframes httpFlash{0%{transform:scale(0.9);opacity:0}50%{transform:scale(1.1);opacity:1}100%{transform:scale(1);opacity:1}}
+
+/* Acessibilidade — respeita usuários com motion reduzido */
+@media (prefers-reduced-motion:reduce){
+  .web-demo-replay,.web-form-submit{transition:none}
+  .web-form-input,.dto-field,.dto-value,.web-list-table tbody tr,.pipeline-step,.pipeline-arrow{transition:none;animation:none}
+  .particle,.web-demo::before{animation:none;display:none}
+  .web-list-table tbody tr,.dto-value{opacity:1;transform:none}
+  .pipeline-step{opacity:1}
+}
+
 /* === TRY-FIRST BOX (lembrete pro aluno tentar antes) === */
 .try-first{background:linear-gradient(135deg,rgba(255,159,67,0.08),rgba(247,183,49,0.04));border:1px solid rgba(255,159,67,0.25);border-radius:14px;padding:16px 22px;margin:14px 0;display:flex;gap:14px;align-items:flex-start}
 .try-first-icon{font-size:1.6rem;flex-shrink:0;line-height:1}
@@ -3574,6 +3713,104 @@ br.com.programaai.api/
       </div>
     </div>
   </div>
+
+  <!-- ▶️ DEMO ANIMADO: Como o front USA esse DTO -->
+  <div class="web-demo" data-demo="dto">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 Como o frontend (React) <strong style="color:var(--accent4)">usa</strong> esse DTO</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 No futuro, sua página React vai ter um <strong>formulário</strong> que monta o JSON do RequestDTO. Quando o usuário clica em <strong>Salvar</strong>, esse JSON é enviado pro backend. Veja:</p>
+
+    <!-- LINHA 1: Form web → RequestDTO -->
+    <div class="web-demo-row">
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>meu-app.com/produtos/novo</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-form-title">📝 Cadastrar Produto</div>
+          <div class="web-form-group"><label class="web-form-label">Nome</label><input class="web-form-input" data-fill="Notebook Dell Inspiron" data-target="nome" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Preço</label><input class="web-form-input" data-fill="3499.90" data-target="preco" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Estoque</label><input class="web-form-input" data-fill="15" data-target="quantidadeEstoque" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Categoria</label><input class="web-form-input" data-fill="INFORMATICA" data-target="categoria" readonly></div>
+          <button class="web-form-submit">💾 Salvar produto</button>
+        </div>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-post">POST /produtos</div>
+      </div>
+
+      <div class="dto-mock">
+        <div class="dto-mock-header">📦 ProdutoRequestDTO</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">ProdutoRequestDTO</span>(
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="nome">nome</span><span class="dto-value" data-field="nome"></span>,
+  <span class="dto-tp">BigDecimal</span> <span class="dto-field" data-field="preco">preco</span><span class="dto-value" data-field="preco"></span>,
+  <span class="dto-tp">Integer</span> <span class="dto-field" data-field="quantidadeEstoque">quantidadeEstoque</span><span class="dto-value" data-field="quantidadeEstoque"></span>,
+  <span class="dto-tp">CategoriaProdutoEnum</span> <span class="dto-field" data-field="categoria">categoria</span><span class="dto-value" data-field="categoria"></span>,
+  <span class="dto-tp">Long</span> fornecedorId
+) {}</pre>
+      </div>
+    </div>
+
+    <!-- DIVISOR -->
+    <div class="web-demo-divider"><span>⚙️ Backend processa, salva no banco e responde...</span></div>
+
+    <!-- LINHA 2: ResponseDTO → Lista web -->
+    <div class="web-demo-row">
+      <div class="dto-mock response-dto">
+        <div class="dto-mock-header" style="color:var(--accent5)">📦 ProdutoResponseDTO (lista)</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">ProdutoResponseDTO</span>(
+  <span class="dto-tp">Long</span> <span class="dto-field">id</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">nome</span>,
+  <span class="dto-tp">BigDecimal</span> <span class="dto-field">preco</span>,
+  <span class="dto-tp">Integer</span> <span class="dto-field">quantidadeEstoque</span>,
+  <span class="dto-tp">CategoriaProdutoEnum</span> <span class="dto-field">categoria</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">fornecedorNome</span>
+) {}</pre>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-get">200 OK</div>
+      </div>
+
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>meu-app.com/produtos</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-list-title">📋 Lista de Produtos</div>
+          <table class="web-list-table">
+            <thead><tr><th>ID</th><th>Nome</th><th>Preço</th><th>Estoque</th></tr></thead>
+            <tbody>
+              <tr><td class="col-id">1</td><td>Notebook Dell</td><td>R$ 3499,90</td><td>15</td></tr>
+              <tr><td class="col-id">2</td><td>Mouse</td><td>R$ 89,90</td><td>120</td></tr>
+              <tr><td class="col-id">3</td><td>Cadeira Gamer</td><td>R$ 1299,00</td><td>8</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content"><strong>Por isso o DTO existe!</strong> O <strong style="color:var(--accent4)">RequestDTO</strong> é o "molde" do que a página envia. O <strong style="color:var(--accent5)">ResponseDTO</strong> é o "molde" do que a página recebe pra exibir. Os campos do DTO casam <strong>1:1</strong> com os campos do form e da listagem do front!</div>
+    </div>
+  </div>
 </section>
 
 <div class="section-connector"><div class="line"></div></div>
@@ -3962,6 +4199,85 @@ br.com.programaai.api/
       </div>
     </div>
   </div>
+
+  <!-- ▶️ DEMO ANIMADO: Controller → Página (ciclo HTTP completo) -->
+  <div class="web-demo" data-demo="pipeline">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 O ciclo completo: <strong style="color:var(--accent4)">Página clica</strong> → Controller → Banco → <strong style="color:var(--accent3)">Página renderiza</strong></span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 Quando o usuário clica em "Listar Produtos" na página, <strong>essa cascata acontece em milissegundos</strong>:</p>
+
+    <div class="pipeline-flow">
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">🌐</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página React clica "Listar"</div>
+          <div class="pipeline-desc">fetch('/produtos')</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-controller">
+        <div class="pipeline-icon">🎮</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">ProdutoController</div>
+          <div class="pipeline-desc">@GetMapping listarTodosProdutos()</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-service">
+        <div class="pipeline-icon">⚙️</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">ProdutoServiceImpl</div>
+          <div class="pipeline-desc">produtoRepository.findAll()</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-db">
+        <div class="pipeline-icon">🐘</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">PostgreSQL</div>
+          <div class="pipeline-desc">SELECT * FROM produto</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-mapper">
+        <div class="pipeline-icon">🔄</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">ProdutoMapper converte</div>
+          <div class="pipeline-desc">.stream().map(::toResponseDTO).toList()</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-response">
+        <div class="pipeline-icon">📤</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Controller responde JSON</div>
+          <div class="pipeline-desc">200 OK + List&lt;ProdutoResponseDTO&gt;</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">✨</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página renderiza a tabela</div>
+          <div class="pipeline-desc">setProdutos(json) → &lt;tr&gt; aparecem na tela</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">⚡</span>
+      <div class="tip-content"><strong>Tudo isso em ~50ms!</strong> Para o usuário, ele só clicou no botão e a tabela apareceu. Mas no backend rolou esse pipeline inteiro. <strong>O Controller é a "porta de entrada"</strong> que orquestra tudo!</div>
+    </div>
+  </div>
 </section>
 
 <div class="section-connector"><div class="line"></div></div>
@@ -3975,6 +4291,53 @@ br.com.programaai.api/
     <div>
       <div class="step-title">Testando Produto no Insomnia</div>
       <div style="color:var(--text-dim);font-size:0.88rem">JSONs de exemplo para testar</div>
+    </div>
+  </div>
+
+  <!-- ▶️ DEMO ANIMADO: Insomnia ↔ Página (a "Aha!" do Insomnia) -->
+  <div class="web-demo" data-demo="compare">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 <strong style="color:#7B68EE">Insomnia</strong> vs <strong style="color:#61dafb">Página React</strong> — fazem a MESMA coisa!</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">👇 Por baixo dos panos, <strong>os dois mandam exatamente a mesma requisição HTTP</strong>. O Insomnia é só mais "manual" — você simula o que sua página vai fazer automaticamente!</p>
+
+    <div class="compare-tools">
+      <div class="compare-tool tool-insomnia">
+        <div class="compare-tool-icon">🦋</div>
+        <div class="compare-tool-name">Insomnia</div>
+        <div class="compare-tool-action">
+          <strong style="color:#49cc90">POST</strong> /produtos<br>
+          <span style="opacity:0.7">Body: &#123; "nome": "...", "preco": ... &#125;</span><br>
+          <span style="color:var(--text);font-size:0.7rem">[ Send ]</span>
+        </div>
+        <p style="color:var(--text-dim);font-size:0.8rem;margin:0">Você escolhe método, URL, body e clica em Send <strong style="color:var(--text)">na mão</strong>.</p>
+      </div>
+
+      <div class="compare-tool tool-react">
+        <div class="compare-tool-icon">⚛️</div>
+        <div class="compare-tool-name">Página React</div>
+        <div class="compare-tool-action">
+<span style="color:#c792ea">await</span> <span style="color:#fca130">fetch</span>(<span style="color:#a8e6a4">'/produtos'</span>, &#123;<br>
+&nbsp;&nbsp;method: <span style="color:#a8e6a4">'POST'</span>,<br>
+&nbsp;&nbsp;body: <span style="color:#fca130">JSON</span>.<span style="color:#fca130">stringify</span>(form)<br>
+&#125;)
+        </div>
+        <p style="color:var(--text-dim);font-size:0.8rem;margin:0">Sua futura página dispara <strong style="color:var(--text)">automaticamente</strong> ao clicar no botão.</p>
+      </div>
+    </div>
+
+    <div class="compare-merge">
+      <div style="font-size:0.92rem;margin-bottom:6px">Por baixo dos panos, ambos mandam a <strong>mesma requisição HTTP</strong>:</div>
+      <span class="http-pulse">POST /produtos HTTP/1.1</span>
+      <span class="http-pulse">Content-Type: application/json</span>
+      <div style="margin-top:8px;color:var(--text-dim);font-size:0.85rem">Pra <strong style="color:var(--text)">o backend Spring tanto faz</strong> de onde a requisição veio — ele processa do mesmo jeito! 🎯</div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content"><strong>Por isso o Insomnia é tão útil:</strong> ele permite testar a API <strong>sem precisar do front pronto</strong>. Você desenvolve o backend, testa no Insomnia, e quando o front estiver pronto, ele vai disparar exatamente as mesmas requisições. Backend e front são <strong>independentes</strong>!</div>
     </div>
   </div>
 
@@ -4841,6 +5204,96 @@ br.com.petshop.api/
       </div>
     </div>
   </div>
+
+  <!-- ▶️ DEMO ANIMADO: Como o front USA o TutorDTO -->
+  <div class="web-demo" data-demo="dto">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 Como o frontend (React) <strong style="color:var(--accent2)">usa</strong> o TutorDTO</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 Pense numa <strong>página de cadastro de Tutor</strong> do PetShop! Cada campo do form vira um campo do DTO automaticamente:</p>
+
+    <div class="web-demo-row">
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>petshop.com/tutores/novo</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-form-title">📝 Novo Tutor</div>
+          <div class="web-form-group"><label class="web-form-label">Nome completo</label><input class="web-form-input" data-fill="Ana Silva" data-target="nomeCompleto" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">E-mail</label><input class="web-form-input" data-fill="ana@email.com" data-target="email" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Telefone</label><input class="web-form-input" data-fill="(83) 99999-0000" data-target="telefone" readonly></div>
+          <button class="web-form-submit">💾 Cadastrar tutor</button>
+        </div>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-post">POST /tutores</div>
+      </div>
+
+      <div class="dto-mock">
+        <div class="dto-mock-header">📦 TutorRequestDTO</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">TutorRequestDTO</span>(
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="nomeCompleto">nomeCompleto</span><span class="dto-value" data-field="nomeCompleto"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="email">email</span><span class="dto-value" data-field="email"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="telefone">telefone</span><span class="dto-value" data-field="telefone"></span>
+) {}</pre>
+      </div>
+    </div>
+
+    <div class="web-demo-divider"><span>⚙️ Backend salva e responde com a lista...</span></div>
+
+    <div class="web-demo-row">
+      <div class="dto-mock response-dto">
+        <div class="dto-mock-header" style="color:var(--accent5)">📦 TutorResponseDTO</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">TutorResponseDTO</span>(
+  <span class="dto-tp">Long</span> <span class="dto-field">id</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">nomeCompleto</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">email</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">telefone</span>
+) {}</pre>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-get">200 OK</div>
+      </div>
+
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>petshop.com/tutores</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-list-title">📋 Tutores cadastrados</div>
+          <table class="web-list-table">
+            <thead><tr><th>ID</th><th>Nome</th><th>E-mail</th></tr></thead>
+            <tbody>
+              <tr><td class="col-id">1</td><td>Ana Silva</td><td>ana@email.com</td></tr>
+              <tr><td class="col-id">2</td><td>Carlos Souza</td><td>carlos@...</td></tr>
+              <tr><td class="col-id">3</td><td>Beatriz Lima</td><td>bia@...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content"><strong>É EXATAMENTE como no Produto!</strong> Repare que o padrão se repete: campos do form ↔ campos do DTO ↔ JSON HTTP. Por isso falamos que o DTO é o "molde do JSON"!</div>
+    </div>
+  </div>
 </section>
 
 <div class="section-connector"><div class="line"></div></div>
@@ -5249,6 +5702,85 @@ br.com.petshop.api/
       <p style="color:var(--text-dim)">Você acabou de fazer um <strong style="color:var(--text)">CRUD completo do Tutor</strong> — Model, DTOs, Mapper, Repository, Service, ServiceImpl e Controller. Suba a aplicação e teste no Insomnia se quiser <strong>antes</strong> de partir pro Pet (rola na seção 🦋 mais à frente). Agora vamos repetir tudo para o Pet, seguindo a MESMA sequência de 8 passos!</p>
     </div>
   </div>
+
+  <!-- ▶️ DEMO ANIMADO: Controller → Página (POST simples Tutor) -->
+  <div class="web-demo" data-demo="pipeline">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 O ciclo completo: <strong style="color:var(--accent2)">cadastrar Tutor</strong> via POST</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 Esse fluxo é o <strong>"hello world"</strong> de qualquer CRUD — o usuário clica e o backend roda essa cascata:</p>
+
+    <div class="pipeline-flow">
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">🌐</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página clica "Cadastrar Tutor"</div>
+          <div class="pipeline-desc">fetch('/tutores', &#123;method:'POST', body: json&#125;)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-controller">
+        <div class="pipeline-icon">🎮</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">TutorController valida</div>
+          <div class="pipeline-desc">@Valid @RequestBody TutorRequestDTO</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-mapper">
+        <div class="pipeline-icon">🔄</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">TutorMapper.toEntity(dto)</div>
+          <div class="pipeline-desc">DTO record vira entidade Tutor</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-service">
+        <div class="pipeline-icon">⚙️</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">TutorServiceImpl.save()</div>
+          <div class="pipeline-desc">tutorRepository.save(tutor)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-db">
+        <div class="pipeline-icon">🐘</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">PostgreSQL</div>
+          <div class="pipeline-desc">INSERT INTO tutor (nome, email, telefone)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-response">
+        <div class="pipeline-icon">📤</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Controller responde 201 Created</div>
+          <div class="pipeline-desc">JSON: TutorResponseDTO com id gerado</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">✨</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página mostra "Tutor cadastrado!"</div>
+          <div class="pipeline-desc">toast.success(json.nomeCompleto)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content"><strong>Memorize esse fluxo!</strong> Página → Controller → (Mapper) → ServiceImpl → Repository → Banco → Mapper → JSON → Página. Esse é o <strong>"caminho de ouro"</strong> que se repete em TODA operação POST de qualquer API REST que você for fazer no futuro!</div>
+    </div>
+  </div>
 </section>
 
 <!-- ENTITY DIVIDER: PET -->
@@ -5428,6 +5960,103 @@ br.com.petshop.api/
     <div class="solution-box">
       <div class="solution-title">✨ Por que <code>tutorId</code> e não o objeto Tutor inteiro?</div>
       <p style="color:var(--text-dim)">É o <strong>mesmo motivo</strong> do <code>fornecedorId</code> no ProdutoRequestDTO! O front só envia o <strong style="color:var(--text)">ID</strong> (um número). Quem busca o objeto Tutor completo no banco é o <strong style="color:var(--accent5)">PetServiceImpl</strong>. E o <code>tutorNomeCompleto</code> no Response é a mesma ideia do <code>fornecedorNome</code>: dado extra pra facilitar a vida do front!</p>
+    </div>
+  </div>
+
+  <!-- ▶️ DEMO ANIMADO: Como o front USA o PetDTO -->
+  <div class="web-demo" data-demo="dto">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 Como o frontend (React) <strong style="color:var(--petshop)">usa</strong> o PetDTO</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 No formulário, o usuário escolhe o tutor num <strong>dropdown</strong> — só vai o ID. Mas no Response, o backend devolve o <strong>nome do tutor</strong> pronto pra exibir!</p>
+
+    <div class="web-demo-row">
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>petshop.com/pets/novo</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-form-title">🐾 Cadastrar Pet</div>
+          <div class="web-form-group"><label class="web-form-label">Nome</label><input class="web-form-input" data-fill="Rex" data-target="nome" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Raça</label><input class="web-form-input" data-fill="Golden Retriever" data-target="raca" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Idade</label><input class="web-form-input" data-fill="3" data-target="idade" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Espécie</label><input class="web-form-input" data-fill="CACHORRO" data-target="especie" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Tutor (selecionado no dropdown)</label><input class="web-form-input" data-fill="1" data-target="tutorId" readonly></div>
+          <button class="web-form-submit">💾 Salvar pet</button>
+        </div>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-post">POST /pets</div>
+      </div>
+
+      <div class="dto-mock">
+        <div class="dto-mock-header">📦 PetRequestDTO</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">PetRequestDTO</span>(
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="nome">nome</span><span class="dto-value" data-field="nome"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="raca">raca</span><span class="dto-value" data-field="raca"></span>,
+  <span class="dto-tp">Integer</span> <span class="dto-field" data-field="idade">idade</span><span class="dto-value" data-field="idade"></span>,
+  <span class="dto-tp">EspeciePetEnum</span> <span class="dto-field" data-field="especie">especie</span><span class="dto-value" data-field="especie"></span>,
+  <span class="dto-tp">Long</span> <span class="dto-field" data-field="tutorId">tutorId</span><span class="dto-value" data-field="tutorId"></span>
+) {}</pre>
+      </div>
+    </div>
+
+    <div class="web-demo-divider"><span>⚙️ Backend busca o Tutor pelo ID, salva o Pet, devolve com o nome do tutor...</span></div>
+
+    <div class="web-demo-row">
+      <div class="dto-mock response-dto">
+        <div class="dto-mock-header" style="color:var(--accent5)">📦 PetResponseDTO</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">PetResponseDTO</span>(
+  <span class="dto-tp">Long</span> <span class="dto-field">id</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">nome</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">raca</span>,
+  <span class="dto-tp">Integer</span> <span class="dto-field">idade</span>,
+  <span class="dto-tp">EspeciePetEnum</span> <span class="dto-field">especie</span>,
+  <span class="dto-tp">Long</span> <span class="dto-field">tutorId</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">tutorNomeCompleto</span>
+) {}</pre>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-get">200 OK</div>
+      </div>
+
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>petshop.com/pets</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-list-title">🐶 Pets do PetShop</div>
+          <table class="web-list-table">
+            <thead><tr><th>ID</th><th>Pet</th><th>Raça</th><th>Tutor</th></tr></thead>
+            <tbody>
+              <tr><td class="col-id">1</td><td>Rex 🐕</td><td>Golden Retriever</td><td>Ana Silva</td></tr>
+              <tr><td class="col-id">2</td><td>Mia 🐈</td><td>SRD</td><td>Carlos Souza</td></tr>
+              <tr><td class="col-id">3</td><td>Loro 🦜</td><td>Calopsita</td><td>Beatriz Lima</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content"><strong>Compare com o Produto!</strong> Lá era <code>fornecedorId</code> + <code>fornecedorNome</code> extra. Aqui é <code>tutorId</code> + <code>tutorNomeCompleto</code> extra. O padrão se repete sempre que tem <strong>@ManyToOne</strong>!</div>
     </div>
   </div>
 </section>
@@ -5862,6 +6491,85 @@ br.com.petshop.api/
       <p style="color:var(--text-dim)">Você fez os <strong style="color:var(--text)">DOIS CRUDs completos</strong> seguindo a sequência didática! Hora de testar tudo no Insomnia 👇</p>
     </div>
   </div>
+
+  <!-- ▶️ DEMO ANIMADO: Controller → Página (POST com @ManyToOne!) -->
+  <div class="web-demo" data-demo="pipeline">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 O ciclo completo: <strong style="color:var(--petshop)">cadastrar Pet com @ManyToOne</strong></span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 Repare na <strong>etapa extra</strong>: o backend precisa <strong>buscar o Tutor primeiro</strong> antes de criar o Pet (porque Pet tem @ManyToOne pra Tutor):</p>
+
+    <div class="pipeline-flow">
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">🌐</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página clica "Cadastrar Pet"</div>
+          <div class="pipeline-desc">JSON com tutorId: 1</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-controller">
+        <div class="pipeline-icon">🎮</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">PetController valida</div>
+          <div class="pipeline-desc">@Valid @RequestBody PetRequestDTO</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-service">
+        <div class="pipeline-icon">🔍</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">PetServiceImpl busca o Tutor</div>
+          <div class="pipeline-desc">tutorRepository.findById(dto.tutorId()).orElseThrow(...)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-mapper">
+        <div class="pipeline-icon">🔄</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">PetMapper.toEntity(dto, tutor)</div>
+          <div class="pipeline-desc">cria Pet apontando pro Tutor encontrado</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-db">
+        <div class="pipeline-icon">🐘</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">PostgreSQL grava</div>
+          <div class="pipeline-desc">INSERT INTO pet (..., tutor_id = 1)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-response">
+        <div class="pipeline-icon">📤</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Controller responde 201 Created</div>
+          <div class="pipeline-desc">JSON: id, tutorId, tutorNomeCompleto (extra!)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">✨</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página mostra "Pet do(a) Ana cadastrado!"</div>
+          <div class="pipeline-desc">card aparece com nome do tutor</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🔗</span>
+      <div class="tip-content"><strong>Esse é o "etapa extra" do @ManyToOne!</strong> Compare com o Tutor (sem relacionamento, sem etapa de busca). Sempre que tem @ManyToOne, o ServiceImpl precisa buscar a entidade pai primeiro pra garantir que existe e construir a referência. <strong>Mesma coisa no Produto → Fornecedor</strong>!</div>
+    </div>
+  </div>
 </section>
 
 <div class="section-connector"><div class="line"></div></div>
@@ -5875,6 +6583,53 @@ br.com.petshop.api/
     <div>
       <div class="step-title">Testando tudo no Insomnia</div>
       <div style="color:var(--text-dim);font-size:0.88rem">Hora de ver o PetShop funcionando!</div>
+    </div>
+  </div>
+
+  <!-- ▶️ DEMO ANIMADO: Insomnia ↔ Página (PetShop) -->
+  <div class="web-demo" data-demo="compare">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 <strong style="color:#7B68EE">Insomnia</strong> vs <strong style="color:#61dafb">Página React</strong> do PetShop</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">👇 No futuro, sua API vai ser consumida por um app React. Por enquanto, o Insomnia <strong>simula</strong> o que o app faria:</p>
+
+    <div class="compare-tools">
+      <div class="compare-tool tool-insomnia">
+        <div class="compare-tool-icon">🦋</div>
+        <div class="compare-tool-name">Insomnia (agora)</div>
+        <div class="compare-tool-action">
+          <strong style="color:#49cc90">POST</strong> /pets<br>
+          <span style="opacity:0.7">Body: &#123; nome, raca, tutorId... &#125;</span><br>
+          <span style="color:var(--text);font-size:0.7rem">[ Send ]</span>
+        </div>
+        <p style="color:var(--text-dim);font-size:0.8rem;margin:0">Você desenvolve e testa <strong>antes</strong> do front existir.</p>
+      </div>
+
+      <div class="compare-tool tool-react">
+        <div class="compare-tool-icon">🐶</div>
+        <div class="compare-tool-name">App PetShop (futuro)</div>
+        <div class="compare-tool-action">
+<span style="opacity:0.7">// Tela de cadastro do pet</span><br>
+&lt;<span style="color:#fca130">button</span> onClick=&#123;<span style="color:#c792ea">async</span> () =&gt; &#123;<br>
+&nbsp;&nbsp;<span style="color:#c792ea">await</span> <span style="color:#fca130">api</span>.<span style="color:#fca130">post</span>(<span style="color:#a8e6a4">'/pets'</span>, form);<br>
+&#125;&#125;&gt;Salvar Pet&lt;/<span style="color:#fca130">button</span>&gt;
+        </div>
+        <p style="color:var(--text-dim);font-size:0.8rem;margin:0">No app, o usuário clica e a função roda automática.</p>
+      </div>
+    </div>
+
+    <div class="compare-merge">
+      <div style="font-size:0.92rem;margin-bottom:6px">A requisição HTTP é a mesma — só muda QUEM dispara:</div>
+      <span class="http-pulse">POST /pets HTTP/1.1</span>
+      <span class="http-pulse">Spring backend não distingue!</span>
+      <div style="margin-top:8px;color:var(--text-dim);font-size:0.85rem">Por isso testar no Insomnia <strong style="color:var(--text)">vale como teste real</strong> — quando o front for plugado, vai funcionar igual!</div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-content"><strong>Filosofia da API REST:</strong> "O backend não sabe (e nem se importa) com quem está conversando — só importa que recebeu uma requisição HTTP válida". É por isso que conseguimos testar o backend isolado, e por isso múltiplos apps (web, mobile, terminal) podem consumir a mesma API.</div>
     </div>
   </div>
 
@@ -6583,6 +7338,104 @@ br.com.petshop.api/
 ) {}</pre>
     </div>
   </div>
+
+  <!-- ▶️ DEMO ANIMADO: Como o front USA o ClienteDTO -->
+  <div class="web-demo" data-demo="dto">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 Como o frontend (React) <strong style="color:var(--accent6)">usa</strong> o ClienteDTO</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 Repare como o JSON é <strong>aninhado</strong>: o objeto <code>endereco</code> entra dentro do objeto principal — exatamente como o DTO Java!</p>
+
+    <!-- LINHA 1: Form web → ClienteRequestDTO -->
+    <div class="web-demo-row">
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>meu-app.com/clientes/novo</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-form-title">📝 Cadastrar Cliente</div>
+          <div class="web-form-group"><label class="web-form-label">Nome completo</label><input class="web-form-input" data-fill="Maria Silva" data-target="nomeCompleto" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">CPF</label><input class="web-form-input" data-fill="123.456.789-09" data-target="cpf" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">E-mail</label><input class="web-form-input" data-fill="maria@email.com" data-target="email" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Data nascimento</label><input class="web-form-input" data-fill="1995-08-22" data-target="dataNascimento" readonly></div>
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(78,205,196,0.06);border:1px dashed rgba(78,205,196,0.3);border-radius:8px;font-size:0.78rem;color:var(--accent3);font-weight:700">🏠 Endereço (sub-formulário aninhado)</div>
+          <button class="web-form-submit" style="margin-top:12px">💾 Salvar cliente</button>
+        </div>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-post">POST /clientes</div>
+      </div>
+
+      <div class="dto-mock">
+        <div class="dto-mock-header">📦 ClienteRequestDTO</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">ClienteRequestDTO</span>(
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="nomeCompleto">nomeCompleto</span><span class="dto-value" data-field="nomeCompleto"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="cpf">cpf</span><span class="dto-value" data-field="cpf"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="email">email</span><span class="dto-value" data-field="email"></span>,
+  <span class="dto-tp">String</span> telefone,
+  <span class="dto-tp">LocalDate</span> <span class="dto-field" data-field="dataNascimento">dataNascimento</span><span class="dto-value" data-field="dataNascimento"></span>,
+  <span class="dto-tp">EnderecoDTO</span> endereco
+) {}</pre>
+      </div>
+    </div>
+
+    <div class="web-demo-divider"><span>⚙️ Backend processa Cliente + Endereço (cascade) e responde...</span></div>
+
+    <!-- LINHA 2: ClienteResponseDTO → Tela de detalhes -->
+    <div class="web-demo-row">
+      <div class="dto-mock response-dto">
+        <div class="dto-mock-header" style="color:var(--accent5)">📦 ClienteResponseDTO</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">ClienteResponseDTO</span>(
+  <span class="dto-tp">Long</span> <span class="dto-field">id</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">nomeCompleto</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">cpf</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">email</span>,
+  <span class="dto-tp">EnderecoDTO</span> <span class="dto-field">endereco</span>
+) {}</pre>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-get">200 OK</div>
+      </div>
+
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>meu-app.com/clientes</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-list-title">📋 Lista de Clientes</div>
+          <table class="web-list-table">
+            <thead><tr><th>ID</th><th>Nome</th><th>CPF</th><th>Cidade</th></tr></thead>
+            <tbody>
+              <tr><td class="col-id">1</td><td>Maria Silva</td><td>123.***</td><td>João Pessoa</td></tr>
+              <tr><td class="col-id">2</td><td>João Souza</td><td>987.***</td><td>Recife</td></tr>
+              <tr><td class="col-id">3</td><td>Ana Lima</td><td>456.***</td><td>Natal</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🪆</span>
+      <div class="tip-content"><strong>DTO aninhado = JSON aninhado!</strong> A estrutura do <code>EnderecoDTO</code> dentro do <code>ClienteRequestDTO</code> em Java vira o sub-objeto <code>"endereco": &#123;...&#125;</code> dentro do JSON. O front não precisa quebrar a cabeça — basta enviar a árvore!</div>
+    </div>
+  </div>
 </section>
 
 <div class="section-connector"><div class="line"></div></div>
@@ -6998,6 +7851,85 @@ br.com.petshop.api/
       </tbody>
     </table>
   </div>
+
+  <!-- ▶️ DEMO ANIMADO: Controller → Página (POST com cascade) -->
+  <div class="web-demo" data-demo="pipeline">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 O ciclo completo: <strong style="color:var(--accent6)">cadastrar Cliente com Endereço</strong> via POST</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 Veja o que rola quando o usuário aperta "Salvar" — o <strong>cascade</strong> salva o Endereço junto automaticamente:</p>
+
+    <div class="pipeline-flow">
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">🌐</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página clica "Salvar Cliente"</div>
+          <div class="pipeline-desc">fetch('/clientes', &#123;method:'POST', body: json&#125;)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-controller">
+        <div class="pipeline-icon">🎮</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">ClienteController valida</div>
+          <div class="pipeline-desc">@Valid @RequestBody ClienteRequestDTO</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-mapper">
+        <div class="pipeline-icon">🔄</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">ClienteMapper.toEntity(dto)</div>
+          <div class="pipeline-desc">cria Cliente + Endereco aninhado</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-service">
+        <div class="pipeline-icon">⚙️</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">ClienteServiceImpl.save()</div>
+          <div class="pipeline-desc">cascade = ALL → salva os dois!</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-db">
+        <div class="pipeline-icon">🐘</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">PostgreSQL grava</div>
+          <div class="pipeline-desc">INSERT endereco; INSERT cliente; (com FK)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-response">
+        <div class="pipeline-icon">📤</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Controller responde 201 Created</div>
+          <div class="pipeline-desc">JSON: ClienteResponseDTO + endereco aninhado</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">✨</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página exibe "Cliente cadastrado!"</div>
+          <div class="pipeline-desc">redirect('/clientes/' + json.id)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🌊</span>
+      <div class="tip-content"><strong>Magia do cascade!</strong> Você só faz <code>save(cliente)</code> e o JPA <strong>automaticamente</strong> cuida de salvar o Endereço junto, na ordem certa. Sem cascade, você teria que salvar o Endereço primeiro e depois o Cliente — mais código, mais bug.</div>
+    </div>
+  </div>
 </section>
 
 <div class="section-connector"><div class="line"></div></div>
@@ -7011,6 +7943,55 @@ br.com.petshop.api/
     <div>
       <div class="step-title">Testando Cliente no Insomnia</div>
       <div style="color:var(--text-dim);font-size:0.88rem">Agora com JSON aninhado!</div>
+    </div>
+  </div>
+
+  <!-- ▶️ DEMO ANIMADO: Insomnia ↔ Página (com JSON aninhado!) -->
+  <div class="web-demo" data-demo="compare">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 <strong style="color:#7B68EE">Insomnia</strong> vs <strong style="color:#61dafb">Página React</strong> — agora com JSON aninhado!</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">👇 Mesmo o Cliente tendo um <strong>endereço aninhado</strong>, o backend recebe a requisição idêntica vinda dos dois lugares:</p>
+
+    <div class="compare-tools">
+      <div class="compare-tool tool-insomnia">
+        <div class="compare-tool-icon">🦋</div>
+        <div class="compare-tool-name">Insomnia</div>
+        <div class="compare-tool-action">
+          <strong style="color:#49cc90">POST</strong> /clientes<br>
+          <span style="opacity:0.7">Body com endereco: &#123; ... &#125;</span><br>
+          <span style="color:var(--text);font-size:0.7rem">[ Send ]</span>
+        </div>
+        <p style="color:var(--text-dim);font-size:0.8rem;margin:0">Você cola o JSON aninhado no body e clica Send.</p>
+      </div>
+
+      <div class="compare-tool tool-react">
+        <div class="compare-tool-icon">⚛️</div>
+        <div class="compare-tool-name">Página React</div>
+        <div class="compare-tool-action">
+<span style="color:#c792ea">await</span> <span style="color:#fca130">fetch</span>(<span style="color:#a8e6a4">'/clientes'</span>, &#123;<br>
+&nbsp;&nbsp;method: <span style="color:#a8e6a4">'POST'</span>,<br>
+&nbsp;&nbsp;body: <span style="color:#fca130">JSON</span>.<span style="color:#fca130">stringify</span>(&#123;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...form, endereco<br>
+&nbsp;&nbsp;&#125;)<br>
+&#125;)
+        </div>
+        <p style="color:var(--text-dim);font-size:0.8rem;margin:0">Form principal + sub-form de endereço, montados num único objeto.</p>
+      </div>
+    </div>
+
+    <div class="compare-merge">
+      <div style="font-size:0.92rem;margin-bottom:6px">A requisição HTTP é idêntica:</div>
+      <span class="http-pulse">POST /clientes HTTP/1.1</span>
+      <span class="http-pulse">Body: &#123; ..., "endereco": &#123;...&#125; &#125;</span>
+      <div style="margin-top:8px;color:var(--text-dim);font-size:0.85rem">O <strong style="color:var(--text)">Spring desserializa o JSON aninhado</strong> direto pra ClienteRequestDTO + EnderecoDTO. Lindo demais! ✨</div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🪆</span>
+      <div class="tip-content"><strong>JSON aninhado é parte do REST!</strong> Tanto Insomnia quanto a página React enviam objetos aninhados naturalmente. O <code>@RequestBody</code> + <code>@Valid</code> do Spring quebra tudo em DTOs Java automaticamente.</div>
     </div>
   </div>
 
@@ -7518,6 +8499,180 @@ function updateChecklist(){
   document.getElementById('checklistCount').textContent=checked+' de '+total+' completos';
   document.getElementById('checklistComplete').style.display=checked===total?'block':'none';
 }
+
+// ═══════════════════════════════════════════════════════
+// WEB DEMO — animações didáticas (front ↔ DTO/Controller)
+// ═══════════════════════════════════════════════════════
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Lança uma partícula voadora de el A pra el B (DOMRect-based)
+function flyParticle(container, fromEl, toEl, opts={}){
+  const cRect=container.getBoundingClientRect();
+  const aRect=fromEl.getBoundingClientRect();
+  const bRect=toEl.getBoundingClientRect();
+  const x0=aRect.left+aRect.width/2-cRect.left;
+  const y0=aRect.top+aRect.height/2-cRect.top;
+  const x1=bRect.left+bRect.width/2-cRect.left;
+  const y1=bRect.top+bRect.height/2-cRect.top;
+  const p=document.createElement('span');
+  p.className='particle '+(opts.kind||'');
+  p.style.left=x0+'px';
+  p.style.top=y0+'px';
+  p.style.setProperty('--tx',(x1-x0)+'px');
+  p.style.setProperty('--ty',(y1-y0)+'px');
+  p.style.transform='translate(0,0)';
+  container.appendChild(p);
+  // Anima
+  requestAnimationFrame(()=>{
+    p.classList.add('flying');
+    p.style.transition='transform 0.85s cubic-bezier(0.4,0.0,0.2,1)';
+    p.style.transform=`translate(${x1-x0}px, ${y1-y0}px)`;
+  });
+  setTimeout(()=>p.remove(),1100);
+}
+
+// Typewriter num input
+async function typeInto(input, text, speed=40){
+  input.value='';
+  input.classList.add('typing');
+  for(let i=0;i<text.length;i++){
+    input.value+=text[i];
+    await sleep(speed);
+  }
+  input.classList.remove('typing');
+  input.classList.add('filled');
+}
+
+// Roda demo Tipo 1+2 (DTOs: form → request → response → lista)
+async function runDtoDemo(demo){
+  if(reducedMotion){
+    // Aplica estado final direto
+    demo.querySelectorAll('.web-form-input').forEach(i=>{i.value=i.dataset.fill||'';i.classList.add('filled')});
+    demo.querySelectorAll('.dto-field').forEach(f=>f.classList.add('lit'));
+    demo.querySelectorAll('.dto-value').forEach(v=>v.classList.add('shown'));
+    demo.querySelectorAll('.web-list-table tbody tr').forEach(r=>r.classList.add('appeared'));
+    return;
+  }
+  // Reset estado
+  demo.querySelectorAll('.web-form-input').forEach(i=>{i.value='';i.classList.remove('typing','filled')});
+  demo.querySelectorAll('.dto-field').forEach(f=>f.classList.remove('lit'));
+  demo.querySelectorAll('.dto-value').forEach(v=>v.classList.remove('shown'));
+  demo.querySelectorAll('.web-list-table tbody tr').forEach(r=>r.classList.remove('appeared'));
+  demo.querySelectorAll('.particle').forEach(p=>p.remove());
+
+  await sleep(300);
+  // Fase 1: typewriter inputs
+  const inputs=[...demo.querySelectorAll('.web-form-input')];
+  for(const inp of inputs){
+    await typeInto(inp,inp.dataset.fill||'',38);
+    await sleep(140);
+  }
+  // Fase 2: pulse no botão Submit
+  const submitBtn=demo.querySelector('.web-form-submit');
+  if(submitBtn){submitBtn.classList.add('pulse');await sleep(450);submitBtn.classList.remove('pulse')}
+  // Fase 3: partículas voam dos inputs aos campos do DTO
+  await sleep(150);
+  for(const inp of inputs){
+    const target=demo.querySelector(`.dto-field[data-field="${inp.dataset.target}"]`);
+    if(target){
+      flyParticle(demo,inp,target,{kind:'kind-data'});
+      await sleep(160);
+      target.classList.add('lit');
+      // mostra valor inline
+      const val=demo.querySelector(`.dto-value[data-field="${inp.dataset.target}"]`);
+      if(val){val.textContent=' = "'+(inp.value||'')+'"';val.classList.add('shown')}
+    }
+  }
+  // Fase 4: pausa "backend processa"
+  await sleep(700);
+  // Fase 5: ResponseDTO inline (ilumina campos)
+  const respFields=demo.querySelectorAll('.dto-mock.response-dto .dto-field');
+  for(const f of respFields){
+    f.classList.add('lit');
+    await sleep(80);
+  }
+  await sleep(150);
+  // Fase 6: partículas voam do ResponseDTO pra lista
+  const listRows=[...demo.querySelectorAll('.web-list-table tbody tr')];
+  if(listRows.length){
+    const respDto=demo.querySelector('.dto-mock.response-dto');
+    for(const r of listRows){
+      if(respDto)flyParticle(demo,respDto,r,{kind:'kind-resp'});
+      await sleep(150);
+      r.classList.add('appeared');
+    }
+  }
+}
+
+// Roda demo Tipo 3 (Controller → Página: pipeline cascata)
+async function runPipelineDemo(demo){
+  if(reducedMotion){
+    demo.querySelectorAll('.pipeline-step').forEach(s=>s.classList.add('done'));
+    demo.querySelectorAll('.pipeline-arrow').forEach(a=>a.classList.add('active'));
+    return;
+  }
+  // Reset
+  demo.querySelectorAll('.pipeline-step').forEach(s=>s.classList.remove('active','done'));
+  demo.querySelectorAll('.pipeline-arrow').forEach(a=>a.classList.remove('active'));
+  await sleep(300);
+  const steps=[...demo.querySelectorAll('.pipeline-step')];
+  const arrows=[...demo.querySelectorAll('.pipeline-arrow')];
+  for(let i=0;i<steps.length;i++){
+    if(i>0)steps[i-1].classList.replace('active','done');
+    steps[i].classList.add('active');
+    if(arrows[i-1])arrows[i-1].classList.add('active');
+    await sleep(750);
+  }
+  // Marca último como done também
+  steps[steps.length-1].classList.add('done');
+}
+
+// Roda demo Tipo 4 (Insomnia ↔ Página)
+async function runCompareDemo(demo){
+  if(reducedMotion){
+    demo.querySelectorAll('.compare-tool-action,.http-pulse').forEach(e=>e.classList.add('firing'));
+    return;
+  }
+  demo.querySelectorAll('.compare-tool-action,.http-pulse').forEach(e=>e.classList.remove('firing'));
+  await sleep(300);
+  const insomnia=demo.querySelector('.tool-insomnia .compare-tool-action');
+  const react=demo.querySelector('.tool-react .compare-tool-action');
+  const pulses=[...demo.querySelectorAll('.http-pulse')];
+  // Insomnia dispara
+  if(insomnia){insomnia.classList.add('firing');await sleep(500)}
+  if(pulses[0]){pulses[0].classList.add('firing');await sleep(700)}
+  // React dispara em seguida
+  if(react){react.classList.add('firing');await sleep(500)}
+  if(pulses[1]){pulses[1].classList.add('firing')}
+}
+
+// Dispatcher: chama o handler certo por data-demo
+function runWebDemo(demo){
+  const type=demo.dataset.demo;
+  if(type==='dto')return runDtoDemo(demo);
+  if(type==='pipeline')return runPipelineDemo(demo);
+  if(type==='compare')return runCompareDemo(demo);
+}
+
+// Replay button (chama do botão dentro do demo)
+function replayWebDemo(btn){
+  const demo=btn.closest('.web-demo');
+  if(demo)runWebDemo(demo);
+}
+
+// IntersectionObserver — autoplay quando entra no viewport
+const webDemoObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting && !e.target.dataset.played){
+      e.target.dataset.played='1';
+      // pequeno delay pra "respirar"
+      setTimeout(()=>runWebDemo(e.target),250);
+    }
+  });
+},{threshold:0.35});
+
+document.querySelectorAll('.web-demo').forEach(el=>webDemoObs.observe(el));
 </script>
 </body>
 </html>
