@@ -2215,7 +2215,7 @@ footer .heart{color:var(--accent2);animation:pulse 2s ease-in-out infinite;displ
       <div class="annotation-card"><div class="anno-name">📦 Project</div><div class="anno-desc">Maven</div></div>
       <div class="annotation-card"><div class="anno-name">☕ Language</div><div class="anno-desc">Java 21</div></div>
       <div class="annotation-card"><div class="anno-name">🍃 Spring Boot</div><div class="anno-desc" style="font-size:0.8rem;line-height:1.4">Mais recente disponível</div></div>
-      <div class="annotation-card"><div class="anno-name">📂 Group</div><div class="anno-desc">br.com.programaai</div></div>
+      <div class="annotation-card"><div class="anno-name">📂 Group</div><div class="anno-desc">br.com.sistemagestao</div></div>
       <div class="annotation-card"><div class="anno-name">📄 Artifact</div><div class="anno-desc">api</div></div>
     </div>
 
@@ -2279,14 +2279,14 @@ footer .heart{color:var(--accent2);animation:pulse 2s ease-in-out infinite;displ
   <!-- Estrutura de Pacotes -->
   <div class="card">
     <h3 style="margin-bottom:12px;color:var(--accent6)">📂 Estrutura de Pacotes</h3>
-    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Organize assim dentro de <code>br.com.programaai.api</code>:</p>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Organize assim dentro de <code>br.com.sistemagestao.api</code>:</p>
     <div class="code-block">
       <div class="code-header">
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <span class="filename">Estrutura do projeto</span>
       </div>
       <pre>
-br.com.programaai.api/
+br.com.sistemagestao.api/
 ├── 📄 ApiApplication.java       <span class="cm">← Classe principal (já vem pronta!)</span>
 ├── 📁 <span class="an">model/</span>                   <span class="cm">← Entidades JPA (tabelas)</span>
 │   ├── Fornecedor.java
@@ -2311,7 +2311,7 @@ br.com.programaai.api/
 
     <div class="tip">
       <span class="tip-icon">📌</span>
-      <div class="tip-content">Sempre crie os pacotes <strong>dentro</strong> do pacote principal <code>br.com.programaai.api</code>. Se criar fora, o Spring não vai encontrar as classes!</div>
+      <div class="tip-content">Sempre crie os pacotes <strong>dentro</strong> do pacote principal <code>br.com.sistemagestao.api</code>. Se criar fora, o Spring não vai encontrar as classes!</div>
     </div>
   </div>
 </section>
@@ -2354,9 +2354,9 @@ br.com.programaai.api/
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <div style="display:flex;align-items:center;gap:8px"><span class="filename">model/Fornecedor.java</span><span class="lang-badge java">Java</span></div>
       </div>
-      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47</div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31</div>
       <pre>
-<span class="pkg">package br.com.programaai.api.model;</span>
+<span class="pkg">package br.com.sistemagestao.api.model;</span>
 
 <span class="pkg">import jakarta.persistence.*;</span>
 <span class="pkg">import lombok.*;</span>
@@ -2364,43 +2364,28 @@ br.com.programaai.api/
 <span class="anno-line"><span class="an">@NoArgsConstructor</span>  <span class="cm">// Gera construtor vazio</span><span class="anno-tooltip"><strong>@NoArgsConstructor</strong>O Lombok gera automaticamente um construtor sem parâmetros: <code>public Fornecedor() {}</code>. O JPA exige esse construtor para criar objetos a partir do banco.</span></span>
 <span class="anno-line"><span class="an">@AllArgsConstructor</span> <span class="cm">// Gera construtor com todos os campos</span><span class="anno-tooltip"><strong>@AllArgsConstructor</strong>Gera um construtor com TODOS os atributos como parâmetros.</span></span>
 <span class="anno-line"><span class="an">@Data</span>                <span class="cm">// Gera getters, setters, toString, equals</span><span class="anno-tooltip"><strong>@Data</strong>Anotação do Lombok que gera automaticamente: getters, setters, toString(), equals(), hashCode(). Sem ela, você teria que escrever ~150 linhas de código!</span></span>
-<span class="anno-line"><span class="an">@Entity</span>              <span class="cm">// "Esta classe é uma tabela!"</span><span class="anno-tooltip"><strong>@Entity</strong>Diz ao JPA: "esta classe Java representa uma tabela no banco de dados". É a anotação mais importante do Model!</span></span>
 <span class="anno-line"><span class="an">@Table</span>(name = <span class="st">"fornecedor"</span>)   <span class="cm">// Nome da tabela no banco</span><span class="anno-tooltip"><strong>@Table(name = "fornecedor")</strong>Define o nome da tabela no PostgreSQL. Sem essa anotação, o Hibernate usaria o nome da classe.</span></span>
+<span class="anno-line"><span class="an">@Entity</span>              <span class="cm">// "Esta classe é uma tabela!"</span><span class="anno-tooltip"><strong>@Entity</strong>Diz ao JPA: "esta classe Java representa uma tabela no banco de dados". É a anotação mais importante do Model!</span></span>
 <span class="kw">public class</span> <span class="tp">Fornecedor</span> {
 
 <span class="anno-line">    <span class="an">@Id</span>                          <span class="cm">// "Este campo é a chave primária"</span><span class="anno-tooltip"><strong>@Id</strong>Marca este campo como a PRIMARY KEY da tabela. Todo @Entity precisa ter um @Id.</span></span>
 <span class="anno-line">    <span class="an">@GeneratedValue</span>(strategy = <span class="tp">GenerationType</span>.<span class="nb">IDENTITY</span>)<span class="anno-tooltip"><strong>@GeneratedValue(strategy = IDENTITY)</strong>O banco gera o ID automaticamente (auto-increment). Você NÃO precisa definir o ID ao criar — o PostgreSQL cuida disso!</span></span>
     <span class="kw">private</span> <span class="tp">Long</span> id;
 
-    <span class="anno-line"><span class="an">@Column</span>(name = <span class="st">"nome"</span>)<span class="anno-tooltip"><strong>@Column(name = "nome")</strong>Define o nome da coluna no banco. Se o nome do atributo for igual ao da coluna, o @Column é opcional — mas deixa o código mais explícito e claro!</span></span>
-    <span class="kw">private</span> <span class="tp">String</span> nome;
+<span class="anno-line">    <span class="an">@Column</span>(name = <span class="st">"nome_fantasia"</span>, nullable = <span class="bool">false</span>)<span class="anno-tooltip"><strong>nullable = false</strong>Cria a constraint NOT NULL no banco — não permite gravar fornecedor sem nome fantasia.</span></span>
+    <span class="kw">private</span> <span class="tp">String</span> nomeFantasia;
 
-    <span class="anno-line"><span class="an">@Column</span>(name = <span class="st">"cnpj"</span>)<span class="anno-tooltip"><strong>@Column(name = "cnpj")</strong>Mapeia o atributo para a coluna "cnpj" no banco.</span></span>
+<span class="anno-line">    <span class="an">@Column</span>(name = <span class="st">"cnpj"</span>, nullable = <span class="bool">false</span>, updatable = <span class="bool">false</span>, unique = <span class="bool">true</span>)<span class="anno-tooltip"><strong>updatable = false + unique = true</strong>O CNPJ é a "identidade" do fornecedor: não pode repetir (unique) e nunca deve mudar depois de cadastrado (updatable=false → o JPA ignora esse campo no UPDATE).</span></span>
     <span class="kw">private</span> <span class="tp">String</span> cnpj;
 
-    <span class="an">@Column</span>(name = <span class="st">"email"</span>)
+    <span class="an">@Column</span>(name = <span class="st">"email"</span>, nullable = <span class="bool">false</span>)
     <span class="kw">private</span> <span class="tp">String</span> email;
 
-    <span class="an">@Column</span>(name = <span class="st">"telefone"</span>)
-    <span class="kw">private</span> <span class="tp">String</span> telefone;
+    <span class="an">@Column</span>(name = <span class="st">"telefone_principal"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> telefonePrincipal;
 
-    <span class="an">@Column</span>(name = <span class="st">"cep"</span>)
-    <span class="kw">private</span> <span class="tp">String</span> cep;
-
-    <span class="an">@Column</span>(name = <span class="st">"logradouro"</span>)
-    <span class="kw">private</span> <span class="tp">String</span> logradouro;
-
-    <span class="an">@Column</span>(name = <span class="st">"numero"</span>)
-    <span class="kw">private</span> <span class="tp">String</span> numero;
-
-    <span class="an">@Column</span>(name = <span class="st">"bairro"</span>)
-    <span class="kw">private</span> <span class="tp">String</span> bairro;
-
-    <span class="an">@Column</span>(name = <span class="st">"cidade"</span>)
-    <span class="kw">private</span> <span class="tp">String</span> cidade;
-
-    <span class="an">@Column</span>(name = <span class="st">"uf"</span>)
-    <span class="kw">private</span> <span class="tp">String</span> uf;
+<span class="anno-line">    <span class="an">@Column</span>(name = <span class="st">"telefone_secundario"</span>)  <span class="cm">// opcional — sem nullable=false</span><span class="anno-tooltip"><strong>Sem nullable=false</strong>Quando o atributo é opcional, deixamos o @Column "nu" — o banco aceita NULL.</span></span>
+    <span class="kw">private</span> <span class="tp">String</span> telefoneSecundario;
 }</pre>
     </div>
 
@@ -2426,17 +2411,17 @@ br.com.programaai.api/
     <div class="db-table">
       <div class="db-table-header">🐘 Tabela: fornecedor</div>
       <table>
-        <thead><tr><th>id</th><th>nome</th><th>cnpj</th><th>email</th><th>cidade</th><th>uf</th></tr></thead>
+        <thead><tr><th>id</th><th>nome_fantasia</th><th>cnpj</th><th>email</th><th>telefone_principal</th></tr></thead>
         <tbody id="fornDbTable">
-          <tr style="color:var(--text-dim);font-style:italic"><td colspan="6" style="text-align:center;padding:20px">Tabela vazia — use os botões abaixo para simular!</td></tr>
+          <tr style="color:var(--text-dim);font-style:italic"><td colspan="5" style="text-align:center;padding:20px">Tabela vazia — use os botões abaixo para simular!</td></tr>
         </tbody>
       </table>
     </div>
 
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn-demo btn-small" onclick="addFornDb('Distribuidora ABC','12.345.678/0001-99','contato@abc.com','São Paulo','SP')">+ Dist. ABC</button>
-      <button class="btn-demo btn-small btn-spring" onclick="addFornDb('Fornecedor XYZ','98.765.432/0001-11','vendas@xyz.com','Rio de Janeiro','RJ')">+ Forn. XYZ</button>
-      <button class="btn-demo btn-small btn-teal" onclick="addFornDb('Teste LTDA','23.323.232/2332-00','teste@programaai.dev','João Pessoa','PB')">+ Teste LTDA</button>
+      <button class="btn-demo btn-small" onclick="addFornDb('Distribuidora ABC','12.345.678/0001-99','contato@abc.com','(11) 99999-0001')">+ Dist. ABC</button>
+      <button class="btn-demo btn-small btn-spring" onclick="addFornDb('Fornecedor XYZ','98.765.432/0001-11','vendas@xyz.com','(21) 98888-0002')">+ Forn. XYZ</button>
+      <button class="btn-demo btn-small btn-teal" onclick="addFornDb('Teste LTDA','23.323.232/2332-00','teste@programaai.dev','(83) 99999-0000')">+ Teste LTDA</button>
       <button class="btn-demo btn-small" onclick="resetFornDb()" style="background:var(--surface2);border:1px solid rgba(255,255,255,0.1)">🔄 Limpar</button>
     </div>
   </div>
@@ -2472,9 +2457,9 @@ br.com.programaai.api/
       </div>
       <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
       <pre>
-<span class="pkg">package br.com.programaai.api.repository;</span>
+<span class="pkg">package br.com.sistemagestao.api.repository;</span>
 
-<span class="pkg">import br.com.programaai.api.model.Fornecedor;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Fornecedor;</span>
 <span class="pkg">import org.springframework.data.jpa.repository.JpaRepository;</span>
 <span class="pkg">import org.springframework.stereotype.Repository;</span>
 
@@ -2527,12 +2512,12 @@ br.com.programaai.api/
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/FornecedorService.java</span><span class="lang-badge java">Java</span></div>
       </div>
-      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65</div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60</div>
       <pre>
-<span class="pkg">package br.com.programaai.api.service;</span>
+<span class="pkg">package br.com.sistemagestao.api.service;</span>
 
-<span class="pkg">import br.com.programaai.api.model.Fornecedor;</span>
-<span class="pkg">import br.com.programaai.api.repository.FornecedorRepository;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Fornecedor;</span>
+<span class="pkg">import br.com.sistemagestao.api.repository.FornecedorRepository;</span>
 <span class="pkg">import org.springframework.beans.factory.annotation.Autowired;</span>
 <span class="pkg">import org.springframework.http.HttpStatus;</span>
 <span class="pkg">import org.springframework.stereotype.Service;</span>
@@ -2572,16 +2557,11 @@ br.com.programaai.api/
         }
 
         <span class="tp">Fornecedor</span> fornecedorParaEditar = fornecedorDoBanco.<span class="fn">get</span>();
-        fornecedorParaEditar.<span class="fn">setNome</span>(fornecedor.<span class="fn">getNome</span>());
-        fornecedorParaEditar.<span class="fn">setCnpj</span>(fornecedor.<span class="fn">getCnpj</span>());
+        fornecedorParaEditar.<span class="fn">setNomeFantasia</span>(fornecedor.<span class="fn">getNomeFantasia</span>());
+        <span class="cm">// CNPJ não é atualizado: @Column(updatable = false) protege a coluna no banco</span>
         fornecedorParaEditar.<span class="fn">setEmail</span>(fornecedor.<span class="fn">getEmail</span>());
-        fornecedorParaEditar.<span class="fn">setTelefone</span>(fornecedor.<span class="fn">getTelefone</span>());
-        fornecedorParaEditar.<span class="fn">setCep</span>(fornecedor.<span class="fn">getCep</span>());
-        fornecedorParaEditar.<span class="fn">setLogradouro</span>(fornecedor.<span class="fn">getLogradouro</span>());
-        fornecedorParaEditar.<span class="fn">setNumero</span>(fornecedor.<span class="fn">getNumero</span>());
-        fornecedorParaEditar.<span class="fn">setBairro</span>(fornecedor.<span class="fn">getBairro</span>());
-        fornecedorParaEditar.<span class="fn">setCidade</span>(fornecedor.<span class="fn">getCidade</span>());
-        fornecedorParaEditar.<span class="fn">setUf</span>(fornecedor.<span class="fn">getUf</span>());
+        fornecedorParaEditar.<span class="fn">setTelefonePrincipal</span>(fornecedor.<span class="fn">getTelefonePrincipal</span>());
+        fornecedorParaEditar.<span class="fn">setTelefoneSecundario</span>(fornecedor.<span class="fn">getTelefoneSecundario</span>());
 
         fornecedorRepository.<span class="fn">save</span>(fornecedorParaEditar);
     }
@@ -2644,10 +2624,10 @@ br.com.programaai.api/
       </div>
       <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48</div>
       <pre>
-<span class="pkg">package br.com.programaai.api.controller;</span>
+<span class="pkg">package br.com.sistemagestao.api.controller;</span>
 
-<span class="pkg">import br.com.programaai.api.model.Fornecedor;</span>
-<span class="pkg">import br.com.programaai.api.service.FornecedorService;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Fornecedor;</span>
+<span class="pkg">import br.com.sistemagestao.api.service.FornecedorService;</span>
 <span class="pkg">import org.springframework.beans.factory.annotation.Autowired;</span>
 <span class="pkg">import org.springframework.http.HttpStatus;</span>
 <span class="pkg">import org.springframework.web.bind.annotation.*;</span>
@@ -2894,16 +2874,11 @@ br.com.programaai.api/
           <span class="lang-badge json">JSON</span>
         </div>
         <pre>{
-  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,
+  <span class="json-key">"nomeFantasia"</span>: <span class="json-val">"Distribuidora ABC"</span>,
   <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,
   <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,
-  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0001"</span>,
-  <span class="json-key">"cep"</span>: <span class="json-val">"01310-100"</span>,
-  <span class="json-key">"logradouro"</span>: <span class="json-val">"Avenida Paulista"</span>,
-  <span class="json-key">"numero"</span>: <span class="json-val">"1000"</span>,
-  <span class="json-key">"bairro"</span>: <span class="json-val">"Bela Vista"</span>,
-  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,
-  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>
+  <span class="json-key">"telefonePrincipal"</span>: <span class="json-val">"(11) 99999-0001"</span>,
+  <span class="json-key">"telefoneSecundario"</span>: <span class="json-val">"(11) 4002-8922"</span>
 }</pre>
       </div>
       <div class="tip" style="margin:12px 0 0">
@@ -6838,7 +6813,7 @@ br.com.petshop.api/
     <div class="tip" style="margin-top:16px">
       <span class="tip-icon">🔮</span>
       <div class="tip-content">
-        <strong>Spoiler do próximo capítulo:</strong> Você vai notar que o <strong>Fornecedor</strong> tem os campos de endereço <strong style="color:var(--accent2)">flat</strong> (cep, logradouro... direto na entidade Fornecedor). Isso foi proposital — começamos simples no cap 1. <strong style="color:var(--text)">No Capítulo 4</strong> vamos refatorar o Fornecedor para também usar essa entidade <code style="color:var(--accent6)">Endereco</code> que vamos criar agora. Aí o aluno vê um <strong>refactor real</strong> com o objetivo de remover duplicação!
+        <strong>Spoiler do próximo capítulo:</strong> O <strong>Fornecedor</strong> que fizemos no cap 1 <strong style="color:var(--accent2)">não tem endereço</strong> ainda — ficou só com nome, CNPJ, e-mail e telefones. Isso foi proposital: começamos simples. <strong style="color:var(--text)">No Capítulo 4</strong> vamos refatorar o Fornecedor para <strong>adicionar</strong> esse <code style="color:var(--accent6)">Endereco</code> que estamos criando agora — e de quebra aplicar todo o padrão profissional que aprendemos (DTOs, Mapper, ServiceImpl, validações). Refactor real! 💪
       </div>
     </div>
   </div>
@@ -8261,8 +8236,7 @@ br.com.sistemagestao.api/
       <div class="annotation-card" style="border-color:rgba(247,183,49,0.3);background:rgba(247,183,49,0.04)">
         <div class="anno-name" style="color:var(--accent5)">⚠️ Antes (cap 1)</div>
         <div class="anno-desc" style="font-size:0.82rem;line-height:1.7">
-          • package <code>br.com.programaai.api</code><br>
-          • Endereço <strong>flat</strong> (cep, logradouro, numero... direto na entidade)<br>
+          • <strong>Sem endereço</strong> — só nome fantasia, CNPJ, e-mail e telefones<br>
           • Sem DTOs — controller recebia/devolvia a Entidade<br>
           • Sem Mapper<br>
           • Sem validações (<code>@NotBlank</code>, <code>@Email</code>...)<br>
@@ -8276,8 +8250,7 @@ br.com.sistemagestao.api/
       <div class="annotation-card" style="border-color:rgba(78,205,196,0.3);background:rgba(78,205,196,0.04)">
         <div class="anno-name" style="color:var(--accent3)">✅ Depois (cap 4)</div>
         <div class="anno-desc" style="font-size:0.82rem;line-height:1.7">
-          • package <code>br.com.sistemagestao.api</code> ✨<br>
-          • <code>@OneToOne</code> com a <strong>mesma</strong> entidade <code>Endereco</code> do Cliente<br>
+          • <strong>Ganha um <code>@OneToOne</code></strong> com a <strong>mesma</strong> entidade <code>Endereco</code> do Cliente ✨<br>
           • <code>FornecedorRequestDTO</code> + <code>FornecedorResponseDTO</code> aninhando <code>EnderecoDTO</code><br>
           • <code>FornecedorMapper</code> usando <code>EnderecoMapper</code><br>
           • Bean Validation (<code>@NotBlank</code>, <code>@Email</code>, <code>@Valid</code>)<br>
@@ -8290,14 +8263,7 @@ br.com.sistemagestao.api/
       </div>
     </div>
 
-    <div class="warning" style="margin-top:20px;border-left-color:var(--accent3)">
-      <span class="warning-icon">⚡</span>
-      <div style="color:var(--text-dim);font-size:0.9rem">
-        <strong style="color:var(--accent3)">Renomeando o package:</strong> Lá no cap 1, o package raiz era <code>br.com.programaai.api</code> (resíduo do início do curso). A partir do cap 2 (Produto) padronizamos para <code>br.com.sistemagestao.api</code>. <strong style="color:var(--text)">Antes de começar este capítulo</strong>, no IntelliJ: clique com o direito no package <code>br.com.programaai</code> → <strong>Refactor</strong> → <strong>Rename</strong> → digite <code>sistemagestao</code> → ele atualiza tudo automaticamente!
-      </div>
-    </div>
-
-    <div class="tip" style="margin-top:12px">
+    <div class="tip" style="margin-top:20px">
       <span class="tip-icon">💪</span>
       <div class="tip-content"><strong>Você já sabe TUDO que vamos usar!</strong> Não tem nenhum conceito novo nesse capítulo — é puro <strong>refactor</strong>: aplicar no Fornecedor o padrão que já está no Produto e no Cliente. Reaproveitar, deletar duplicação, ganhar consistência.</div>
     </div>
@@ -8322,13 +8288,13 @@ br.com.sistemagestao.api/
     <div class="warning">
       <span class="warning-icon">🚨</span>
       <div style="color:var(--text-dim);font-size:0.9rem">
-        <strong style="color:var(--accent2)">Atenção:</strong> Vamos <strong>mudar a estrutura</strong> da tabela <code>fornecedor</code> — sair de 10 colunas flat (cep, logradouro... dentro de fornecedor) para 4 colunas + uma FK <code>endereco_id</code>. O <code>spring.jpa.hibernate.ddl-auto=update</code> vai <strong style="color:var(--text)">ADICIONAR a coluna nova</strong>, mas <strong>NÃO vai apagar as antigas</strong> nem migrar os dados.
+        <strong style="color:var(--accent2)">Atenção:</strong> Vamos <strong>adicionar uma FK <code>endereco_id NOT NULL</code></strong> na tabela <code>fornecedor</code> existente. O <code>spring.jpa.hibernate.ddl-auto=update</code> tenta criar a coluna, mas se já houver fornecedores cadastrados no cap 1, <strong style="color:var(--text)">vai falhar</strong> — porque essas linhas antigas não têm valor para a nova coluna obrigatória. Precisamos preparar o terreno antes de subir a aplicação refatorada.
       </div>
     </div>
 
     <div class="concept" style="margin-top:16px">
       <div class="concept-title">🐘 O que fazer no DBeaver</div>
-      <p>Como ainda estamos em desenvolvimento, a forma <strong>mais limpa</strong> é dropar a tabela <code>fornecedor</code> e deixar o Hibernate recriá-la do zero quando subirmos a aplicação. Os dados de teste do cap 1 vão sumir — mas isso é normal num refactor de schema!</p>
+      <p>Como ainda estamos em desenvolvimento, a forma <strong>mais limpa</strong> é dropar a tabela <code>fornecedor</code> e deixar o Hibernate recriá-la do zero (com a coluna <code>endereco_id</code>) quando subirmos a aplicação. Os fornecedores de teste do cap 1 vão sumir — mas isso é normal num refactor de schema!</p>
     </div>
 
     <div class="code-block" style="margin-top:14px">
@@ -8501,15 +8467,15 @@ br.com.sistemagestao.api/
   <div class="step-header">
     <div class="step-number sn-red">4.4</div>
     <div>
-      <div class="step-title">Refatorar Fornecedor.java — adeus endereço flat</div>
-      <div style="color:var(--text-dim);font-size:0.88rem">@OneToOne para Endereco, igualzinho ao Cliente</div>
+      <div class="step-title">Refatorar Fornecedor.java — adicionar @OneToOne para Endereco</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Mantém os campos próprios e ganha o relacionamento, igualzinho ao Cliente</div>
     </div>
   </div>
 
   <div class="card">
-    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">A entidade Fornecedor sai de <strong>10 colunas planas</strong> para <strong>4 colunas próprias + 1 FK</strong>. A novidade é o relacionamento <code>@OneToOne</code> — exatamente como o Cliente!</p>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">O Fornecedor do cap 1 estava <strong>sem endereço</strong>. Agora vamos <strong style="color:var(--text)">acrescentar</strong> um campo do tipo <code>Endereco</code> com <code>@OneToOne</code> + cascade — exatamente como fizemos no Cliente. Os 5 campos que já existiam continuam intactos!</p>
 
-    <h4 style="margin:0 0 12px;color:var(--accent5)">⚠️ Antes (cap 1) — endereço flat</h4>
+    <h4 style="margin:0 0 12px;color:var(--accent5)">⚠️ Antes (cap 1) — sem endereço</h4>
     <div class="code-block" style="opacity:0.7">
       <div class="code-header">
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
@@ -8521,26 +8487,32 @@ br.com.sistemagestao.api/
 <span class="kw">public class</span> <span class="tp">Fornecedor</span> {
 
     <span class="an">@Id</span> <span class="kw">private</span> <span class="tp">Long</span> id;
-    <span class="an">@Column</span>(name = <span class="st">"nome"</span>)        <span class="kw">private</span> <span class="tp">String</span> nome;
-    <span class="an">@Column</span>(name = <span class="st">"cnpj"</span>)        <span class="kw">private</span> <span class="tp">String</span> cnpj;
-    <span class="an">@Column</span>(name = <span class="st">"email"</span>)       <span class="kw">private</span> <span class="tp">String</span> email;
-    <span class="an">@Column</span>(name = <span class="st">"telefone"</span>)    <span class="kw">private</span> <span class="tp">String</span> telefone;
-    <span class="an">@Column</span>(name = <span class="st">"cep"</span>)         <span class="kw">private</span> <span class="tp">String</span> cep;          <span class="cm">// ⬅️</span>
-    <span class="an">@Column</span>(name = <span class="st">"logradouro"</span>)  <span class="kw">private</span> <span class="tp">String</span> logradouro;   <span class="cm">// ⬅️</span>
-    <span class="an">@Column</span>(name = <span class="st">"numero"</span>)      <span class="kw">private</span> <span class="tp">String</span> numero;       <span class="cm">// ⬅️</span>
-    <span class="an">@Column</span>(name = <span class="st">"bairro"</span>)      <span class="kw">private</span> <span class="tp">String</span> bairro;       <span class="cm">// ⬅️</span>
-    <span class="an">@Column</span>(name = <span class="st">"cidade"</span>)      <span class="kw">private</span> <span class="tp">String</span> cidade;       <span class="cm">// ⬅️</span>
-    <span class="an">@Column</span>(name = <span class="st">"uf"</span>)          <span class="kw">private</span> <span class="tp">String</span> uf;           <span class="cm">// ⬅️</span>
+    <span class="an">@Column</span>(name = <span class="st">"nome_fantasia"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> nomeFantasia;
+
+    <span class="an">@Column</span>(name = <span class="st">"cnpj"</span>, nullable = <span class="bool">false</span>, updatable = <span class="bool">false</span>, unique = <span class="bool">true</span>)
+    <span class="kw">private</span> <span class="tp">String</span> cnpj;
+
+    <span class="an">@Column</span>(name = <span class="st">"email"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> email;
+
+    <span class="an">@Column</span>(name = <span class="st">"telefone_principal"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> telefonePrincipal;
+
+    <span class="an">@Column</span>(name = <span class="st">"telefone_secundario"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> telefoneSecundario;
+
+    <span class="cm">// ⚠️ ainda não existe nenhum campo de endereço aqui!</span>
 }</pre>
     </div>
 
-    <h4 style="margin:24px 0 12px;color:var(--accent3)">✅ Depois (cap 4) — @OneToOne com Endereco</h4>
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">✅ Depois (cap 4) — com @OneToOne para Endereco</h4>
     <div class="code-block with-lines">
       <div class="code-header">
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <div style="display:flex;align-items:center;gap:8px"><span class="filename">model/Fornecedor.java <span style="color:var(--accent3);font-size:0.7rem">(refatorado)</span></span><span class="lang-badge java">Java</span></div>
       </div>
-      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34</div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38</div>
       <pre>
 <span class="pkg">package br.com.sistemagestao.api.model;</span>
 
@@ -8560,21 +8532,24 @@ br.com.sistemagestao.api/
     <span class="an">@GeneratedValue</span>(strategy = <span class="tp">GenerationType</span>.<span class="nb">IDENTITY</span>)
     <span class="kw">private</span> <span class="tp">Long</span> id;
 
-    <span class="an">@Column</span>(name = <span class="st">"nome"</span>, nullable = <span class="bool">false</span>)
-    <span class="kw">private</span> <span class="tp">String</span> nome;
+    <span class="an">@Column</span>(name = <span class="st">"nome_fantasia"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> nomeFantasia;
 
-    <span class="an">@Column</span>(name = <span class="st">"cnpj"</span>, nullable = <span class="bool">false</span>, unique = <span class="bool">true</span>)
+    <span class="an">@Column</span>(name = <span class="st">"cnpj"</span>, nullable = <span class="bool">false</span>, updatable = <span class="bool">false</span>, unique = <span class="bool">true</span>)
     <span class="kw">private</span> <span class="tp">String</span> cnpj;
 
     <span class="an">@Column</span>(name = <span class="st">"email"</span>, nullable = <span class="bool">false</span>)
     <span class="kw">private</span> <span class="tp">String</span> email;
 
-    <span class="an">@Column</span>(name = <span class="st">"telefone"</span>, nullable = <span class="bool">false</span>)
-    <span class="kw">private</span> <span class="tp">String</span> telefone;
+    <span class="an">@Column</span>(name = <span class="st">"telefone_principal"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> telefonePrincipal;
 
-    <span class="an">@OneToOne</span>(cascade = <span class="tp">CascadeType</span>.<span class="nb">ALL</span>, orphanRemoval = <span class="bool">true</span>)
-    <span class="an">@JoinColumn</span>(name = <span class="st">"endereco_id"</span>, nullable = <span class="bool">false</span>)
-    <span class="kw">private</span> <span class="tp">Endereco</span> endereco;
+    <span class="an">@Column</span>(name = <span class="st">"telefone_secundario"</span>)
+    <span class="kw">private</span> <span class="tp">String</span> telefoneSecundario;
+
+    <span class="an">@OneToOne</span>(cascade = <span class="tp">CascadeType</span>.<span class="nb">ALL</span>, orphanRemoval = <span class="bool">true</span>)  <span class="cm">// 🆕</span>
+    <span class="an">@JoinColumn</span>(name = <span class="st">"endereco_id"</span>, nullable = <span class="bool">false</span>)        <span class="cm">// 🆕</span>
+    <span class="kw">private</span> <span class="tp">Endereco</span> endereco;                                      <span class="cm">// 🆕</span>
 }</pre>
     </div>
 
@@ -8584,8 +8559,8 @@ br.com.sistemagestao.api/
     </div>
 
     <div class="tip" style="margin-top:12px">
-      <span class="tip-icon">🛡️</span>
-      <div class="tip-content"><strong>Bônus: <code>unique = true</code> no CNPJ!</strong> No cap 1 essa constraint não existia. Agora, ao tentar cadastrar dois fornecedores com o mesmo CNPJ, o banco já barra. Igualzinho ao <code>cpf unique</code> do Cliente.</div>
+      <span class="tip-icon">🔒</span>
+      <div class="tip-content"><strong><code>updatable = false</code> no CNPJ — herança do cap 1.</strong> O CNPJ é a "identidade" do fornecedor: não muda. O JPA <strong>ignora</strong> esse campo quando emite o UPDATE, então mesmo que o ServiceImpl chame <code>setCnpj(...)</code>, o banco mantém o valor original. Vamos manter essa proteção no refactor!</div>
     </div>
   </div>
 </section>
@@ -8613,7 +8588,7 @@ br.com.sistemagestao.api/
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/fornecedor/FornecedorRequestDTO.java</span><span class="lang-badge java">Java</span></div>
       </div>
-      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28</div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27</div>
       <pre>
 <span class="pkg">package br.com.sistemagestao.api.dto.fornecedor;</span>
 
@@ -8623,8 +8598,8 @@ br.com.sistemagestao.api/
 
 <span class="kw">public record</span> <span class="tp">FornecedorRequestDTO</span>(
 
-        <span class="an">@NotBlank</span>(message = <span class="st">"O nome é obrigatório"</span>)
-        <span class="tp">String</span> nome,
+        <span class="an">@NotBlank</span>(message = <span class="st">"O nome fantasia é obrigatório"</span>)
+        <span class="tp">String</span> nomeFantasia,
 
         <span class="an">@NotBlank</span>(message = <span class="st">"O CNPJ é obrigatório"</span>)
         <span class="tp">String</span> cnpj,
@@ -8633,8 +8608,10 @@ br.com.sistemagestao.api/
         <span class="an">@Email</span>(message = <span class="st">"E-mail inválido"</span>)
         <span class="tp">String</span> email,
 
-        <span class="an">@NotBlank</span>(message = <span class="st">"O telefone é obrigatório"</span>)
-        <span class="tp">String</span> telefone,
+        <span class="an">@NotBlank</span>(message = <span class="st">"O telefone principal é obrigatório"</span>)
+        <span class="tp">String</span> telefonePrincipal,
+
+        <span class="tp">String</span> telefoneSecundario,                                <span class="cm">// opcional!</span>
 
         <span class="an">@NotNull</span>(message = <span class="st">"O endereço é obrigatório"</span>)
         <span class="an">@Valid</span>  <span class="cm">// ← ATIVA validações DENTRO do EnderecoDTO!</span>
@@ -8657,7 +8634,7 @@ br.com.sistemagestao.api/
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/fornecedor/FornecedorResponseDTO.java</span><span class="lang-badge java">Java</span></div>
       </div>
-      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13</div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14</div>
       <pre>
 <span class="pkg">package br.com.sistemagestao.api.dto.fornecedor;</span>
 
@@ -8665,10 +8642,11 @@ br.com.sistemagestao.api/
 
 <span class="kw">public record</span> <span class="tp">FornecedorResponseDTO</span>(
         <span class="tp">Long</span> id,
-        <span class="tp">String</span> nome,
+        <span class="tp">String</span> nomeFantasia,
         <span class="tp">String</span> cnpj,
         <span class="tp">String</span> email,
-        <span class="tp">String</span> telefone,
+        <span class="tp">String</span> telefonePrincipal,
+        <span class="tp">String</span> telefoneSecundario,
         <span class="tp">EnderecoDTO</span> endereco
 ) {}</pre>
     </div>
@@ -8693,10 +8671,10 @@ br.com.sistemagestao.api/
         </div>
         <div class="browser-content">
           <div class="web-form-title">📝 Cadastrar Fornecedor</div>
-          <div class="web-form-group"><label class="web-form-label">Nome</label><input class="web-form-input" data-fill="Distribuidora ABC" data-target="nome" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Nome fantasia</label><input class="web-form-input" data-fill="Distribuidora ABC" data-target="nomeFantasia" readonly></div>
           <div class="web-form-group"><label class="web-form-label">CNPJ</label><input class="web-form-input" data-fill="12.345.678/0001-99" data-target="cnpj" readonly></div>
           <div class="web-form-group"><label class="web-form-label">E-mail</label><input class="web-form-input" data-fill="contato@abc.com" data-target="email" readonly></div>
-          <div class="web-form-group"><label class="web-form-label">Telefone</label><input class="web-form-input" data-fill="(11) 99999-0001" data-target="telefone" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Telefone principal</label><input class="web-form-input" data-fill="(11) 99999-0001" data-target="telefonePrincipal" readonly></div>
           <div style="margin-top:12px;padding:10px 12px;background:rgba(78,205,196,0.06);border:1px dashed rgba(78,205,196,0.3);border-radius:8px;font-size:0.78rem;color:var(--accent3);font-weight:700">🏠 Endereço (sub-formulário aninhado)</div>
           <button class="web-form-submit" style="margin-top:12px">💾 Salvar fornecedor</button>
         </div>
@@ -8712,10 +8690,11 @@ br.com.sistemagestao.api/
       <div class="dto-mock">
         <div class="dto-mock-header">📦 FornecedorRequestDTO</div>
         <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">FornecedorRequestDTO</span>(
-  <span class="dto-tp">String</span> <span class="dto-field" data-field="nome">nome</span><span class="dto-value" data-field="nome"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="nomeFantasia">nomeFantasia</span><span class="dto-value" data-field="nomeFantasia"></span>,
   <span class="dto-tp">String</span> <span class="dto-field" data-field="cnpj">cnpj</span><span class="dto-value" data-field="cnpj"></span>,
   <span class="dto-tp">String</span> <span class="dto-field" data-field="email">email</span><span class="dto-value" data-field="email"></span>,
-  <span class="dto-tp">String</span> <span class="dto-field" data-field="telefone">telefone</span><span class="dto-value" data-field="telefone"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="telefonePrincipal">telefonePrincipal</span><span class="dto-value" data-field="telefonePrincipal"></span>,
+  <span class="dto-tp">String</span> telefoneSecundario,
   <span class="dto-tp">EnderecoDTO</span> endereco
 ) {}</pre>
       </div>
@@ -8728,9 +8707,10 @@ br.com.sistemagestao.api/
         <div class="dto-mock-header" style="color:var(--accent5)">📦 FornecedorResponseDTO</div>
         <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">FornecedorResponseDTO</span>(
   <span class="dto-tp">Long</span> <span class="dto-field">id</span>,
-  <span class="dto-tp">String</span> <span class="dto-field">nome</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">nomeFantasia</span>,
   <span class="dto-tp">String</span> <span class="dto-field">cnpj</span>,
   <span class="dto-tp">String</span> <span class="dto-field">email</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">telefonePrincipal</span>,
   <span class="dto-tp">EnderecoDTO</span> <span class="dto-field">endereco</span>
 ) {}</pre>
       </div>
@@ -8792,7 +8772,7 @@ br.com.sistemagestao.api/
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <div style="display:flex;align-items:center;gap:8px"><span class="filename">mapper/FornecedorMapper.java</span><span class="lang-badge java">Java</span></div>
       </div>
-      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34</div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36</div>
       <pre>
 <span class="pkg">package br.com.sistemagestao.api.mapper;</span>
 
@@ -8807,10 +8787,11 @@ br.com.sistemagestao.api/
 
         <span class="tp">Fornecedor</span> fornecedor = <span class="kw">new</span> <span class="tp">Fornecedor</span>();
 
-        fornecedor.<span class="fn">setNome</span>(dto.<span class="fn">nome</span>());
+        fornecedor.<span class="fn">setNomeFantasia</span>(dto.<span class="fn">nomeFantasia</span>());
         fornecedor.<span class="fn">setCnpj</span>(dto.<span class="fn">cnpj</span>());
         fornecedor.<span class="fn">setEmail</span>(dto.<span class="fn">email</span>());
-        fornecedor.<span class="fn">setTelefone</span>(dto.<span class="fn">telefone</span>());
+        fornecedor.<span class="fn">setTelefonePrincipal</span>(dto.<span class="fn">telefonePrincipal</span>());
+        fornecedor.<span class="fn">setTelefoneSecundario</span>(dto.<span class="fn">telefoneSecundario</span>());
 
         fornecedor.<span class="fn">setEndereco</span>(<span class="tp">EnderecoMapper</span>.<span class="fn">toEntity</span>(dto.<span class="fn">endereco</span>()));
 
@@ -8822,10 +8803,11 @@ br.com.sistemagestao.api/
 
         <span class="kw">return new</span> <span class="tp">FornecedorResponseDTO</span>(
                 fornecedor.<span class="fn">getId</span>(),
-                fornecedor.<span class="fn">getNome</span>(),
+                fornecedor.<span class="fn">getNomeFantasia</span>(),
                 fornecedor.<span class="fn">getCnpj</span>(),
                 fornecedor.<span class="fn">getEmail</span>(),
-                fornecedor.<span class="fn">getTelefone</span>(),
+                fornecedor.<span class="fn">getTelefonePrincipal</span>(),
+                fornecedor.<span class="fn">getTelefoneSecundario</span>(),
                 <span class="tp">EnderecoMapper</span>.<span class="fn">toResponseDTO</span>(fornecedor.<span class="fn">getEndereco</span>())
         );
     }
@@ -8980,7 +8962,7 @@ br.com.sistemagestao.api/
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/FornecedorServiceImpl.java</span><span class="lang-badge java">Java</span></div>
       </div>
-      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65<br>66<br>67<br>68<br>69<br>70<br>71<br>72<br>73<br>74<br>75<br>76<br>77<br>78<br>79<br>80<br>81<br>82<br>83<br>84</div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65<br>66<br>67<br>68<br>69<br>70<br>71<br>72<br>73<br>74<br>75<br>76<br>77<br>78<br>79<br>80<br>81<br>82<br>83<br>84<br>85</div>
       <pre>
 <span class="pkg">package br.com.sistemagestao.api.service;</span>
 
@@ -9041,10 +9023,11 @@ br.com.sistemagestao.api/
                         <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Fornecedor não encontrado"</span>));
 
         <span class="cm">// Atualiza os campos simples do fornecedor</span>
-        fornecedor.<span class="fn">setNome</span>(dto.<span class="fn">nome</span>());
-        fornecedor.<span class="fn">setCnpj</span>(dto.<span class="fn">cnpj</span>());
+        fornecedor.<span class="fn">setNomeFantasia</span>(dto.<span class="fn">nomeFantasia</span>());
+        <span class="cm">// CNPJ não é atualizado: @Column(updatable = false) protege a coluna no banco</span>
         fornecedor.<span class="fn">setEmail</span>(dto.<span class="fn">email</span>());
-        fornecedor.<span class="fn">setTelefone</span>(dto.<span class="fn">telefone</span>());
+        fornecedor.<span class="fn">setTelefonePrincipal</span>(dto.<span class="fn">telefonePrincipal</span>());
+        fornecedor.<span class="fn">setTelefoneSecundario</span>(dto.<span class="fn">telefoneSecundario</span>());
 
         <span class="cm">// Atualiza os campos do Endereco que JÁ EXISTE (mantemos o mesmo id!)</span>
         <span class="tp">Endereco</span> endereco = fornecedor.<span class="fn">getEndereco</span>();
@@ -9083,7 +9066,7 @@ br.com.sistemagestao.api/
 
     <div class="solution-box" style="margin-top:14px">
       <div class="solution-title">🔥 Compare com o cap 1</div>
-      <p style="color:var(--text-dim)">No cap 1 o <code>atualizar</code> tinha 11 <code>setters</code> (4 do fornecedor + 7 do endereço flat) tudo no mesmo objeto. Aqui mantemos a mesma quantidade total de setters, mas <strong style="color:var(--text)">organizados em duas entidades</strong>: 4 no Fornecedor, 7 no Endereço. Quando outra entidade (tipo Cliente) precisar de Endereço, ela <strong>já tem a estrutura</strong> sem inventar nada.</p>
+      <p style="color:var(--text-dim)">No cap 1 o <code>atualizar</code> chamava 4 <code>setters</code> direto no Fornecedor (sem CNPJ, por causa do <code>updatable=false</code>). Aqui mantemos esses 4 e <strong style="color:var(--text)">somamos 7 do Endereço aninhado</strong>, num bloco separado e bem nomeado. O Cliente já fez o caminho idêntico — quando o terceiro consumidor aparecer (uma Empresa, um Cliente Corporativo...), ele <strong>já tem a estrutura</strong> pronta sem inventar nada.</p>
     </div>
   </div>
 </section>
@@ -9349,30 +9332,26 @@ br.com.sistemagestao.api/
   <div class="card">
     <div class="warning" style="margin-bottom:20px">
       <span class="warning-icon">⚠️</span>
-      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Se você guardou os requests do cap 1 no Insomnia, eles vão quebrar!</strong> O JSON era flat (cep/logradouro/... no nível principal). Agora precisa estar com o objeto <code>endereco</code> aninhado. Atualize os bodies dos requests da pasta <strong>Fornecedor</strong> seguindo os exemplos abaixo.</div>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Se você guardou os requests do cap 1 no Insomnia, eles vão precisar de ajuste!</strong> O body antigo não tinha <code>endereco</code>. Agora ele é obrigatório (<code>nullable=false</code> + <code>@NotNull</code>). Atualize os bodies dos requests da pasta <strong>Fornecedor</strong> incluindo o sub-objeto.</div>
     </div>
 
-    <h4 style="margin:0 0 12px;color:var(--accent5)">⚠️ Antes (cap 1) — body flat</h4>
+    <h4 style="margin:0 0 12px;color:var(--accent5)">⚠️ Antes (cap 1) — body sem endereço</h4>
     <div class="code-block" style="opacity:0.7">
       <div class="code-header">
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <div style="display:flex;align-items:center;gap:8px"><span class="filename">POST /fornecedores (antes)</span><span class="lang-badge json">JSON</span></div>
       </div>
       <pre>{
-  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,
+  <span class="json-key">"nomeFantasia"</span>: <span class="json-val">"Distribuidora ABC"</span>,
   <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,
   <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,
-  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0001"</span>,
-  <span class="json-key">"cep"</span>: <span class="json-val">"01310-100"</span>,           <span class="cm">// ⚠️ campos flat</span>
-  <span class="json-key">"logradouro"</span>: <span class="json-val">"Avenida Paulista"</span>,
-  <span class="json-key">"numero"</span>: <span class="json-val">"1000"</span>,
-  <span class="json-key">"bairro"</span>: <span class="json-val">"Bela Vista"</span>,
-  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,
-  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>
+  <span class="json-key">"telefonePrincipal"</span>: <span class="json-val">"(11) 99999-0001"</span>,
+  <span class="json-key">"telefoneSecundario"</span>: <span class="json-val">"(11) 4002-8922"</span>
+                                       <span class="cm">// ⚠️ sem endereco — ainda não existia!</span>
 }</pre>
     </div>
 
-    <h4 style="margin:24px 0 12px;color:var(--accent3)">✅ Depois (cap 4) — body aninhado</h4>
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">✅ Depois (cap 4) — body aninhado com endereco</h4>
 
     <!-- POST -->
     <div style="background:rgba(73,204,144,0.04);border:1px solid rgba(73,204,144,0.12);border-radius:16px;padding:24px;margin:16px 0">
@@ -9384,10 +9363,11 @@ br.com.sistemagestao.api/
           <span class="lang-badge json">JSON</span>
         </div>
         <pre>{
-  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,
+  <span class="json-key">"nomeFantasia"</span>: <span class="json-val">"Distribuidora ABC"</span>,
   <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,
   <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,
-  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0001"</span>,
+  <span class="json-key">"telefonePrincipal"</span>: <span class="json-val">"(11) 99999-0001"</span>,
+  <span class="json-key">"telefoneSecundario"</span>: <span class="json-val">"(11) 4002-8922"</span>,
   <span class="json-key">"endereco"</span>: {
     <span class="json-key">"cep"</span>: <span class="json-val">"01310-100"</span>,
     <span class="json-key">"logradouro"</span>: <span class="json-val">"Avenida Paulista"</span>,
@@ -9419,10 +9399,10 @@ br.com.sistemagestao.api/
         <div style="display:flex;align-items:center;gap:8px"><span class="filename">JSON com endereço incompleto</span><span class="lang-badge json">JSON</span></div>
       </div>
       <pre>{
-  <span class="json-key">"nome"</span>: <span class="json-val">"Teste"</span>,
+  <span class="json-key">"nomeFantasia"</span>: <span class="json-val">"Teste"</span>,
   <span class="json-key">"cnpj"</span>: <span class="json-val">"00.000.000/0001-00"</span>,
   <span class="json-key">"email"</span>: <span class="json-val">"teste@email.com"</span>,
-  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0000"</span>,
+  <span class="json-key">"telefonePrincipal"</span>: <span class="json-val">"(11) 99999-0000"</span>,
   <span class="json-key">"endereco"</span>: {
     <span class="json-key">"cep"</span>: <span class="json-val">""</span>,            <span class="cm">// ← vazio!</span>
     <span class="json-key">"logradouro"</span>: <span class="json-val">""</span>,     <span class="cm">// ← vazio!</span>
@@ -9648,19 +9628,19 @@ async function runFlowDemo(){
 // ═══════════════════════════════════════════
 let fornDbData=[];
 let fornDbId=0;
-function addFornDb(nome,cnpj,email,cidade,uf){
+function addFornDb(nomeFantasia,cnpj,email,telefonePrincipal){
   fornDbId++;
-  fornDbData.push({id:fornDbId,nome,cnpj,email,cidade,uf});
+  fornDbData.push({id:fornDbId,nomeFantasia,cnpj,email,telefonePrincipal});
   renderFornDb();
 }
 function resetFornDb(){fornDbData=[];fornDbId=0;renderFornDb()}
 function renderFornDb(){
   const tb=document.getElementById('fornDbTable');
   if(fornDbData.length===0){
-    tb.innerHTML='<tr style="color:var(--text-dim);font-style:italic"><td colspan="6" style="text-align:center;padding:20px">Tabela vazia — use os botões para simular!</td></tr>';
+    tb.innerHTML='<tr style="color:var(--text-dim);font-style:italic"><td colspan="5" style="text-align:center;padding:20px">Tabela vazia — use os botões para simular!</td></tr>';
     return;
   }
-  tb.innerHTML=fornDbData.map((f,i)=>`<tr class="db-row-new" style="animation-delay:${i*0.1}s"><td style="color:var(--accent5);font-weight:700">${f.id}</td><td>${f.nome}</td><td style="color:var(--text-dim);font-size:0.72rem">${f.cnpj}</td><td style="color:var(--text-dim);font-size:0.72rem">${f.email}</td><td>${f.cidade}</td><td style="font-weight:700">${f.uf}</td></tr>`).join('');
+  tb.innerHTML=fornDbData.map((f,i)=>`<tr class="db-row-new" style="animation-delay:${i*0.1}s"><td style="color:var(--accent5);font-weight:700">${f.id}</td><td>${f.nomeFantasia}</td><td style="color:var(--text-dim);font-size:0.72rem">${f.cnpj}</td><td style="color:var(--text-dim);font-size:0.72rem">${f.email}</td><td style="color:var(--text-dim);font-size:0.72rem">${f.telefonePrincipal}</td></tr>`).join('');
 }
 
 // ═══════════════════════════════════════════
@@ -9678,16 +9658,11 @@ async function demoFornCrud(type){
       {delay:200,html:''},
       {delay:100,html:'<span class="arrow">→ Body:</span>'},
       {delay:100,html:'{'},
-      {delay:100,html:'  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,'},
+      {delay:100,html:'  <span class="json-key">"nomeFantasia"</span>: <span class="json-val">"Distribuidora ABC"</span>,'},
       {delay:100,html:'  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,'},
       {delay:100,html:'  <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,'},
-      {delay:100,html:'  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0001"</span>,'},
-      {delay:80,html:'  <span class="json-key">"cep"</span>: <span class="json-val">"01310-100"</span>,'},
-      {delay:80,html:'  <span class="json-key">"logradouro"</span>: <span class="json-val">"Avenida Paulista"</span>,'},
-      {delay:80,html:'  <span class="json-key">"numero"</span>: <span class="json-val">"1000"</span>,'},
-      {delay:80,html:'  <span class="json-key">"bairro"</span>: <span class="json-val">"Bela Vista"</span>,'},
-      {delay:80,html:'  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,'},
-      {delay:80,html:'  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>'},
+      {delay:100,html:'  <span class="json-key">"telefonePrincipal"</span>: <span class="json-val">"(11) 99999-0001"</span>,'},
+      {delay:80,html:'  <span class="json-key">"telefoneSecundario"</span>: <span class="json-val">"(11) 4002-8922"</span>'},
       {delay:100,html:'}'},
       {delay:600,html:''},
       {delay:200,html:'<span class="arrow">← Response:</span> <span class="status-created">201 Created</span> ✅'},
@@ -9699,8 +9674,8 @@ async function demoFornCrud(type){
       {delay:500,html:''},
       {delay:200,html:'<span class="arrow">← Response:</span> <span class="status-ok">200 OK</span>'},
       {delay:100,html:'['},
-      {delay:150,html:'  {<span class="json-key">"id"</span>:<span class="json-num">1</span>, <span class="json-key">"nome"</span>:<span class="json-val">"Distribuidora ABC"</span>, <span class="json-key">"cnpj"</span>:<span class="json-val">"12.345..."</span>, ...},'},
-      {delay:150,html:'  {<span class="json-key">"id"</span>:<span class="json-num">2</span>, <span class="json-key">"nome"</span>:<span class="json-val">"Fornecedor XYZ"</span>, <span class="json-key">"cnpj"</span>:<span class="json-val">"98.765..."</span>, ...}'},
+      {delay:150,html:'  {<span class="json-key">"id"</span>:<span class="json-num">1</span>, <span class="json-key">"nomeFantasia"</span>:<span class="json-val">"Distribuidora ABC"</span>, <span class="json-key">"cnpj"</span>:<span class="json-val">"12.345..."</span>, ...},'},
+      {delay:150,html:'  {<span class="json-key">"id"</span>:<span class="json-num">2</span>, <span class="json-key">"nomeFantasia"</span>:<span class="json-val">"Fornecedor XYZ"</span>, <span class="json-key">"cnpj"</span>:<span class="json-val">"98.765..."</span>, ...}'},
       {delay:100,html:']'},
     ];
   } else if(type==='getOne'){
@@ -9710,11 +9685,11 @@ async function demoFornCrud(type){
       {delay:200,html:'<span class="arrow">← Response:</span> <span class="status-ok">200 OK</span>'},
       {delay:100,html:'{'},
       {delay:100,html:'  <span class="json-key">"id"</span>: <span class="json-num">1</span>,'},
-      {delay:100,html:'  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,'},
+      {delay:100,html:'  <span class="json-key">"nomeFantasia"</span>: <span class="json-val">"Distribuidora ABC"</span>,'},
       {delay:100,html:'  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,'},
       {delay:100,html:'  <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,'},
-      {delay:80,html:'  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,'},
-      {delay:80,html:'  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>'},
+      {delay:80,html:'  <span class="json-key">"telefonePrincipal"</span>: <span class="json-val">"(11) 99999-0001"</span>,'},
+      {delay:80,html:'  <span class="json-key">"telefoneSecundario"</span>: <span class="json-val">"(11) 4002-8922"</span>'},
       {delay:100,html:'}'},
     ];
   } else if(type==='put'){
@@ -9724,11 +9699,11 @@ async function demoFornCrud(type){
       {delay:200,html:''},
       {delay:100,html:'<span class="arrow">→ Body:</span>'},
       {delay:100,html:'{'},
-      {delay:100,html:'  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC Atualizada"</span>,'},
-      {delay:100,html:'  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,'},
+      {delay:100,html:'  <span class="json-key">"nomeFantasia"</span>: <span class="json-val">"Distribuidora ABC Atualizada"</span>,'},
+      {delay:100,html:'  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,           <span class="cm">// updatable=false: ignorado</span>'},
       {delay:100,html:'  <span class="json-key">"email"</span>: <span class="json-val">"novo@abc.com"</span>,'},
-      {delay:100,html:'  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,'},
-      {delay:100,html:'  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>'},
+      {delay:100,html:'  <span class="json-key">"telefonePrincipal"</span>: <span class="json-val">"(11) 99999-0001"</span>,'},
+      {delay:100,html:'  <span class="json-key">"telefoneSecundario"</span>: <span class="json-val">"(11) 91234-5678"</span>'},
       {delay:100,html:'}'},
       {delay:600,html:''},
       {delay:200,html:'<span class="arrow">← Response:</span> <span class="status-ok">204 No Content</span> ✅'},
