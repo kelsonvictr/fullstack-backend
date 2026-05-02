@@ -1900,7 +1900,7 @@ footer .heart{color:var(--accent2);animation:pulse 2s ease-in-out infinite;displ
     <p style="font-size:1.02rem;margin-bottom:20px">Lembra do <strong style="color:var(--accent5)">JSON Server</strong> que usamos no frontend como banco de dados simulado? Agora vamos substituí-lo por uma <strong style="color:var(--spring)">API REST real</strong> feita com Java e Spring Boot!</p>
 
     <div class="keyword-map stagger" id="overviewMap">
-      <div class="keyword-chip"><span class="emoji">📦</span><span class="kw-name">Fornecedor</span><span class="kw-desc">CRUD completo + endereço</span></div>
+      <div class="keyword-chip"><span class="emoji">📦</span><span class="kw-name">Fornecedor</span><span class="kw-desc">CRUD completo (refactor + endereço no cap 4)</span></div>
       <div class="keyword-chip"><span class="emoji">🏷️</span><span class="kw-name">Produto</span><span class="kw-desc">Com vínculo ao fornecedor</span></div>
       <div class="keyword-chip"><span class="emoji">👤</span><span class="kw-name">Cliente</span><span class="kw-desc">Dados + endereço</span></div>
       <div class="keyword-chip"><span class="emoji">🔗</span><span class="kw-name">Relacionamentos</span><span class="kw-desc">Produto ↔ Fornecedor</span></div>
@@ -6848,23 +6848,23 @@ br.com.petshop.api/
       <p style="color:var(--text-dim)">Pense numa <strong style="color:var(--text)">pessoa</strong> e seu <strong style="color:var(--accent6)">CPF</strong>. Cada pessoa tem <strong style="color:var(--accent3)">um único CPF</strong>, e cada CPF pertence a <strong style="color:var(--accent3)">uma única pessoa</strong>. Eles existem como informações separadas (a Receita Federal guarda os CPFs em uma "tabela", a base de cidadãos em outra), mas estão <strong style="color:var(--text)">linkados</strong> — um aponta pro outro. Esse é o relacionamento <strong>@OneToOne</strong>! 🪪</p>
     </div>
 
-    <h4 style="margin:20px 0 12px;color:var(--accent2)">📦 Antes (Fornecedor — endereço flat):</h4>
+    <h4 style="margin:20px 0 12px;color:var(--accent2)">📦 Como NÃO fazer (endereço flat dentro do Cliente):</h4>
     <div style="background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:16px;font-size:0.85rem;margin-bottom:16px">
-      <p style="color:var(--text-dim)">No Capítulo 1, o Fornecedor tem os campos de endereço <strong style="color:var(--accent2)">direto na entidade</strong>:</p>
+      <p style="color:var(--text-dim)">Imagine se a gente jogasse os campos de endereço <strong style="color:var(--accent2)">direto na entidade Cliente</strong>:</p>
       <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.8;display:block;margin-top:10px">
-        <span style="color:var(--accent2)">Fornecedor</span> { id, nome, cnpj, email, <strong style="color:var(--accent5)">cep, logradouro, numero, bairro, cidade, uf</strong> }
+        <span style="color:var(--accent2)">Cliente</span> { id, nomeCompleto, cpf, email, telefone, dataNascimento, <strong style="color:var(--accent5)">cep, logradouro, numero, bairro, cidade, uf</strong> }
       </code>
-      <p style="color:var(--text-dim);margin-top:10px;font-size:0.82rem">É simples e funciona, mas <strong>duplica</strong> a estrutura de endereço em todo lugar que precisar dela. 😕</p>
+      <p style="color:var(--text-dim);margin-top:10px;font-size:0.82rem">Funciona — mas se amanhã o <em>Fornecedor</em> também precisar de endereço, vamos <strong>duplicar</strong> esses 6 campos. E se algum dia trocarmos "uf" por "estado", precisaremos mexer em <strong>todas</strong> as entidades. 😕</p>
     </div>
 
-    <h4 style="margin:20px 0 12px;color:#49cc90">✅ Agora (Cliente — endereço como entidade):</h4>
+    <h4 style="margin:20px 0 12px;color:#49cc90">✅ Como vamos fazer (Endereco como entidade própria):</h4>
     <div style="background:rgba(73,204,144,0.06);border:1px solid rgba(73,204,144,0.15);border-radius:12px;padding:16px;font-size:0.85rem;margin-bottom:16px">
       <p style="color:var(--text-dim)">O Cliente terá <strong style="color:#49cc90">uma referência</strong> a um Endereço em outra tabela:</p>
       <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.8;display:block;margin-top:10px">
         <span style="color:var(--accent6)">Cliente</span> { id, nomeCompleto, cpf, email, telefone, dataNascimento, <strong style="color:#49cc90">endereco → Endereco</strong> }<br>
         <span style="color:var(--accent3)">Endereco</span> { id, cep, logradouro, numero, complemento, bairro, cidade, uf }
       </code>
-      <p style="color:var(--text-dim);margin-top:10px;font-size:0.82rem">Estrutura <strong>reutilizável</strong>! No próximo capítulo o Fornecedor vai usar essa <em>mesma</em> entidade. ✨</p>
+      <p style="color:var(--text-dim);margin-top:10px;font-size:0.82rem">Estrutura <strong>reutilizável</strong>! No próximo capítulo o Fornecedor vai ganhar essa <em>mesma</em> entidade — sem inventar nada. ✨</p>
     </div>
 
     <!-- Visual das tabelas relacionadas -->
@@ -8189,7 +8189,7 @@ br.com.sistemagestao.api/
     <div class="tip" style="margin-top:20px">
       <span class="tip-icon">🚀</span>
       <div class="tip-content">
-        <strong>Próximo passo (Capítulo 4):</strong> Vamos <strong style="color:var(--text)">refatorar o Fornecedor</strong> para também usar essa entidade <code style="color:var(--accent3)">Endereco</code>! Você vai ver um <strong>refactor real</strong> de código — remover duplicação e ganhar consistência. É o momento "ahá!" do curso. 🎯
+        <strong>Próximo passo (Capítulo 4):</strong> Vamos <strong style="color:var(--text)">refatorar o Fornecedor</strong> — o do cap 1 ainda não tem endereço. Vamos <strong>adicionar</strong> esse <code style="color:var(--accent3)">Endereco</code> que acabamos de criar e de quebra elevar o Fornecedor ao padrão profissional (DTOs, Mapper, ServiceImpl, validações). É o momento "ahá!" do curso. 🎯
       </div>
     </div>
   </div>
@@ -8223,7 +8223,7 @@ br.com.sistemagestao.api/
   <div class="card">
     <div class="concept">
       <div class="concept-title">🎯 O momento "ahá!" do curso</div>
-      <p>No <strong style="color:var(--accent5)">cap 1</strong> construímos o Fornecedor de um jeito <strong>simples e funcional</strong> — endereço com 6 colunas direto na entidade, sem DTOs, sem Mapper, sem validações, com <code>@Autowired</code> de campo. <strong style="color:var(--text)">Funcionava!</strong> Agora, depois de aprender o padrão profissional em Produto e Cliente, vamos <strong style="color:var(--accent3)">elevar o Fornecedor ao mesmo nível</strong>.</p>
+      <p>No <strong style="color:var(--accent5)">cap 1</strong> construímos o Fornecedor de um jeito <strong>simples e funcional</strong> — só com nome, CNPJ, e-mail e telefones, sem endereço, sem DTOs, sem Mapper, sem validações, com <code>@Autowired</code> de campo. <strong style="color:var(--text)">Funcionava!</strong> Agora, depois de aprender o padrão profissional em Produto e Cliente, vamos <strong style="color:var(--accent3)">elevar o Fornecedor ao mesmo nível</strong> — adicionando o <code>Endereco</code> e aplicando todas as boas práticas.</p>
     </div>
 
     <div class="analogy">
@@ -8831,12 +8831,12 @@ br.com.sistemagestao.api/
     <div class="step-number sn-green">4.7</div>
     <div>
       <div class="step-title">Repository — sem mudança real</div>
-      <div style="color:var(--text-dim);font-size:0.88rem">Só precisa atualizar o package após o rename</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Continua igual ao do cap 1 — interface vazia herda tudo</div>
     </div>
   </div>
 
   <div class="card">
-    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">O <code>FornecedorRepository</code> já era uma interface vazia herdando de <code>JpaRepository</code> — não precisa mudar nada além do package (que o IntelliJ já atualizou no rename). E <strong style="color:var(--text)">continuamos sem precisar de <code>EnderecoRepository</code></strong>: o cascade do <code>@OneToOne</code> cuida da tabela endereco automaticamente, igual no Cliente.</p>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">O <code>FornecedorRepository</code> já era uma interface vazia herdando de <code>JpaRepository</code> — não precisa mudar nada! E <strong style="color:var(--text)">continuamos sem precisar de <code>EnderecoRepository</code></strong>: o cascade do <code>@OneToOne</code> cuida da tabela endereco automaticamente, igual no Cliente.</p>
 
     <div class="code-block with-lines">
       <div class="code-header">
@@ -9455,9 +9455,8 @@ br.com.sistemagestao.api/
   <div class="card" style="text-align:left;max-width:640px;margin:0 auto">
     <h3 style="margin-bottom:16px;color:var(--accent3)">📋 O que você consolidou neste refactor</h3>
     <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.92rem">
-      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Refactor de package</strong> — programaai → sistemagestao via IntelliJ</div>
-      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Migração de schema</strong> — DROP TABLE + ddl-auto recriando do zero</div>
-      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Endereço flat → @OneToOne</strong> — eliminando duplicação com a entidade do cap 3</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Migração de schema</strong> — DROP TABLE + ddl-auto recriando do zero (com a nova FK <code>endereco_id</code>)</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Adicionar @OneToOne</strong> — reaproveitando a entidade <code>Endereco</code> do cap 3</div>
       <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Extract Mapper</strong> — auxiliares do Endereço viraram <code>EnderecoMapper</code> dedicado</div>
       <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">DTOs aninhados no Fornecedor</strong> — @Valid no campo Endereco</div>
       <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Service único → Interface + Impl</strong> — mesma quebra do Cliente</div>
