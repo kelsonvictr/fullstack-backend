@@ -1,0 +1,1174 @@
+# Capitulo 3 - Cliente
+(id inicial: cap-cli; ate: cap-forn-refac)
+
+👤
+Capítulo 3
+
+## CRUD de Cliente com Endereço
+
+Mesmo padrão do Produto, agora com um relacionamento @OneToOne para a entidade Endereço
+
+CLIENTE: INTRODUÇÃO / O QUE MUDA
+
+🎯
+
+O que muda em relação ao Produto?
+
+Mantemos o padrão profissional. A novidade é o relacionamento!
+
+No Produto você aprendeu o padrão profissional completo: DTOs, Mapper, ServiceImpl, validações, lambdas e streams. Agora vamos consolidar tudo isso em um novo CRUD — o de Cliente — adicionando um ingrediente novo: cada cliente terá seu Endereço em uma tabela separada 🏠
+
+#### 🆕 Novidades do Capítulo 3
+
+@OneToOne
+Endereço como entidade separada — Cada cliente tem UM endereço próprio em uma tabela `endereco` dedicada.
+
+cascade
+Ciclo de vida acoplado — Salvar/deletar o Cliente já salva/deleta o Endereço junto. Sem dor de cabeça!
+
+@CPF
+Validação de CPF — Bean Validation já tem uma anotação pronta que confere se o CPF é válido!
+
+@Email
+Validação de e-mail — Confere se o texto tem o formato de um e-mail válido.
+
+@Past
+Data no passado — Garante que a data de nascimento é anterior a hoje. Ninguém nasce no futuro!
+
+DTO aninhado
+DTO dentro de DTO — O `ClienteRequestDTO` vai conter um `EnderecoDTO` dentro dele. JSON aninhado!
+
+🔮
+Spoiler do próximo capítulo: O Fornecedor que fizemos no cap 1 não tem endereço ainda — ficou só com nome, CNPJ, e-mail e telefones. Isso foi proposital: começamos simples. No Capítulo 4 vamos refatorar o Fornecedor para adicionar esse `Endereco` que estamos criando agora — e de quebra aplicar todo o padrão profissional que aprendemos (DTOs, Mapper, ServiceImpl, validações). Refactor real! 💪
+
+════════════════════════════════════════ CONCEITOS NOVOS ════════════════════════════════════════
+
+📖
+
+Entendendo os Conceitos Novos
+
+Antes de codar, vamos entender como esse relacionamento funciona
+
+@OneToOne
+
+### 🔗 @OneToOne — Endereço como entidade separada
+
+O conceito mais importante deste capítulo!
+
+🤔 O que é @OneToOne?
+
+É a anotação que diz: UM cliente tem UM endereço, e UM endereço pertence a UM cliente. No banco, isso cria uma chave estrangeira (FK) na tabela cliente que aponta para a tabela endereco. As duas tabelas existem separadas — uma linkada à outra!
+
+Analogia: A Pessoa e o seu CPF
+
+Pense numa pessoa e seu CPF. Cada pessoa tem um único CPF, e cada CPF pertence a uma única pessoa. Eles existem como informações separadas (a Receita Federal guarda os CPFs em uma "tabela", a base de cidadãos em outra), mas estão linkados — um aponta pro outro. Esse é o relacionamento @OneToOne! 🪪
+
+#### 📦 Como NÃO fazer (endereço flat dentro do Cliente):
+
+Imagine se a gente jogasse os campos de endereço direto na entidade Cliente:
+`
+Cliente { id, nomeCompleto, cpf, email, telefone, dataNascimento, cep, logradouro, numero, bairro, cidade, uf }
+`
+Funciona — mas se amanhã o Fornecedor também precisar de endereço, vamos duplicar esses 6 campos. E se algum dia trocarmos "uf" por "estado", precisaremos mexer em todas as entidades. 😕
+
+#### ✅ Como vamos fazer (Endereco como entidade própria):
+
+O Cliente terá uma referência a um Endereço em outra tabela:
+`
+Cliente { id, nomeCompleto, cpf, email, telefone, dataNascimento, endereco → Endereco }
+
+Endereco { id, cep, logradouro, numero, complemento, bairro, cidade, uf }
+`
+Estrutura reutilizável! No próximo capítulo o Fornecedor vai ganhar essa mesma entidade — sem inventar nada. ✨
+
+Visual das tabelas relacionadas
+
+#### 🗄️ Como fica no banco:
+
+📋 cliente
+
+id 🔑 | nomeCompleto | endereco_id 🔗
+
+1 | Maria Silva | 10 → ...
+2 | João Souza | 11 → ...
+3 | Ana Lima | 12 → ...
+
+📋 endereco
+
+id 🔑 | cidade | uf
+
+10 | João Pessoa | PB
+11 | Recife | PE
+12 | Natal | RN
+
+☝️ Cada cliente tem seu próprio endereço. A coluna `endereco_id` é a chave estrangeira que linka as duas tabelas!
+
+💡
+Diferença pro @ManyToOne do Produto: Lá, muitos produtos podem apontar pro mesmo fornecedor (compartilham o ID). Aqui, cada cliente tem seu próprio endereço — ninguém compartilha a mesma linha de endereço com outro cliente!
+
+CASCADE + ORPHAN REMOVAL
+
+### 🌊 cascade + orphanRemoval — Ciclo de vida acoplado
+
+🤔 Pra que servem?
+
+Quando você tem dois objetos linkados (Cliente ↔ Endereço), surge a pergunta: "quando eu salvar o Cliente, o Endereço também é salvo?" e "quando eu deletar o Cliente, o Endereço também é apagado?". Por padrão, o JPA não faz nada disso — você teria que salvar e deletar cada um manualmente! O `cascade` e o `orphanRemoval` resolvem isso.
+
+Analogia: O Caderno e a Capa
+
+Imagine um caderno com sua capa personalizada. Quando você compra o caderno, a capa vem junto (não compra separado). Quando joga o caderno fora, a capa vai junto (não vai guardar uma capa solta na gaveta!). Essa é a ideia do `cascade = ALL` e `orphanRemoval = true`: a vida do Endereço está colada à vida do Cliente. 📓
+
+#### 🔬 Decompondo:
+
+`cascade = CascadeType.ALL`
+"Toda operação que eu fizer no Cliente — salvar, atualizar, deletar — propaga para o Endereço também."
+
+`orphanRemoval = true`
+"Se o Endereço ficar órfão (sem cliente apontando pra ele), apaga ele do banco automaticamente."
+
+⚡
+Resultado prático: Você só vai precisar de `clienteRepository.save(cliente)` e o JPA salva o Endereço junto. Você só vai precisar de `clienteRepository.deleteById(id)` e o Endereço some também. Não precisa nem de `EnderecoRepository` nesse capítulo! 🎉
+
+DTO ANINHADO
+
+### 📦 DTO Aninhado — DTO dentro de DTO
+
+🤔 O que é um DTO aninhado?
+
+É um DTO que contém outro DTO dentro dele. No nosso caso, o `ClienteRequestDTO` vai ter um campo do tipo `EnderecoDTO`. Isso reflete o JSON aninhado que o front vai enviar — onde o endereço é um sub-objeto.
+
+Analogia: O Formulário com Sub-formulário
+
+Já preencheu um cadastro online onde tem o formulário principal (nome, CPF, e-mail) e, no meio dele, um bloco separado de "Endereço" com seus próprios campos? Esse bloco é o sub-formulário! O `EnderecoDTO` dentro do `ClienteRequestDTO` é exatamente isso. 📝
+
+#### 📤 Como o JSON chega do front:
+
+JSON
+
+```
+{
+  "nomeCompleto": "Maria Silva",
+  "cpf": "123.456.789-09",
+  "email": "maria@email.com",
+  "telefone": "(83) 99999-1234",
+  "dataNascimento": "1995-08-22",
+  "endereco": {                          // ← sub-objeto!
+    "cep": "58000-000",
+    "logradouro": "Rua das Flores",
+    "numero": "123",
+    "complemento": "Apto 201",
+    "bairro": "Centro",
+    "cidade": "João Pessoa",
+    "uf": "PB"
+  }
+}
+```
+
+🔑
+Detalhe crucial — `@Valid` em campo aninhado: Para o Spring validar os campos de dentro do EnderecoDTO (cep, logradouro, etc), você precisa colocar `@Valid` no campo `endereco` do ClienteRequestDTO! Sem isso, ele só valida os campos do "nível de fora" e ignora os de dentro. 🚨
+
+VALIDAÇÕES NOVAS
+
+### ✅ Validações Novas — @CPF, @Email, @Past
+
+🤔 Mais anotações prontas?
+
+O Bean Validation tem muitas anotações prontas além das que vimos no Produto (@NotBlank, @Positive...). Para Cliente, vamos usar três novas que cobrem casos super comuns no mundo real!
+
+Analogia: Os Especialistas da Portaria
+
+No Produto vimos o segurança que confere coisas básicas (não está vazio, é positivo). Agora chegaram três especialistas na portaria: o despachante que confere CPFs, o analista de e-mail que valida formato, e o cronista que confere se a data é mesmo do passado! 🕵️‍♂️
+
+#### 🏷️ Anotações novas:
+
+@CPF
+
+Valida se a string é um CPF brasileiro válido (algoritmo dos dígitos verificadores). Aceita com ou sem máscara!
+
+@Email
+
+Valida o formato de e-mail (tem @, tem domínio, etc). Não confere se o e-mail existe de verdade — só o formato.
+
+@Past
+
+A data deve ser anterior à data atual. Perfeito para data de nascimento (ninguém nasce no futuro!).
+
+📦
+Importante: O `@CPF` vem do pacote `org.hibernate.validator.constraints.br.CPF` — é uma extensão BR do Hibernate Validator. Mas já vem incluído com a dependência `spring-boot-starter-validation` que adicionamos no Produto! Não precisa instalar nada novo. 🎉
+
+════════════════════════════════════════ CLIENTE: MODEL ENDERECO ════════════════════════════════════════
+
+3.1
+
+Model — Endereco.java
+
+A entidade que representa a tabela endereco
+
+Vamos criar o Endereço como uma entidade JPA completa, exatamente como fizemos com Fornecedor e Produto. Ele terá sua própria tabela `endereco` no banco.
+
+model/Endereco.javaJava
+
+```
+
+package br.com.sistemagestao.api.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name = "endereco")
+@Entity
+public class Endereco {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "cep", nullable = false)
+    private String cep;
+
+    @Column(name = "logradouro", nullable = false)
+    private String logradouro;
+
+    @Column(name = "numero", nullable = false)
+    private String numero;
+
+    @Column(name = "complemento")  // pode ser null!
+    private String complemento;
+
+    @Column(name = "bairro", nullable = false)
+    private String bairro;
+
+    @Column(name = "cidade", nullable = false)
+    private String cidade;
+
+    @Column(name = "uf", nullable = false, length = 2)
+    private String uf;
+}
+```
+
+💡
+Repare: Endereco é uma entidade idêntica em estrutura ao Fornecedor — tem `@Entity`, `@Table`, `@Id` com geração automática, Lombok... Nada de novo! A novidade vai ser no Cliente, onde vamos linkar ele a esse Endereco.
+
+🤏
+Por que `length = 2` no UF? Estados brasileiros têm sempre 2 letras (PB, SP, RJ...). Definir o tamanho da coluna é uma boa prática — economiza espaço no banco e impede inserções inválidas como "São Paulo" no campo UF.
+
+════════════════════════════════════════ CLIENTE: MODEL CLIENTE ════════════════════════════════════════
+
+3.2
+
+Model — Cliente.java
+
+A entidade Cliente com @OneToOne para Endereco
+
+Aqui vem a grande novidade! O Cliente terá um campo do tipo `Endereco` com a anotação `@OneToOne` + cascade + orphanRemoval.
+
+model/Cliente.javaJava
+
+```
+
+package br.com.sistemagestao.api.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name = "cliente")
+@Entity
+public class Cliente {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nome_completo", nullable = false)
+    private String nomeCompleto;
+
+    @Column(name = "cpf", nullable = false, unique = true)  // não pode repetir!
+    private String cpf;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "telefone", nullable = false)
+    private String telefone;
+
+    @Column(name = "data_nascimento", nullable = false)
+    private LocalDate dataNascimento;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)  // 🌊 vida acoplada!
+    @JoinColumn(name = "endereco_id", nullable = false)  // FK na tabela cliente
+    private Endereco endereco;
+}
+```
+
+Anotacoes:
+- unique = true Cria uma constraint UNIQUE no banco — não permite dois clientes com o mesmo CPF. Se tentar, o banco já barra com erro.
+- @OneToOne(cascade = ALL, orphanRemoval = true) UM cliente tem UM endereço próprio. Salvar o cliente salva o endereço junto. Deletar o cliente deleta o endereço junto.
+- @JoinColumn(name = "endereco_id") Define o nome da coluna FK na tabela cliente que aponta para o id da tabela endereco.
+
+📅
+Por que `LocalDate` e não `Date`? A classe `java.util.Date` é antiga e cheia de problemas. O `LocalDate` (Java 8+) é a forma moderna e segura de representar uma data sem horário. Para data de nascimento, ele é perfeito!
+
+🔍
+Compare com o @ManyToOne do Produto: Lá usamos `@ManyToOne` porque vários produtos apontam pro mesmo fornecedor. Aqui usamos `@OneToOne` porque cada cliente tem seu próprio endereço, não compartilhado!
+
+════════════════════════════════════════ CLIENTE: DTOs ════════════════════════════════════════
+
+3.3
+
+DTOs — Endereco e Cliente
+
+Records com Bean Validation e DTO aninhado
+
+ENDERECO DTO
+
+### 📍 EnderecoDTO — DTO reutilizável
+
+Esse DTO é único — vai ser usado tanto no request (entrada) quanto no response (saída). Ele fica numa pasta separada porque é reutilizável (no Capítulo 4 o Fornecedor também vai usar!).
+
+dto/endereco/EnderecoDTO.javaJava
+
+```
+
+package br.com.sistemagestao.api.dto.endereco;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record EnderecoDTO(
+
+        Long id,                           // vem null no request, preenchido no response
+
+        @NotBlank(message = "O CEP é obrigatório")
+        String cep,
+
+        @NotBlank(message = "O logradouro é obrigatório")
+        String logradouro,
+
+        @NotBlank(message = "O número é obrigatório")
+        String numero,
+
+        String complemento,                 // opcional — sem validação!
+
+        @NotBlank(message = "O bairro é obrigatório")
+        String bairro,
+
+        @NotBlank(message = "A cidade é obrigatória")
+        String cidade,
+
+        @NotBlank(message = "A UF é obrigatória")
+        @Size(min = 2, max = 2, message = "A UF deve ter 2 letras")
+        String uf
+) {}
+```
+
+Anotacoes:
+- @NotBlank + @Size Aqui combinamos duas validações: a string não pode ser vazia E precisa ter exatamente 2 caracteres.
+
+🔄
+Por que um DTO só, sem separar Request/Response? Para Endereço, os campos são os mesmos nos dois sentidos — só muda o `id` (vazio no request, preenchido no response). Como o Endereço sempre vem aninhado dentro de outro DTO, dá pra usar o mesmo nos dois lados sem perder clareza. Menos código repetido! 🎯
+
+CLIENTE REQUEST DTO
+
+### 📥 ClienteRequestDTO — O que o front envia
+
+Aqui está a estrela do capítulo: um DTO com EnderecoDTO aninhado e novas validações!
+
+dto/cliente/ClienteRequestDTO.javaJava
+
+```
+
+package br.com.sistemagestao.api.dto.cliente;
+
+import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.br.CPF;
+
+import java.time.LocalDate;
+
+public record ClienteRequestDTO(
+
+        @NotBlank(message = "O nome completo é obrigatório")
+        String nomeCompleto,
+
+        @NotBlank(message = "O CPF é obrigatório")
+        @CPF(message = "CPF inválido")
+        String cpf,
+
+        @NotBlank(message = "O e-mail é obrigatório")
+        @Email(message = "E-mail inválido")
+        String email,
+
+        @NotBlank(message = "O telefone é obrigatório")
+        String telefone,
+
+        @NotNull(message = "A data de nascimento é obrigatória")
+        @Past(message = "A data de nascimento deve ser no passado")
+        LocalDate dataNascimento,
+
+        @NotNull(message = "O endereço é obrigatório")
+        @Valid  // ← ATIVA as validações DENTRO do EnderecoDTO!
+        EnderecoDTO endereco
+) {}
+```
+
+Anotacoes:
+- @CPF Valida o algoritmo dos dígitos verificadores do CPF brasileiro. Aceita "12345678909" ou "123.456.789-09".
+- @Email Verifica se a string tem o formato de e-mail (algo@algo.algo). Não confere se o e-mail existe!
+- @Past A data deve ser anterior a hoje. Evita data futura ou data atual.
+- @Valid É a chave do DTO aninhado! Sem o @Valid aqui, as validações de DENTRO do EnderecoDTO seriam ignoradas.
+
+🎯
+O `@Valid` no campo aninhado é OBRIGATÓRIO. Repare que no Controller temos `@Valid @RequestBody ClienteRequestDTO dto` — esse @Valid valida o nível "de fora" (nomeCompleto, cpf, email, dataNascimento). Mas para validar os campos de dentro do EnderecoDTO, precisamos de outro @Valid no campo `endereco`! É como abrir uma "porta" para a validação descer um nível. 🚪
+
+CLIENTE RESPONSE DTO
+
+### 📤 ClienteResponseDTO — O que o front recebe
+
+No response devolvemos o `id` gerado e o EnderecoDTO completo (já com seu id).
+
+dto/cliente/ClienteResponseDTO.javaJava
+
+```
+
+package br.com.sistemagestao.api.dto.cliente;
+
+import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;
+
+import java.time.LocalDate;
+
+public record ClienteResponseDTO(
+        Long id,
+        String nomeCompleto,
+        String cpf,
+        String email,
+        String telefone,
+        LocalDate dataNascimento,
+        EnderecoDTO endereco          // EnderecoDTO aninhado de novo!
+) {}
+```
+
+▶️ DEMO ANIMADO: Como o front USA o ClienteDTO
+
+🎬 Como o frontend (React) usa o ClienteDTO 🔄 Replay
+
+👇 Repare como o JSON é aninhado: o objeto `endereco` entra dentro do objeto principal — exatamente como o DTO Java!
+LINHA 1: Form web → ClienteRequestDTO
+
+🔒meu-app.com/clientes/novo
+
+📝 Cadastrar Cliente
+
+Nome completo
+
+CPF
+
+E-mail
+
+Data nascimento
+
+🏠 Endereço (sub-formulário aninhado)
+💾 Salvar cliente
+
+JSON
+
+POST /clientes
+
+📦 ClienteRequestDTO
+
+```
+public record ClienteRequestDTO(
+  String nomeCompleto,
+  String cpf,
+  String email,
+  String telefone,
+  LocalDate dataNascimento,
+  EnderecoDTO endereco
+) {}
+```
+
+⚙️ Backend processa Cliente + Endereço (cascade) e responde...
+LINHA 2: ClienteResponseDTO → Tela de detalhes
+
+📦 ClienteResponseDTO
+
+```
+public record ClienteResponseDTO(
+  Long id,
+  String nomeCompleto,
+  String cpf,
+  String email,
+  EnderecoDTO endereco
+) {}
+```
+
+JSON
+
+200 OK
+
+🔒meu-app.com/clientes
+
+📋 Lista de Clientes
+
+ID | Nome | CPF | Cidade
+
+1 | Maria Silva | 123.*** | João Pessoa
+2 | João Souza | 987.*** | Recife
+3 | Ana Lima | 456.*** | Natal
+
+🪆
+DTO aninhado = JSON aninhado! A estrutura do `EnderecoDTO` dentro do `ClienteRequestDTO` em Java vira o sub-objeto `"endereco": {...}` dentro do JSON. O front não precisa quebrar a cabeça — basta enviar a árvore!
+
+════════════════════════════════════════ CLIENTE: MAPPER ════════════════════════════════════════
+
+3.4
+
+Mapper — ClienteMapper.java
+
+Convertendo DTOs aninhados em entidades aninhadas
+
+O Mapper agora precisa converter duas entidades: o Cliente e o Endereço aninhado dentro dele. Vamos criar métodos auxiliares para o Endereço — código mais organizado!
+
+mapper/ClienteMapper.javaJava
+
+```
+
+package br.com.sistemagestao.api.mapper;
+
+import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;
+import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;
+import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;
+import br.com.sistemagestao.api.model.Cliente;
+import br.com.sistemagestao.api.model.Endereco;
+
+public class ClienteMapper {
+
+    // ───── CLIENTE ─────
+
+    // Converte RequestDTO → Entidade (criando o Endereco junto!)
+    public static Cliente toEntity(ClienteRequestDTO dto) {
+
+        Cliente cliente = new Cliente();
+
+        cliente.setNomeCompleto(dto.nomeCompleto());
+        cliente.setCpf(dto.cpf());
+        cliente.setEmail(dto.email());
+        cliente.setTelefone(dto.telefone());
+        cliente.setDataNascimento(dto.dataNascimento());
+
+        // Cria o Endereco a partir do DTO aninhado e seta no cliente
+        cliente.setEndereco(toEnderecoEntity(dto.endereco()));
+
+        return cliente;
+    }
+
+    // Converte Entidade → ResponseDTO
+    public static ClienteResponseDTO toResponseDTO(Cliente cliente) {
+
+        return new ClienteResponseDTO(
+                cliente.getId(),
+                cliente.getNomeCompleto(),
+                cliente.getCpf(),
+                cliente.getEmail(),
+                cliente.getTelefone(),
+                cliente.getDataNascimento(),
+                toEnderecoDTO(cliente.getEndereco())  // converte o Endereco aninhado
+        );
+    }
+
+    // ───── ENDERECO (auxiliares) ─────
+
+    // EnderecoDTO → Endereco (entidade)
+    public static Endereco toEnderecoEntity(EnderecoDTO dto) {
+
+        Endereco endereco = new Endereco();
+
+        endereco.setCep(dto.cep());
+        endereco.setLogradouro(dto.logradouro());
+        endereco.setNumero(dto.numero());
+        endereco.setComplemento(dto.complemento());
+        endereco.setBairro(dto.bairro());
+        endereco.setCidade(dto.cidade());
+        endereco.setUf(dto.uf());
+
+        return endereco;
+    }
+
+    // Endereco (entidade) → EnderecoDTO
+    public static EnderecoDTO toEnderecoDTO(Endereco endereco) {
+
+        return new EnderecoDTO(
+                endereco.getId(),
+                endereco.getCep(),
+                endereco.getLogradouro(),
+                endereco.getNumero(),
+                endereco.getComplemento(),
+                endereco.getBairro(),
+                endereco.getCidade(),
+                endereco.getUf()
+        );
+    }
+}
+```
+
+🧩
+Por que separar em métodos auxiliares? Os métodos `toEnderecoEntity` e `toEnderecoDTO` são públicos de propósito — assim, quando o Fornecedor for refatorado no Capítulo 4 para também usar Endereço, ele reaproveita esses métodos! Código bem organizado paga dividendos no futuro. 💰
+
+════════════════════════════════════════ CLIENTE: REPOSITORY ════════════════════════════════════════
+
+3.5
+
+Repository — ClienteRepository.java
+
+Igualzinho aos outros!
+
+Sem novidade aqui — interface vazia herdando de JpaRepository. E olha que legal: não precisamos nem de um `EnderecoRepository`! Como o cascade cuida de salvar/deletar o Endereço junto com o Cliente, não precisamos acessar a tabela endereço diretamente.
+
+repository/ClienteRepository.javaJava
+
+```
+
+package br.com.sistemagestao.api.repository;
+
+import br.com.sistemagestao.api.model.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+}
+```
+
+════════════════════════════════════════ CLIENTE: SERVICE INTERFACE ════════════════════════════════════════
+
+3.6
+
+Service — Interface ClienteService.java
+
+O contrato — quais métodos existem
+
+Mesmo padrão do Produto: a interface tem só as assinaturas dos 5 métodos do CRUD, todos trabalhando com DTOs.
+
+service/ClienteService.javaJava
+
+```
+
+package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;
+import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;
+
+import java.util.List;
+
+public interface ClienteService {
+
+    ClienteResponseDTO criarCliente(ClienteRequestDTO dto);
+
+    List<ClienteResponseDTO> listarTodosClientes();
+
+    ClienteResponseDTO buscarClientePorId(Long id);
+
+    ClienteResponseDTO atualizarClientePorId(Long id, ClienteRequestDTO dto);
+
+    void deletarClientePorId(Long id);
+}
+```
+
+════════════════════════════════════════ CLIENTE: SERVICE IMPL ════════════════════════════════════════
+
+3.7
+
+ServiceImpl — ClienteServiceImpl.java
+
+A implementação — repare como o cascade simplifica tudo!
+
+Implementação mais simples que a do Produto — só precisamos de um Repository (não tem o segundo Repository do "fornecedor" como o Produto tinha). O cascade do JPA cuida do Endereço!
+
+service/ClienteServiceImpl.javaJava
+
+```
+
+package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;
+import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;
+import br.com.sistemagestao.api.mapper.ClienteMapper;
+import br.com.sistemagestao.api.model.Cliente;
+import br.com.sistemagestao.api.model.Endereco;
+import br.com.sistemagestao.api.repository.ClienteRepository;
+import br.com.sistemagestao.api.service.ClienteService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ClienteServiceImpl implements ClienteService {
+
+    // Só um Repository! O cascade cuida do Endereco.
+    private final ClienteRepository clienteRepository;
+
+    @Override
+    public ClienteResponseDTO criarCliente(ClienteRequestDTO dto) {
+
+        // Mapper cria Cliente + Endereco aninhado
+        Cliente cliente = ClienteMapper.toEntity(dto);
+
+        // 🌊 Salva o Cliente — o Endereco é salvo junto via cascade!
+        clienteRepository.save(cliente);
+
+        return ClienteMapper.toResponseDTO(cliente);
+    }
+
+    @Override
+    public List<ClienteResponseDTO> listarTodosClientes() {
+
+        return clienteRepository.findAll()
+                .stream()
+                .map(ClienteMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public ClienteResponseDTO buscarClientePorId(Long id) {
+
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+
+        return ClienteMapper.toResponseDTO(cliente);
+    }
+
+    @Override
+    public ClienteResponseDTO atualizarClientePorId(Long id, ClienteRequestDTO dto) {
+
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+
+        // Atualiza os campos simples do cliente
+        cliente.setNomeCompleto(dto.nomeCompleto());
+        cliente.setCpf(dto.cpf());
+        cliente.setEmail(dto.email());
+        cliente.setTelefone(dto.telefone());
+        cliente.setDataNascimento(dto.dataNascimento());
+
+        // Atualiza os campos do Endereco que JÁ EXISTE (mantemos o mesmo id!)
+        Endereco endereco = cliente.getEndereco();
+        endereco.setCep(dto.endereco().cep());
+        endereco.setLogradouro(dto.endereco().logradouro());
+        endereco.setNumero(dto.endereco().numero());
+        endereco.setComplemento(dto.endereco().complemento());
+        endereco.setBairro(dto.endereco().bairro());
+        endereco.setCidade(dto.endereco().cidade());
+        endereco.setUf(dto.endereco().uf());
+
+        clienteRepository.save(cliente);
+
+        return ClienteMapper.toResponseDTO(cliente);
+    }
+
+    @Override
+    public void deletarClientePorId(Long id) {
+
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+
+        // 🗑️ Deleta o Cliente — o Endereco é deletado junto via orphanRemoval!
+        clienteRepository.deleteById(cliente.getId());
+    }
+}
+```
+
+🤔
+Por que no `atualizar` mexemos no Endereço existente em vez de criar um novo? Para manter o mesmo `endereco_id` no banco. Se criássemos um Endereço novo, geraria uma linha nova na tabela endereco e o orphanRemoval apagaria a antiga. Funcionaria, mas seria uma operação a mais. Atualizar a instância existente é mais eficiente! ⚡
+
+════════════════════════════════════════ CLIENTE: CONTROLLER ════════════════════════════════════════
+
+3.8
+
+Controller — ClienteController.java
+
+Endpoints REST com @Valid (igual ao Produto)
+
+O Controller é praticamente idêntico ao do Produto — mesmo padrão com `@RequiredArgsConstructor` e `@Valid`.
+
+controller/ClienteController.javaJava
+
+```
+
+package br.com.sistemagestao.api.controller;
+
+import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;
+import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;
+import br.com.sistemagestao.api.service.ClienteService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/clientes")
+@RequiredArgsConstructor
+public class ClienteController {
+
+    private final ClienteService clienteService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ClienteResponseDTO criarCliente(@Valid @RequestBody ClienteRequestDTO dto) {
+        return clienteService.criarCliente(dto);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ClienteResponseDTO> listarTodosClientes() {
+        return clienteService.listarTodosClientes();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ClienteResponseDTO buscarClientePorId(@PathVariable Long id) {
+        return clienteService.buscarClientePorId(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ClienteResponseDTO atualizarClientePorId(@PathVariable Long id,
+                                                     @Valid @RequestBody ClienteRequestDTO dto) {
+        return clienteService.atualizarClientePorId(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarClientePorId(@PathVariable Long id) {
+        clienteService.deletarClientePorId(id);
+    }
+}
+```
+
+Endpoint Table
+
+#### 📍 Endpoints do Cliente
+
+Método | URL | Ação | Status
+
+POST | `/clientes` | Criar cliente (com endereço) | 201 Created
+GET | `/clientes` | Listar todos | 200 OK
+GET | `/clientes/{id}` | Buscar por ID | 200 OK
+PUT | `/clientes/{id}` | Atualizar cliente | 200 OK
+DELETE | `/clientes/{id}` | Deletar cliente (e endereço) | 204 No Content
+
+▶️ DEMO ANIMADO: Controller → Página (POST com cascade)
+
+🎬 O ciclo completo: cadastrar Cliente com Endereço via POST 🔄 Replay
+
+👇 Veja o que rola quando o usuário aperta "Salvar" — o cascade salva o Endereço junto automaticamente:
+
+🌐
+
+Página clica "Salvar Cliente"
+
+fetch('/clientes', {method:'POST', body: json})
+
+↓
+
+🎮
+
+ClienteController valida
+
+@Valid @RequestBody ClienteRequestDTO
+
+↓
+
+🔄
+
+ClienteMapper.toEntity(dto)
+
+cria Cliente + Endereco aninhado
+
+↓
+
+⚙️
+
+ClienteServiceImpl.save()
+
+cascade = ALL → salva os dois!
+
+↓
+
+🐘
+
+PostgreSQL grava
+
+INSERT endereco; INSERT cliente; (com FK)
+
+↓
+
+📤
+
+Controller responde 201 Created
+
+JSON: ClienteResponseDTO + endereco aninhado
+
+↓
+
+✨
+
+Página exibe "Cliente cadastrado!"
+
+redirect('/clientes/' + json.id)
+
+🌊
+Magia do cascade! Você só faz `save(cliente)` e o JPA automaticamente cuida de salvar o Endereço junto, na ordem certa. Sem cascade, você teria que salvar o Endereço primeiro e depois o Cliente — mais código, mais bug.
+
+════════════════════════════════════════ CLIENTE: INSOMNIA ════════════════════════════════════════
+
+🦋
+
+Testando Cliente no Insomnia
+
+Agora com JSON aninhado!
+
+▶️ DEMO ANIMADO: Insomnia ↔ Página (com JSON aninhado!)
+
+🎬 Insomnia vs Página React — agora com JSON aninhado! 🔄 Replay
+
+👇 Mesmo o Cliente tendo um endereço aninhado, o backend recebe a requisição idêntica vinda dos dois lugares:
+
+🦋
+
+Insomnia
+
+POST /clientes
+Body com endereco: { ... }
+[ Send ]
+
+Você cola o JSON aninhado no body e clica Send.
+
+⚛️
+
+Página React
+
+await fetch('/clientes', {
+method: 'POST',
+body: JSON.stringify({
+...form, endereco
+})
+})
+
+Form principal + sub-form de endereço, montados num único objeto.
+
+A requisição HTTP é idêntica:
+POST /clientes HTTP/1.1 Body: { ..., "endereco": {...} }
+O Spring desserializa o JSON aninhado direto pra ClienteRequestDTO + EnderecoDTO. Lindo demais! ✨
+
+🪆
+JSON aninhado é parte do REST! Tanto Insomnia quanto a página React enviam objetos aninhados naturalmente. O `@RequestBody` + `@Valid` do Spring quebra tudo em DTOs Java automaticamente.
+
+Crie uma pasta Cliente no Insomnia e prepare-se: o JSON tem um sub-objeto dentro!
+POST
+
+#### POST Criar Cliente
+
+URL: `_.baseUrl/clientes`
+
+JSON
+
+```
+{
+  "nomeCompleto": "Maria Silva Souza",
+  "cpf": "123.456.789-09",
+  "email": "maria@email.com",
+  "telefone": "(83) 99999-1234",
+  "dataNascimento": "1995-08-22",
+  "endereco": {
+    "cep": "58000-000",
+    "logradouro": "Rua das Flores",
+    "numero": "123",
+    "complemento": "Apto 201",
+    "bairro": "Centro",
+    "cidade": "João Pessoa",
+    "uf": "PB"
+  }
+}
+```
+
+✅
+Resposta esperada: 201 Created com o JSON de volta — agora com o `id` do cliente e o `id` do endereço (gerado automaticamente pelo cascade)!
+
+Testando validação CPF
+
+#### 🧪 Testando @CPF
+
+Tente enviar com um CPF inválido (qualquer sequência aleatória):
+
+JSON com CPF inválidoJSON
+
+```
+{
+  "nomeCompleto": "Teste",
+  "cpf": "111.111.111-11",    // ← CPF inválido!
+  "email": "teste@email.com",
+  "telefone": "(83) 99999-1234",
+  "dataNascimento": "1995-08-22",
+  "endereco": { ... }
+}
+```
+
+Testando @Email
+
+#### 🧪 Testando @Email
+
+JSON com e-mail inválidoJSON
+
+```
+{
+  // ...
+  "email": "isso-nao-e-email",    // ← falta @ e domínio
+  // ...
+}
+```
+
+Testando @Past
+
+#### 🧪 Testando @Past
+
+JSON com data futuraJSON
+
+```
+{
+  // ...
+  "dataNascimento": "2099-01-01",    // ← futuro!
+  // ...
+}
+```
+
+Testando @Valid aninhado
+
+#### 🧪 Testando @Valid no DTO aninhado
+
+Tente enviar com o endereço com campos vazios — para confirmar que o @Valid aninhado funciona:
+
+JSON com endereço incompletoJSON
+
+```
+{
+  // ...campos do cliente OK...
+  "endereco": {
+    "cep": "",            // ← vazio!
+    "logradouro": "",     // ← vazio!
+    "numero": "123",
+    "bairro": "Centro",
+    "cidade": "João Pessoa",
+    "uf": "PB"
+  }
+}
+```
+
+🎯
+Resultado esperado em todos os testes: 400 Bad Request com a mensagem específica que você escreveu na anotação. Isso prova que o Spring está validando todos os níveis — inclusive os campos aninhados! 🎉
+
+════════════════════════════════════════ CLIENTE: ESTRUTURA DE PASTAS ════════════════════════════════════════
+
+📂
+
+Estrutura Final de Pastas
+
+Como ficou o projeto após o Cliente
+
+Estrutura do projeto — atualizada
+
+```
+
+br.com.sistemagestao.api/
+├── 📄 ApiApplication.java
+├── 📁 model/
+│   ├── Fornecedor.java
+│   ├── Produto.java
+│   ├── Endereco.java                  ← 🆕
+│   └── Cliente.java                   ← 🆕
+├── 📁 enums/
+│   └── CategoriaProdutoEnum.java
+├── 📁 dto/
+│   ├── 📁 produto/
+│   │   ├── ProdutoRequestDTO.java
+│   │   └── ProdutoResponseDTO.java
+│   ├── 📁 endereco/                       ← 🆕 pacote novo!
+│   │   └── EnderecoDTO.java             ← 🆕
+│   └── 📁 cliente/                        ← 🆕 pacote novo!
+│       ├── ClienteRequestDTO.java      ← 🆕
+│       └── ClienteResponseDTO.java     ← 🆕
+├── 📁 mapper/
+│   ├── ProdutoMapper.java
+│   └── ClienteMapper.java             ← 🆕
+├── 📁 repository/
+│   ├── FornecedorRepository.java
+│   ├── ProdutoRepository.java
+│   └── ClienteRepository.java         ← 🆕
+├── 📁 service/
+│   ├── FornecedorService.java
+│   ├── ProdutoService.java
+│   ├── ProdutoServiceImpl.java
+│   ├── ClienteService.java            ← 🆕 (interface)
+│   └── ClienteServiceImpl.java        ← 🆕 (implementação)
+└── 📁 controller/
+    ├── FornecedorController.java
+    ├── ProdutoController.java
+    └── ClienteController.java         ← 🆕
+```
+
+════════════════════════════════════════ CLIENTE: RESUMO FINAL ════════════════════════════════════════
+
+👤
+
+## Cliente Completo!
+
+Você consolidou o padrão profissional e aprendeu seu primeiro relacionamento @OneToOne com cascade!
+
+### 📋 O que você aprendeu neste capítulo
+
+✅ @OneToOne — Relacionamento "um para um" entre entidades
+
+✅ cascade = ALL — Operações propagam pra entidade relacionada
+
+✅ orphanRemoval = true — Remove entidades órfãs automaticamente
+
+✅ DTO aninhado — DTO contendo outro DTO (JSON aninhado)
+
+✅ @Valid em campo aninhado — Ativar validação no nível interno
+
+✅ @CPF — Validar CPF brasileiro
+
+✅ @Email — Validar formato de e-mail
+
+✅ @Past — Garantir data anterior ao presente
+
+✅ unique = true — Constraint de unicidade no banco
+
+✅ LocalDate — Tipo moderno do Java para datas
+
+✅ Mapper com auxiliares — Funções reutilizáveis para outros mapeamentos
+
+🚀
+Próximo passo (Capítulo 4): Vamos refatorar o Fornecedor — o do cap 1 ainda não tem endereço. Vamos adicionar esse `Endereco` que acabamos de criar e de quebra elevar o Fornecedor ao padrão profissional (DTOs, Mapper, ServiceImpl, validações). É o momento "ahá!" do curso. 🎯
+
+╔══════════════════════════════════════════════════════════════╗ ║ CAPÍTULO 4: REFATORANDO FORNECEDOR ║ ╚══════════════════════════════════════════════════════════════╝

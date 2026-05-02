@@ -1,0 +1,540 @@
+# Capitulo 1 - Fornecedor
+(id inicial: cap-forn; ate: cap-prod)
+
+📦
+Capítulo 1
+
+## CRUD de Fornecedor
+
+Sua primeira entidade completa — Create, Read, Update, Delete
+
+FORNECEDOR: MODEL
+
+1.1
+
+Model — Fornecedor.java
+
+A entidade que representa a tabela no banco
+
+🤔 O que é um Model?
+
+O Model é uma classe Java que representa uma tabela no banco de dados. Cada atributo da classe vira uma coluna na tabela. Cada objeto que criamos a partir dessa classe vira uma linha na tabela.
+
+Analogia: Ficha de Cadastro
+
+O Model é como uma ficha de cadastro em branco de fornecedor. A ficha define quais campos existem (nome, CNPJ, email...). Quando você preenche uma ficha, é como criar um objeto. Quando arquiva a ficha, é como salvar no banco! 🗂️
+
+model/Fornecedor.javaJava
+
+```
+
+package br.com.sistemagestao.api.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@NoArgsConstructor  // Gera construtor vazio
+@AllArgsConstructor // Gera construtor com todos os campos
+@Data                // Gera getters, setters, toString, equals
+@Table(name = "fornecedor")   // Nome da tabela no banco
+@Entity              // "Esta classe é uma tabela!"
+public class Fornecedor {
+
+    @Id                          // "Este campo é a chave primária"
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nome_fantasia", nullable = false)
+    private String nomeFantasia;
+
+    @Column(name = "cnpj", nullable = false, updatable = false, unique = true)
+    private String cnpj;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "telefone_principal", nullable = false)
+    private String telefonePrincipal;
+
+    @Column(name = "telefone_secundario")  // opcional — sem nullable=false
+    private String telefoneSecundario;
+}
+```
+
+Anotacoes:
+- @NoArgsConstructor O Lombok gera automaticamente um construtor sem parâmetros: public Fornecedor() {} . O JPA exige esse construtor para criar objetos a partir do banco.
+- @AllArgsConstructor Gera um construtor com TODOS os atributos como parâmetros.
+- @Data Anotação do Lombok que gera automaticamente: getters, setters, toString(), equals(), hashCode(). Sem ela, você teria que escrever ~150 linhas de código!
+- @Table(name = "fornecedor") Define o nome da tabela no PostgreSQL. Sem essa anotação, o Hibernate usaria o nome da classe.
+- @Entity Diz ao JPA: "esta classe Java representa uma tabela no banco de dados". É a anotação mais importante do Model!
+- @Id Marca este campo como a PRIMARY KEY da tabela. Todo @Entity precisa ter um @Id.
+- @GeneratedValue(strategy = IDENTITY) O banco gera o ID automaticamente (auto-increment). Você NÃO precisa definir o ID ao criar — o PostgreSQL cuida disso!
+- nullable = false Cria a constraint NOT NULL no banco — não permite gravar fornecedor sem nome fantasia.
+- updatable = false + unique = true O CNPJ é a "identidade" do fornecedor: não pode repetir (unique) e nunca deve mudar depois de cadastrado (updatable=false → o JPA ignora esse campo no UPDATE).
+- Sem nullable=false Quando o atributo é opcional, deixamos o @Column "nu" — o banco aceita NULL.
+
+🏷️ O que cada anotação faz? (Clique para expandir) ▼
+
+@Entity
+
+"Esta classe é uma tabela no banco!" — Sem isso, o JPA ignora a classe.
+
+@Table
+
+Define o nome da tabela no banco. Sem ela, usa o nome da classe.
+
+@Id
+
+Marca o campo como PRIMARY KEY. Obrigatório em toda @Entity.
+
+@GeneratedValue
+
+O banco gera o valor automaticamente (auto-increment).
+
+@Column
+
+Mapeia o atributo para uma coluna específica no banco.
+
+@Data
+
+Lombok: gera getters, setters, toString, equals, hashCode.
+
+DB Visualization
+
+#### 🗄️ Como fica no banco de dados:
+
+🐘 Tabela: fornecedor
+
+id | nome_fantasia | cnpj | email | telefone_principal
+
+Tabela vazia — use os botões abaixo para simular!
+
++ Dist. ABC + Forn. XYZ + Teste LTDA 🔄 Limpar
+
+FORNECEDOR: REPOSITORY
+
+1.2
+
+Repository — FornecedorRepository.java
+
+A camada que conversa com o banco
+
+🗄️ O que é um Repository?
+
+O Repository é uma interface (não uma classe!) que herda de `JpaRepository`. Ao estender ela, você ganha de graça vários métodos para operar no banco — sem escrever nenhum SQL!
+
+Analogia: O Arquivista
+
+O Repository é como um arquivista super eficiente. Você pede: "guarde esta ficha de fornecedor", "me dê o fornecedor de ID 3", "me dê todos os fornecedores". Ele faz tudo sem você precisar organizar o arquivo!
+
+repository/FornecedorRepository.javaJava
+
+```
+
+package br.com.sistemagestao.api.repository;
+
+import br.com.sistemagestao.api.model.Fornecedor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
+}  // Sim, está vazio! E já funciona! 🪄
+```
+
+Anotacoes:
+- @Repository Marca esta interface como um componente de acesso a dados do Spring.
+
+🪄
+JpaRepository<Fornecedor, Long> significa: "este repositório gerencia a entidade Fornecedor e sua chave primária é do tipo Long". Ao herdar, você ganha de graça:
+
+.save(fornecedor)
+
+INSERT ou UPDATE — salva no banco
+
+.findAll()
+
+SELECT * — retorna todos
+
+.findById(id)
+
+SELECT WHERE id = ?
+
+.deleteById(id)
+
+DELETE WHERE id = ?
+
+FORNECEDOR: SERVICE
+
+1.3
+
+Service — FornecedorService.java
+
+Onde ficam as regras de negócio
+
+⚙️ O que é um Service?
+
+O Service é a camada de regras de negócio. É aqui que a lógica acontece: validações, verificações, decisões. O Controller nunca acessa o Repository diretamente — sempre passa pelo Service.
+
+Analogia: O Gerente da Loja
+
+Imagine uma loja: o atendente (Controller) recebe o pedido do cliente. Mas quem decide se pode fazer a venda, se tem estoque, se o desconto é válido, é o gerente (Service). O gerente então manda o estoquista (Repository) buscar ou guardar os produtos.
+
+service/FornecedorService.javaJava
+
+```
+
+package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.model.Fornecedor;
+import br.com.sistemagestao.api.repository.FornecedorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
+import java.util.Optional;
+
+@Service  // "Esta classe é um Service do Spring!"
+public class FornecedorService {
+
+    @Autowired  // 💉 Injeção de dependência!
+    FornecedorRepository fornecedorRepository;
+
+    // CREATE — salvar novo fornecedor
+    public void criarFornecedor(Fornecedor fornecedor) {
+        fornecedorRepository.save(fornecedor);
+    }
+
+    // READ — listar todos os fornecedores
+    public List<Fornecedor> listarTodosFornecedores() {
+        return fornecedorRepository.findAll();
+    }
+
+    // READ — buscar por ID
+    public Optional<Fornecedor> buscarFornecedorPorId(Long id) {
+        return fornecedorRepository.findById(id);
+    }
+
+    // UPDATE — atualizar fornecedor por ID
+    public void atualizarFornecedorPorId(Long id, Fornecedor fornecedor) {
+        Optional<Fornecedor> fornecedorDoBanco = buscarFornecedorPorId(id);
+
+        if (fornecedorDoBanco.isEmpty()) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Fornecedor não encontrado"
+            );
+        }
+
+        Fornecedor fornecedorParaEditar = fornecedorDoBanco.get();
+        fornecedorParaEditar.setNomeFantasia(fornecedor.getNomeFantasia());
+        // CNPJ não é atualizado: @Column(updatable = false) protege a coluna no banco
+        fornecedorParaEditar.setEmail(fornecedor.getEmail());
+        fornecedorParaEditar.setTelefonePrincipal(fornecedor.getTelefonePrincipal());
+        fornecedorParaEditar.setTelefoneSecundario(fornecedor.getTelefoneSecundario());
+
+        fornecedorRepository.save(fornecedorParaEditar);
+    }
+
+    // DELETE — deletar fornecedor por ID
+    public void deletarFornecedorPorId(Long id) {
+        fornecedorRepository.deleteById(id);
+    }
+}
+```
+
+Anotacoes:
+- @Service Marca a classe como um componente de serviço. O Spring cria uma instância automaticamente.
+- @Autowired O Spring injeta automaticamente uma instância do FornecedorRepository aqui. Você NÃO precisa fazer new FornecedorRepository() !
+
+🔍 O que é Optional e por que usamos? ▼
+
+`Optional<Fornecedor>` é como uma caixa de presente que pode estar vazia ou ter um fornecedor dentro.
+
+Quando buscamos por ID, o fornecedor pode não existir. O Optional nos obriga a tratar esse caso:
+
+- `.isEmpty()` → a caixa está vazia? (fornecedor não existe)
+- `.get()` → pega o fornecedor de dentro da caixa
+- `.isPresent()` → tem algo na caixa?
+
+Isso evita o famoso NullPointerException! 💀
+
+FORNECEDOR: CONTROLLER
+
+1.4
+
+Controller — FornecedorController.java
+
+A porta de entrada da API — endpoints REST
+
+🎮 O que é um Controller?
+
+O Controller é a porta de entrada da API. Ele recebe as requisições HTTP (GET, POST, PUT, DELETE), chama o Service apropriado, e devolve a resposta. É aqui que definimos as URLs (endpoints) da API.
+
+Analogia: O Recepcionista
+
+O Controller é o recepcionista de um hotel. Ele recebe o hóspede (requisição), identifica o que ele precisa (método HTTP + URL), e encaminha para o departamento certo (Service). Quando o serviço é concluído, o recepcionista entrega a resposta.
+
+controller/FornecedorController.javaJava
+
+```
+
+package br.com.sistemagestao.api.controller;
+
+import br.com.sistemagestao.api.model.Fornecedor;
+import br.com.sistemagestao.api.service.FornecedorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.Optional;
+
+@RestController                    // "Esta classe é um controller REST!"
+@RequestMapping("/fornecedores")    // URL base: /fornecedores
+public class FornecedorController {
+
+    @Autowired
+    FornecedorService fornecedorService;
+
+    // POST /fornecedores — Criar
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)       // 201
+    public void criarFornecedor(@RequestBody Fornecedor fornecedor) {
+        fornecedorService.criarFornecedor(fornecedor);
+    }
+
+    // GET /fornecedores — Listar todos
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)             // 200
+    public List<Fornecedor> listarTodosFornecedores() {
+        return fornecedorService.listarTodosFornecedores();
+    }
+
+    // GET /fornecedores/{id} — Buscar por ID
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Optional<Fornecedor> buscarFornecedorPorId(@PathVariable Long id) {
+        return fornecedorService.buscarFornecedorPorId(id);
+    }
+
+    // PUT /fornecedores/{id} — Atualizar
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)     // 204
+    public void atualizarFornecedorPorId(@PathVariable Long id,
+                                          @RequestBody Fornecedor fornecedor) {
+        fornecedorService.atualizarFornecedorPorId(id, fornecedor);
+    }
+
+    // DELETE /fornecedores/{id} — Deletar
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)   // 204
+    public void deletarFornecedorPorId(@PathVariable Long id) {
+        fornecedorService.deletarFornecedorPorId(id);
+    }
+}
+```
+
+Anotacoes:
+- @RestController Combina @Controller + @ResponseBody. Retorna JSON automaticamente.
+- @RequestMapping("/fornecedores") Define a URL base. Todos os endpoints começam com /fornecedores.
+- @PostMapping Responde a requisições HTTP POST. Usado para CRIAR recursos.
+- @GetMapping Responde a HTTP GET. Usado para BUSCAR/LISTAR recursos.
+- @GetMapping("/{id}") O {id} é capturado da URL. Em /fornecedores/5, id = 5.
+- @PutMapping Responde a HTTP PUT. Usado para ATUALIZAR recursos.
+- @DeleteMapping Responde a HTTP DELETE. Usado para REMOVER recursos.
+
+Endpoint Table
+
+#### 📍 Endpoints do Fornecedor
+
+Método | URL | Ação | Status
+
+POST | `/fornecedores` | Criar fornecedor | 201 Created
+GET | `/fornecedores` | Listar todos | 200 OK
+GET | `/fornecedores/{id}` | Buscar por ID | 200 OK
+PUT | `/fornecedores/{id}` | Atualizar fornecedor | 204 No Content
+DELETE | `/fornecedores/{id}` | Deletar fornecedor | 204 No Content
+
+🔍 @RequestBody vs @PathVariable — qual a diferença? ▼
+
+@RequestBody Pega os dados do corpo da requisição (o JSON). Ex: `{ "nome": "ABC", "cnpj": "12.345..." }`
+
+@PathVariable Pega o valor da URL. Em `/fornecedores/5`, o {id} vira 5.
+
+FORNECEDOR: DEMO INTERATIVA
+
+▶
+
+Demo: CRUD de Fornecedor
+
+Simulação do Swagger/Insomnia
+
+Veja como as requisições funcionam! Clique nos botões para simular cada operação:
+
+POST Criar GET Listar GET Buscar/1 PUT Atualizar DELETE Deletar
+
+Swagger UI — localhost:8080
+
+Clique em um botão acima para simular uma requisição...
+
+════════════════════════════════════════ FORNECEDOR: TUTORIAL INSOMNIA ════════════════════════════════════════
+
+🦋
+
+Testando no Insomnia
+
+Organizando e testando todos os endpoints
+
+🦋 O que é o Insomnia?
+
+O Insomnia é uma ferramenta para testar APIs. Ele permite enviar requisições HTTP (GET, POST, PUT, DELETE) para o seu backend e ver a resposta — sem precisar de um frontend pronto. É como um "controle remoto" da sua API!
+
+Analogia: Controle Remoto da TV
+
+Imagine que sua API é uma TV. O frontend React é o controle remoto bonito que o usuário vai usar. Mas durante o desenvolvimento, você precisa de um controle técnico para testar todos os botões — esse é o Insomnia! Ele te permite apertar cada botão (endpoint) e ver se funciona, antes de construir o controle bonito. 📺🎮
+
+INSTALAÇÃO
+
+#### 📥 Instalando o Insomnia
+
+- Acesse insomnia.rest/download
+- Baixe e instale normalmente
+- Abra o Insomnia e crie um novo projeto chamado "Sistema Gestao"
+
+ORGANIZANDO PASTAS
+
+#### 📂 Organizando com Pastas
+
+Uma boa prática é organizar os endpoints em pastas por entidade. Assim fica fácil encontrar o que você precisa:
+
+#### 1. Criar pastas
+
+Clique com botão direito no painel esquerdo → "New Folder". Crie uma pasta para cada entidade: Fornecedor, Produto, Cliente.
+
+#### 2. Criar requests dentro das pastas
+
+Dentro de cada pasta, crie os requests (um para cada endpoint). O Insomnia mostra o método HTTP com cor ao lado do nome — igual na imagem abaixo!
+
+VISUAL DA ORGANIZAÇÃO
+
+#### 📁 Estrutura no Insomnia:
+
+📁 Produto
+
+📁 Cliente
+
+📁 Fornecedor
+
+PUT atualizarFornecedorPorId
+
+GET buscarFornecedorPorId
+
+GET listarTodosFornecedores
+
+POST criarFornecedor
+
+💡
+Dica: Nomeie cada request com o nome do método do Controller. Assim quando você vê "criarFornecedor" no Insomnia, sabe exatamente qual método está testando no código!
+
+CONFIGURANDO BASE URL
+
+#### 🔗 Configurando a Base URL
+
+Para não digitar `http://localhost:8080` em toda requisição, crie uma variável de ambiente:
+
+#### 1. Acessar Environment
+
+Clique em "Base Environment" no painel esquerdo (ou no ícone de engrenagem ⚙️)
+
+#### 2. Adicionar variável
+
+Adicione a variável `baseUrl` com o valor `http://localhost:8080`
+
+#### 3. Usar nas requisições
+
+Na URL de cada request, use `_.baseUrl` seguido do endpoint. Exemplo: `_.baseUrl/fornecedores`
+
+Se precisar mudar a URL base (ex: quando for pra produção), é só alterar em um lugar só — a variável de ambiente. Todos os requests atualizam automaticamente! 🎯
+
+PASSO A PASSO: CADA REQUEST
+
+#### 🚀 Montando cada Request — Passo a Passo
+POST
+
+#### POST Criar Fornecedor
+
+URL: `_.baseUrl/fornecedores`
+
+Method: POST
+
+Body: Clique na aba "Body" → selecione "JSON"
+
+JSON
+
+```
+{
+  "nomeFantasia": "Distribuidora ABC",
+  "cnpj": "12.345.678/0001-99",
+  "email": "contato@abc.com",
+  "telefonePrincipal": "(11) 99999-0001",
+  "telefoneSecundario": "(11) 4002-8922"
+}
+```
+
+✅
+Resposta esperada: 201 Created. Não retorna body — mas o fornecedor foi salvo no banco!
+
+GET ALL
+
+#### GET Listar Todos Fornecedores
+
+URL: `_.baseUrl/fornecedores`
+
+Method: GET
+
+Body: Nenhum — GET não envia body!
+
+✅
+Resposta esperada: 200 OK com um array JSON contendo todos os fornecedores cadastrados.
+
+GET BY ID
+
+#### GET Buscar Fornecedor Por ID
+
+URL: `_.baseUrl/fornecedores/1` (troque o 1 pelo ID desejado)
+
+Method: GET
+
+✅
+Resposta esperada: 200 OK com o JSON de um fornecedor específico.
+
+PUT
+
+#### PUT Atualizar Fornecedor
+
+URL: `_.baseUrl/fornecedores/1`
+
+Method: PUT
+
+Body: JSON com os dados atualizados (mesmo formato do POST)
+
+✅
+Resposta esperada: 204 No Content. Sem body na resposta, mas o fornecedor foi atualizado!
+
+DELETE
+
+#### DELETE Deletar Fornecedor
+
+URL: `_.baseUrl/fornecedores/1`
+
+Method: DELETE
+
+Body: Nenhum
+
+✅
+Resposta esperada: 204 No Content. Fornecedor removido do banco!
+
+⚠️
+Ordem de teste recomendada: Primeiro faça um POST para ter dados no banco, depois GET para listar, depois PUT para editar, e por último DELETE para remover. Se tentar GET sem ter criado nada, vai voltar lista vazia!
+
+╔══════════════════════════════════════════════════════════════╗ ║ CAPÍTULO 2: PRODUTO ║ ╚══════════════════════════════════════════════════════════════╝

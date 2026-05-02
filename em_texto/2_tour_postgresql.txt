@@ -1,0 +1,838 @@
+# Tour PostgreSQL
+(id inicial: tour-pg; ate: overview)
+
+🐘
+Pré-requisito
+
+## Tour: Conhecendo o PostgreSQL
+
+Antes de codar, vamos entender onde os dados moram!
+
+MISSÃO DESTA ETAPA
+
+### 🎯 Missão desta etapa
+
+Nesta parte do material, você vai aprender a preparar todo o ambiente de banco de dados para o nosso projeto. Ao final, você será capaz de:
+
+🐳DockerSubir um PostgreSQL local com Docker
+
+🦫DBeaverConectar pelo DBeaver e navegar no banco
+
+🏗️Criar BancoCriar o database do projeto
+
+📋Criar TabelaDefinir a estrutura com CREATE TABLE
+
+📝CRUD em SQLINSERT, SELECT, UPDATE e DELETE
+
+💪
+Dica de ouro: Não apenas leia — execute cada comando no seu computador! Praticar é o que transforma leitura em habilidade real. Abra o Docker, o DBeaver e vá junto passo a passo.
+
+O QUE É BANCO DE DADOS
+
+🗄️
+
+O que é um Banco de Dados?
+
+Entendendo o conceito antes de tudo
+
+Analogia: O Armário Organizado
+
+Imagine um armário gigante de escritório com várias gavetas. Cada gaveta tem uma etiqueta (nome da tabela): "Fornecedores", "Produtos", "Clientes". Dentro de cada gaveta tem fichas organizadas em linhas e colunas. Isso é um banco de dados relacional! 📂
+
+📖 Definição
+
+Um banco de dados é um lugar organizado para armazenar, consultar e manipular dados. Quando você fecha o programa, os dados não somem — ficam salvos permanentemente. É diferente de variáveis no código, que morrem quando o programa fecha.
+
+🗄️Banco (Database)O armário inteiro
+
+📋Tabela (Table)Uma gaveta — ex: "fornecedor"
+
+📊Coluna (Column)Os campos — ex: "nome", "email"
+
+📝Linha (Row)Um registro — ex: "Distribuidora ABC"
+
+🔑Chave Primária (PK)ID único de cada registro
+
+📝SQLA "linguagem" para falar com o banco
+
+#### 🖼️ Visualizando: como uma tabela se parece
+
+📋 Tabela: fornecedor
+
+id 🔑 | nome | cnpj | email | cidade | uf
+
+1 | Distribuidora ABC | 12.345.678/0001-99 | contato@abc.com | São Paulo | SP
+2 | Fornecedor XYZ | 98.765.432/0001-11 | vendas@xyz.com | João Pessoa | PB
+3 | Tech Solutions | 11.222.333/0001-44 | info@tech.com | Recife | PE
+
+☝️ Cada linha é um fornecedor cadastrado. Cada coluna é uma informação sobre ele. O id é gerado automaticamente e nunca se repete — é a chave primária (PK).
+
+🐘
+Por que PostgreSQL? Existem vários bancos (MySQL, SQLite, Oracle...). O PostgreSQL é gratuito, robusto, seguro e um dos mais usados no mercado. É perfeito para aprender e também para projetos profissionais!
+
+DOCKER + POSTGRESQL
+
+🐳
+
+Instalando o PostgreSQL com Docker
+
+A forma mais fácil e profissional de rodar bancos de dados
+
+🐳 O que é Docker?
+
+Docker é como uma caixa mágica que empacota um programa com tudo que ele precisa para funcionar. Em vez de instalar o PostgreSQL direto no seu computador (e lidar com configurações complicadas), você cria um container — uma "mini-máquina" que roda o PostgreSQL isoladamente.
+
+Analogia: Container = Marmita
+
+Instalar um programa direto no computador é como cozinhar na sua cozinha — suja tudo, ocupa espaço, e é difícil de limpar depois. Usar Docker é como pedir uma marmita: vem tudo pronto, embalado, e quando você termina, joga fora a embalagem sem sujar nada! 🍱
+
+PASSO 1: Docker Desktop
+
+#### 📥 Passo 1 — Instale o Docker Desktop
+
+O Docker Desktop é o app que permite usar Docker no seu computador de forma visual e simples.
+
+- Acesse docker.com/products/docker-desktop
+- Baixe para o seu sistema operacional (Windows, Mac ou Linux)
+- Instale normalmente (next, next, finish...)
+- Abra o Docker Desktop e aguarde ele iniciar (ícone da baleia 🐳 fica verde)
+
+✅
+Como saber se o Docker está funcionando? Abra o terminal e digite `docker --version`. Se aparecer uma versão, está tudo certo!
+
+PASSO 2: Criar container
+
+#### 🚀 Passo 2 — Criar o Container do PostgreSQL
+
+Com o Docker Desktop rodando, abra o terminal (Prompt de Comando, PowerShell ou Terminal do Mac) e cole este comando:
+
+Terminalbash
+
+```
+docker run --name postgres-fullstack -e POSTGRES_PASSWORD=123 -e POSTGRES_USER=postgres -p 5432:5432 -d postgres
+```
+
+🔍 O que cada parte desse comando faz? ▼
+
+`docker run` — Cria e inicia um novo container
+
+`--name postgres-fullstack` — Dá o nome "postgres-fullstack" ao container (pode ser qualquer nome)
+
+`-e POSTGRES_PASSWORD=123` — Define a senha do usuário postgres como 123
+
+`-e POSTGRES_USER=postgres` — Define o usuário como postgres
+
+`-p 5432:5432` — Mapeia a porta 5432 do container para a porta 5432 do seu PC (porta padrão do PostgreSQL)
+
+`-d` — Roda em background (não trava o terminal)
+
+`postgres` — Nome da imagem oficial do PostgreSQL no Docker Hub
+
+🐳
+Pronto! O PostgreSQL já está rodando! Você pode ver o container no Docker Desktop (aba "Containers") — ele deve estar com status verde Running.
+
+PASSO 3: Comandos úteis
+
+#### 🔧 Comandos úteis do Docker
+
+docker ps
+
+Lista containers rodando
+
+docker stop postgres-fullstack
+
+Para o container
+
+docker start postgres-fullstack
+
+Inicia novamente
+
+docker rm postgres-fullstack
+
+Remove o container (dados perdem!)
+
+⚠️
+Atenção: Sempre que ligar o computador, abra o Docker Desktop primeiro! Sem ele rodando, o PostgreSQL não funciona. O container não inicia sozinho — você pode configurar auto-start no Docker Desktop ou usar `docker start postgres-fullstack`.
+
+DBEAVER
+
+🦫
+
+DBeaver — Sua IDE para Banco de Dados
+
+Visualize e manipule o banco de forma gráfica
+
+🤔 O que é o DBeaver?
+
+O DBeaver é como o VS Code, mas para bancos de dados. É uma ferramenta gráfica (GUI) que permite ver tabelas, escrever SQL, e manipular dados de forma visual — sem precisar decorar comandos. É gratuito e funciona com qualquer banco!
+
+Analogia: Explorer de Arquivos
+
+O DBeaver é para o banco de dados o que o Explorer/Finder é para arquivos no computador. Você pode navegar pelas "pastas" (bancos), abrir "arquivos" (tabelas), e editar o conteúdo visualmente. Sem ele, seria como usar o computador só pelo terminal — funciona, mas é mais difícil! 🖥️
+
+Instalação
+
+#### 📥 Instalando o DBeaver
+
+- Acesse dbeaver.io/download
+- Baixe o DBeaver Community (versão gratuita)
+- Instale normalmente
+
+Conectando ao PostgreSQL
+
+#### 🔌 Conectando o DBeaver ao PostgreSQL
+
+Com o container Docker rodando, vamos conectar o DBeaver ao banco:
+
+#### 1. Nova Conexão
+
+Clique no ícone de tomada com "+" (canto superior esquerdo) ou vá em Database → New Database Connection
+
+#### 2. Selecione PostgreSQL
+
+Na lista de bancos, escolha o PostgreSQL (ícone do elefantinho azul 🐘) e clique em Next
+
+#### 3. Preencha os dados de conexão
+
+Configure assim:
+
+Host
+
+localhost
+
+Port
+
+5432
+
+Database
+
+postgres (padrão)
+
+Username
+
+postgres
+
+Password
+
+123
+
+#### 4. Testar Conexão
+
+Clique em "Test Connection". Se aparecer "Connected!", está tudo certo! Clique em Finish.
+
+🎉
+Parabéns! Você acabou de se conectar ao seu banco de dados! Agora no painel da esquerda do DBeaver você verá o PostgreSQL listado. Clique para expandir e explorar.
+
+Criar o banco do projeto
+
+#### 🏗️ Criando o Banco do Nosso Projeto
+
+Precisamos criar um banco de dados específico para o nosso projeto. No DBeaver:
+
+- No painel esquerdo, clique com botão direito em "Databases"
+- Selecione "Create New Database"
+- No campo nome, digite: `bd_sistema_gestao`
+- Clique em OK
+
+Ou, se preferir via SQL, abra um novo editor SQL (botão "SQL" no topo) e execute:
+
+DBeaver — SQL EditorSQL
+
+```
+CREATE DATABASE bd_sistema_gestao;
+```
+
+💡
+Depois de criar o banco, clique com botão direito na conexão do PostgreSQL (painel esquerdo) e selecione "Refresh" para ver o novo banco aparecer. Depois, conecte-se a ele dando duplo-clique no banco `bd_sistema_gestao`.
+
+TOUR SQL BÁSICO
+
+📝
+
+SQL Básico — Falando com o Banco
+
+CREATE TABLE, INSERT, SELECT, UPDATE, DELETE
+
+🗣️ O que é SQL?
+
+SQL (Structured Query Language) é a linguagem que usamos para conversar com o banco de dados. É como uma "língua" que o banco entende. Você escreve comandos em SQL e o banco executa — cria tabelas, insere dados, busca informações, etc.
+
+Analogia: Cardápio do Restaurante
+
+SQL é como fazer pedidos em um restaurante. Você tem CREATE TABLE = "quero criar um novo prato no cardápio", INSERT = "quero servir um prato", SELECT = "me mostra o que tem", UPDATE = "muda o prato", DELETE = "tire esse prato". Simples assim! 🍽️
+
+📌
+Onde escrever SQL? No DBeaver! Conecte-se ao banco `bd_sistema_gestao`, clique no botão "SQL" (ou Ctrl+Enter / Cmd+Enter) para abrir o editor SQL. Escreva os comandos lá e execute com Ctrl+Enter (ou o botão ▶️).
+
+MAPA DAS 5 OPERAÇÕES SQL
+
+#### 🗺️ As 5 operações fundamentais do SQL
+
+Todo CRUD no banco de dados se resume a 5 tipos de ação. Entenda cada uma antes de praticar:
+
+🏗️
+
+Criar Estrutura
+`CREATE TABLE`
+Define as colunas e tipos da tabela
+
+➕
+
+Inserir Dados
+`INSERT INTO`
+Adiciona novas linhas (registros)
+
+🔍
+
+Consultar Dados
+`SELECT`
+Busca e retorna informações
+
+✏️
+
+Alterar Dados
+`UPDATE`
+Modifica dados existentes
+
+🗑️
+
+Remover Dados
+`DELETE`
+Apaga registros da tabela
+
+CREATE TABLE
+
+#### CREATE TABLE Criando uma tabela
+
+Antes de guardar dados, precisamos definir a estrutura da gaveta — ou seja, quais colunas a tabela vai ter:
+
+DBeaver — SQL EditorSQL
+
+```
+
+CREATE TABLE teste_fornecedor (
+    id     SERIAL PRIMARY KEY,   -- ID automático, chave primária
+    nome   VARCHAR(100) NOT NULL, -- Texto de até 100 caracteres, obrigatório
+    cnpj   VARCHAR(20),           -- Texto de até 20 caracteres
+    email  VARCHAR(100),          -- Texto de até 100 caracteres
+    cidade VARCHAR(50)            -- Texto de até 50 caracteres
+);
+```
+
+🔍 O que cada parte significa? ▼
+
+`CREATE TABLE teste_fornecedor` — Cria uma nova tabela chamada "teste_fornecedor"
+
+`SERIAL` — Tipo numérico que se auto-incrementa (1, 2, 3...)
+
+`PRIMARY KEY` — Marca o campo como chave primária (identificador único)
+
+`VARCHAR(100)` — Texto com no máximo 100 caracteres
+
+`NOT NULL` — Campo obrigatório — não pode ficar vazio
+
+🎯
+Execute o comando no DBeaver e depois dê Refresh no painel esquerdo. Você verá a tabela `teste_fornecedor` aparecer dentro de Schemas → public → Tables!
+
+INSERT
+
+#### INSERT Inserindo dados
+
+Agora vamos colocar dados dentro da tabela — como preencher fichas de cadastro:
+
+DBeaver — SQL EditorSQL
+
+```
+
+-- Inserindo o primeiro fornecedor
+INSERT INTO teste_fornecedor (nome, cnpj, email, cidade)
+VALUES ('Distribuidora ABC', '12.345.678/0001-99', 'contato@abc.com', 'São Paulo');
+
+-- Inserindo mais alguns
+INSERT INTO teste_fornecedor (nome, cnpj, email, cidade)
+VALUES ('Fornecedor XYZ', '98.765.432/0001-11', 'vendas@xyz.com', 'João Pessoa');
+
+INSERT INTO teste_fornecedor (nome, cnpj, email, cidade)
+VALUES ('Tech Solutions', '11.222.333/0001-44', 'info@tech.com', 'Recife');
+```
+
+💡
+Perceba que NÃO informamos o id! Ele é `SERIAL` — o banco gera automaticamente: 1, 2, 3...
+
+SELECT
+
+#### SELECT Consultando dados
+
+O comando mais usado do SQL! É como perguntar ao banco: "me mostra os dados":
+
+DBeaver — SQL EditorSQL
+
+```
+
+-- Buscar TODOS os fornecedores (todas as colunas)
+SELECT * FROM teste_fornecedor;
+
+-- Buscar só nome e cidade
+SELECT nome, cidade FROM teste_fornecedor;
+
+-- Buscar fornecedor com id = 1
+SELECT * FROM teste_fornecedor WHERE id = 1;
+
+-- Buscar fornecedores de São Paulo
+SELECT * FROM teste_fornecedor WHERE cidade = 'São Paulo';
+```
+
+🔍 Traduzindo cada SELECT: ▼
+
+`SELECT * FROM teste_fornecedor;`
+→ "Me dá tudo (*) que tem na tabela teste_fornecedor"
+
+`SELECT nome, cidade FROM teste_fornecedor;`
+→ "Me dá só o nome e a cidade dos fornecedores"
+
+`SELECT * FROM teste_fornecedor WHERE id = 1;`
+→ "Me dá tudo do fornecedor cujo id é 1"
+
+`SELECT * FROM teste_fornecedor WHERE cidade = 'São Paulo';`
+→ "Me dá todos que são de São Paulo"
+
+UPDATE
+
+#### UPDATE Atualizando dados
+
+Precisa corrigir ou atualizar algum dado? Use o UPDATE:
+
+DBeaver — SQL EditorSQL
+
+```
+
+-- Alterar o email do fornecedor com id = 1
+UPDATE teste_fornecedor
+SET email = 'novoemail@abc.com'
+WHERE id = 1;
+
+-- Verificar a alteração
+SELECT * FROM teste_fornecedor WHERE id = 1;
+```
+
+🚨
+NUNCA esqueça o WHERE no UPDATE! Se fizer `UPDATE teste_fornecedor SET email = 'teste@teste.com'` sem WHERE, TODOS os fornecedores terão o email alterado! O WHERE filtra quem será afetado.
+
+DELETE
+
+#### DELETE Deletando dados
+
+Para remover um registro da tabela:
+
+DBeaver — SQL EditorSQL
+
+```
+
+-- Deletar o fornecedor com id = 3
+DELETE FROM teste_fornecedor
+WHERE id = 3;
+
+-- Verificar: agora só devem aparecer 2 registros
+SELECT * FROM teste_fornecedor;
+```
+
+🚨
+NUNCA esqueça o WHERE no DELETE! Um `DELETE FROM teste_fornecedor` sem WHERE apaga TODOS os dados da tabela. Cuidado!
+
+AVISOS PEDAGÓGICOS
+
+#### 📢 Avisos importantes para a prática
+
+⚠️
+Sempre use WHERE em UPDATE e DELETE quando a intenção for alterar ou remover apenas um registro. Sem o WHERE, o comando afeta todas as linhas da tabela — e não tem "Ctrl+Z" no banco de dados!
+
+🔍
+Confira em qual database você está conectado! No DBeaver, olhe o painel esquerdo — o banco ativo aparece em negrito. Se estiver no banco `postgres` em vez do `bd_sistema_gestao`, seus comandos não vão funcionar como esperado.
+
+🏋️
+Pratique executando, não apenas lendo! SQL se aprende fazendo. Cada comando aqui deve ser digitado e executado no DBeaver. Leitura passiva não fixa — é a prática que constrói a memória.
+
+Limpar tabela de teste
+
+#### 🧹 Limpando a tabela de teste
+
+Essa tabela era só para praticar. O Spring Boot vai criar as tabelas reais automaticamente! Pode remover:
+
+DBeaver — SQL EditorSQL
+
+```
+
+-- Apagar a tabela inteira (estrutura + dados)
+DROP TABLE teste_fornecedor;
+```
+
+Resumo CRUD SQL
+
+#### 📋 Resumão — CRUD em SQL
+
+Operação | Comando SQL | O que faz
+
+CREATE | `INSERT INTO tabela ...` | Insere um novo registro
+READ | `SELECT * FROM tabela` | Consulta registros
+UPDATE | `UPDATE tabela SET ...` | Atualiza registros
+DELETE | `DELETE FROM tabela ...` | Remove registros
+
+🚀
+A grande sacada: Quando usamos Spring Boot + JPA, você NÃO precisa escrever esses SQLs na mão! O Hibernate gera tudo automaticamente. O `CREATE TABLE` vira a anotação `@Entity`, o `INSERT` vira `.save()`, o `SELECT` vira `.findAll()`, o `UPDATE` vira `.save()` de novo, e o `DELETE` vira `.deleteById()`. Mas é essencial entender o que acontece por baixo dos panos! 🪄
+
+SQL vs Spring Boot comparison
+
+#### 🔄 SQL Manual vs Spring Boot — Comparação
+
+📝 SQL Manual
+`
+CREATE TABLE fornecedor (...)
+
+INSERT INTO fornecedor ...
+
+SELECT * FROM fornecedor
+
+UPDATE fornecedor SET ...
+
+DELETE FROM fornecedor ...
+`
+
+🍃 Spring Boot
+`
+@Entity @Table ← cria tabela
+
+repository.save(fornecedor)
+
+repository.findAll()
+
+repository.save(fornecedorEditado)
+
+repository.deleteById(id)
+`
+
+════════════════════════════════════════ ERROS MAIS COMUNS ════════════════════════════════════════
+
+🐛
+
+Erros Mais Comuns
+
+Problemas que todo iniciante encontra (e como resolver!)
+
+Não se preocupe se algo der errado — isso é parte normal do aprendizado! Aqui estão os erros mais comuns e como resolver cada um:
+
+Erro 1
+🐳
+
+Docker Desktop não está aberto
+
+Sintoma: Ao rodar `docker run...` aparece erro "Cannot connect to the Docker daemon".
+
+Solução: Abra o Docker Desktop e espere o ícone da baleia 🐳 ficar verde. Depois tente o comando de novo.
+
+Erro 2
+🔌
+
+Porta 5432 já em uso
+
+Sintoma: Erro "port is already allocated" ou "Bind for 0.0.0.0:5432 failed".
+
+Solução: Já existe algo usando a porta 5432. Pode ser outro container ou um PostgreSQL instalado localmente. Pare o outro serviço ou mude a porta: `-p 5433:5432` (e use 5433 no DBeaver).
+
+Erro 3
+🔑
+
+Senha ou usuário incorretos no DBeaver
+
+Sintoma: "FATAL: password authentication failed" ao testar a conexão.
+
+Solução: Confira se o usuário é `postgres` e a senha é `123` (exatamente como definimos no `docker run`). Letras maiúsculas/minúsculas importam!
+
+Erro 4
+🔄
+
+Esquecer de dar Refresh no DBeaver
+
+Sintoma: Você criou o banco ou a tabela mas não aparece no painel esquerdo.
+
+Solução: Clique com botão direito na conexão e selecione "Refresh". O DBeaver não atualiza sozinho!
+
+Erro 5
+🎯
+
+Estar conectado no banco errado
+
+Sintoma: "ERROR: relation "teste_fornecedor" does not exist" — mas você acabou de criar!
+
+Solução: Verifique se está no database `bd_sistema_gestao` e não no `postgres` (padrão). Dê duplo-clique no banco correto no painel esquerdo.
+
+Erro 6
+💀
+
+UPDATE ou DELETE sem WHERE — PERIGO!
+
+Sintoma: Todos os registros da tabela foram alterados ou apagados.
+
+Solução: Infelizmente, não tem "desfazer" fácil. Sempre revise o comando antes de executar. Se aconteceu, apague a tabela com `DROP TABLE` e recrie tudo.
+
+🧠
+Dica de ouro: Quando algo dá errado, leia a mensagem de erro com calma. Ela quase sempre diz o que aconteceu. Copie o texto do erro e pesquise no Google — você vai se surpreender como é rápido encontrar a solução!
+
+════════════════════════════════════════ FLUXO MENTAL DA PRÁTICA ════════════════════════════════════════
+
+🧠
+
+Fluxo Mental da Prática
+
+A ordem certa para fazer tudo funcionar
+
+Sempre que for praticar PostgreSQL, siga essa ordem. Se pular algum passo, algo vai dar errado!
+
+Passo 1
+🐳 Docker Desktop aberto
+
+Aguarde ficar verde
+
+Passo 2
+📦 Container rodando
+
+docker start postgres-fullstack
+
+Passo 3
+🦫 Conexão no DBeaver
+
+Duplo-clique no banco
+
+Passo 4
+🏗️ Criar database
+
+CREATE DATABASE
+
+Passo 5
+📋 Criar tabela
+
+CREATE TABLE
+
+Passo 6
+➕ Inserir dados
+
+INSERT INTO
+
+Passo 7
+🔍 Consultar
+
+SELECT
+
+Passo 8
+✏️ Atualizar
+
+UPDATE
+
+Passo 9
+🗑️ Deletar
+
+💡
+Memorizou? Docker → Container → DBeaver → Database → Tabela → INSERT → SELECT → UPDATE → DELETE. Sempre nessa ordem! Se pular o Docker, nada funciona. Se pular a tabela, não tem onde inserir dados.
+
+════════════════════════════════════════ TREINO GUIADO EM CASA ════════════════════════════════════════
+
+🏠
+
+Treino Guiado em Casa
+
+Exercício prático completo para fazer sozinho
+
+#### 🎯 Missão: Criar a tabela `aluno_teste`
+
+Siga os passos abaixo na ordem. Cada comando deve ser executado no DBeaver, conectado ao banco `bd_sistema_gestao`. Ao final, você terá praticado o CRUD completo!
+
+Tabela visual do que vamos criar
+
+#### 📋 Estrutura da tabela que vamos criar:
+
+📋 Tabela: aluno_teste
+
+Coluna | Tipo | Descrição
+
+id | `SERIAL PRIMARY KEY` | Identificador único, gerado automaticamente
+nome | `VARCHAR(100) NOT NULL` | Nome do aluno (obrigatório)
+email | `VARCHAR(100)` | E-mail do aluno
+cidade | `VARCHAR(50)` | Cidade onde mora
+
+Passo 1: CREATE TABLE
+
+#### PASSO 1 Criar a tabela
+
+DBeaver — SQL EditorSQL
+
+```
+
+CREATE TABLE aluno_teste (
+    id     SERIAL PRIMARY KEY,
+    nome   VARCHAR(100) NOT NULL,
+    email  VARCHAR(100),
+    cidade VARCHAR(50)
+);
+```
+
+✅
+Após executar, dê Refresh no DBeaver. A tabela deve aparecer em Schemas → public → Tables → aluno_teste.
+
+Passo 2: INSERT
+
+#### PASSO 2 Inserir 3 alunos
+
+DBeaver — SQL EditorSQL
+
+```
+
+INSERT INTO aluno_teste (nome, email, cidade)
+VALUES ('Maria Silva', 'maria@email.com', 'João Pessoa');
+
+INSERT INTO aluno_teste (nome, email, cidade)
+VALUES ('Carlos Santos', 'carlos@email.com', 'Recife');
+
+INSERT INTO aluno_teste (nome, email, cidade)
+VALUES ('Ana Oliveira', 'ana@email.com', 'São Paulo');
+```
+
+Passo 3: SELECT *
+
+#### PASSO 3 Consultar todos os alunos
+
+DBeaver — SQL EditorSQL
+
+```
+
+-- Listar todos os alunos cadastrados
+SELECT * FROM aluno_teste;
+```
+
+🎯 Resultado esperado: 3 linhas com id 1, 2 e 3.
+Passo 4: SELECT com WHERE
+
+#### PASSO 4 Consultar com filtro (WHERE)
+
+DBeaver — SQL EditorSQL
+
+```
+
+-- Buscar apenas alunos de João Pessoa
+SELECT * FROM aluno_teste WHERE cidade = 'João Pessoa';
+
+-- Buscar o aluno com id = 2
+SELECT * FROM aluno_teste WHERE id = 2;
+```
+
+🎯 Resultado esperado: O primeiro retorna só a Maria. O segundo retorna só o Carlos.
+Passo 5: UPDATE com WHERE
+
+#### PASSO 5 Atualizar um aluno
+
+DBeaver — SQL EditorSQL
+
+```
+
+-- Atualizar o email da Maria (id = 1)
+UPDATE aluno_teste
+SET email = 'maria.nova@email.com'
+WHERE id = 1;
+
+-- Conferir a alteração
+SELECT * FROM aluno_teste WHERE id = 1;
+```
+
+⚠️
+Perceba que usamos `WHERE id = 1`. Sem o WHERE, todos os alunos teriam o email alterado!
+
+Passo 6: DELETE com WHERE
+
+#### PASSO 6 Deletar um aluno
+
+DBeaver — SQL EditorSQL
+
+```
+
+-- Deletar o aluno com id = 3 (Ana)
+DELETE FROM aluno_teste
+WHERE id = 3;
+
+-- Conferir: agora devem aparecer apenas 2 alunos
+SELECT * FROM aluno_teste;
+```
+
+🎯 Resultado esperado: Somente Maria e Carlos aparecem. Ana foi removida.
+Limpeza
+
+#### 🧹 Limpeza (opcional)
+
+Se quiser praticar de novo do zero, apague a tabela e refaça:
+
+DBeaver — SQL EditorSQL
+
+```
+
+DROP TABLE aluno_teste;
+```
+
+🏆
+Parabéns! Se você chegou até aqui executando cada passo, já praticou o CRUD completo em SQL! Esse é o alicerce para tudo que faremos com Spring Boot. Quanto mais vezes repetir, mais natural fica. 💪
+
+════════════════════════════════════════ COMO SABER SE DEU CERTO ════════════════════════════════════════
+
+✅
+
+Como Saber se Deu Certo?
+
+Sinais visuais de que tudo está funcionando
+
+Em cada etapa, existe um sinal visual claro de que deu certo. Confira:
+
+🐳
+
+Docker Desktop
+
+O container `postgres-fullstack` deve aparecer com status Running (bolinha verde). Se estiver com status vermelho ou cinza, clique no botão ▶️ para iniciar.
+
+🦫
+
+DBeaver — Conexão
+
+Ao clicar em "Test Connection" deve aparecer a mensagem "Connected!" em verde. Sem erros, sem mensagens vermelhas.
+
+📋
+
+DBeaver — Tabela
+
+Depois do CREATE TABLE + Refresh, a tabela deve aparecer no navegador do banco: bd_sistema_gestao → Schemas → public → Tables → sua_tabela.
+
+📊
+
+DBeaver — SELECT
+
+O `SELECT * FROM sua_tabela` deve retornar linhas com dados na aba de resultados (parte inferior do DBeaver). Se retornar vazio, é porque ainda não fez INSERT ou está no banco errado.
+
+Resumo: O "Teste do Espelho"
+
+Pense assim: cada ação tem um "reflexo" visual. Se você cria uma tabela, ela aparece no painel. Se você insere dados, o SELECT mostra. Se nada aparece, algo saiu errado — volte aos passos e confira! 🪞
+
+════════════════════════════════════════ CHECKLIST DE CONCLUSÃO ════════════════════════════════════════
+
+🏁
+
+Checklist de Conclusão
+
+Marque cada item para garantir que completou tudo
+
+Use essa lista para conferir se você completou todas as etapas do tour pelo PostgreSQL. Ao marcar todos, você está pronto para o Spring Boot! 🚀
+
+🐳 Docker Desktop instalado e aberto 📦 Container `postgres-fullstack` rodando (status verde) 🦫 Conexão com PostgreSQL no DBeaver funcionando 🏗️ Database `bd_sistema_gestao` criado 📋 Tabela criada com sucesso (aparece no painel) ➕ INSERTs executados (dados inseridos) 🔍 SELECT executado (dados retornados) ✏️ UPDATE executado (dado alterado) 🗑️ DELETE executado (registro removido)
+
+🎉
+
+#### Tour Completo! Você está pronto!
+
+Agora você domina o básico do PostgreSQL. O próximo passo é deixar o Spring Boot fazer esse trabalho automaticamente — mas sabendo o que acontece por baixo dos panos!
+
+0 de 9 completos
+
+════════════════════════════════════════ INTRO: O QUE VAMOS CONSTRUIR ════════════════════════════════════════

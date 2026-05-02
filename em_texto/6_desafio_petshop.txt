@@ -1,0 +1,1779 @@
+# Desafio - PetShop
+(id inicial: cap-petshop; ate: cap-cli)
+
+🐶
+Desafio
+
+## Desafio Prático: PetShop API
+
+Hora de voar com as próprias asas! Aplique TUDO do Produto em um domínio novo. Tente sozinho antes de espiar!
+
+════════════════════════════════════════ DESAFIO: INTRO ════════════════════════════════════════
+
+🐶 🐱 🦜 🐰
+
+Sistema de PetShop
+
+Você vai construir uma API REST para gerenciar Tutores e seus Pets, aplicando exatamente o mesmo padrão profissional que aprendeu no Produto!
+
+### 🎯 O que você vai construir
+
+📋 Entidades do sistema
+
+Duas entidades simples com um relacionamento @ManyToOne — exatamente como Produto e Fornecedor!
+
+🧑 Tutor
+
+id, nomeCompleto, email, telefone
+A pessoa dona dos pets — equivalente ao Fornecedor
+
+🐶 Pet
+
+id, nome, raca, idade, especie, tutor (FK)
+Cada pet pertence a um tutor — @ManyToOne, igual Produto → Fornecedor!
+
+#### 📍 Endpoints que você vai implementar
+
+🧑 Tutor
+Método | URL | Ação | Status
+
+POST | `/tutores` | Cadastrar tutor | 201
+GET | `/tutores` | Listar todos | 200
+GET | `/tutores/{id}` | Buscar por id | 200
+PUT | `/tutores/{id}` | Atualizar tutor | 200
+DELETE | `/tutores/{id}` | Deletar tutor | 204
+
+🐶 Pet
+Método | URL | Ação | Status
+
+POST | `/pets` | Cadastrar pet | 201
+GET | `/pets` | Listar todos | 200
+GET | `/pets/{id}` | Buscar por id | 200
+PUT | `/pets/{id}` | Atualizar pet | 200
+DELETE | `/pets/{id}` | Deletar pet | 204
+
+💪
+Você JÁ SABE TUDO ISSO! Não tem NADA novo neste capítulo — só vamos repetir o padrão do Produto em um domínio diferente. Essa repetição é o que vai consolidar o conhecimento.
+
+Como aproveitar o desafio
+
+### 📌 Como aproveitar este desafio (LEIA com atenção!)
+
+Cada seção daqui pra frente segue a mesma estrutura:
+
+1
+📖 LEIA a Dica — cada seção começa com uma dica curta explicando O QUE fazer, com referência direta ao código equivalente em Produto/Fornecedor.
+
+2
+📂 ABRA o material do Produto numa aba ao lado — use ele como referência. Não decore, COMPARE!
+
+3
+⌨️ TENTE escrever sozinho — abra o IntelliJ e escreva o seu código. Errar é parte do processo!
+
+4
+👀 SÓ DEPOIS clique em "Ver código completo" — pra conferir e ajustar. Quem espia antes de tentar perde a maior parte do aprendizado!
+
+🚨
+Promessa para você mesmo: "Vou tentar TODA seção antes de abrir o toggler. Se travar, releio o capítulo de Produto antes de espiar a resposta!" 🤝
+
+════════════════════════════════════════ DESAFIO: SETUP ════════════════════════════════════════
+
+🍃
+
+Setup do Projeto PetShop
+
+Spring Initializr + application.properties
+
+Esse é um projeto NOVO, separado do que viemos fazendo! Você vai criá-lo do zero — exatamente como fez no início do curso para o sistema de gestão.
+
+#### 1️⃣ Acesse o Spring Initializr
+
+Abra start.spring.io e preencha exatamente assim:
+
+⚡ Truque: Preencha apenas Group e Artifact — o Spring Initializr auto-completa o Name, o Description e o Package name automaticamente!
+
+📦 Project
+
+Maven
+
+☕ Language
+
+Java
+
+🍃 Spring Boot
+
+Versão estável mais recente (não SNAPSHOT!)
+
+📂 Group
+
+`br.com.petshop` ← você digita
+
+📄 Artifact
+
+`api` ← você digita
+
+🏷️ Name
+
+`api` ✨ auto
+
+📦 Package name
+
+`br.com.petshop.api` ✨ auto
+
+📝 Description
+
+Demo project for Spring Boot ✨ auto
+
+📦 Packaging
+
+Jar ⚠️ confira!
+
+☕ Java
+
+21 ⚠️ confira!
+
+📦
+Por que Packaging = Jar? Aplicações Spring Boot rodam como um Jar executável (com servidor embutido). É o padrão moderno — não escolha War, que é para deploy em servidores externos antigos.
+
+#### 2️⃣ Selecione as Dependências
+
+No botão "Add Dependencies", adicione 5 dependências:
+
+Spring Web
+
+Para criar endpoints REST
+
+Spring Data JPA
+
+Para acessar o banco
+
+PostgreSQL Driver
+
+Driver do PostgreSQL
+
+Lombok
+
+Gera getters/setters automaticamente
+
+Validation
+
+Bean Validation (@NotBlank, @Positive...)
+
+✨
+Diferença esperta: No projeto do sistema de gestão a gente adicionou o `spring-boot-starter-validation` manualmente no `pom.xml` depois (no cap 2). Aqui já vamos pedir tudo de uma vez no Initializr — é mais prático!
+
+#### 3️⃣ Clique em "Generate" e abra no IntelliJ
+
+Vai baixar um `.zip`. Descompacte, abra a pasta no IntelliJ e aguarde o Maven baixar tudo (você vai ver a barrinha embaixo carregando — pode demorar 1-2 minutos na primeira vez).
+
+Project Structure
+
+### 🔧 Conferindo o SDK no IntelliJ — File > Project Structure
+
+Passo MUITO importante! Mesmo escolhendo "Java 21" no Spring Initializr, o IntelliJ pode abrir o projeto com outro SDK instalado na sua máquina. Se isso acontecer, nada de records, lambdas ou Spring Boot vai funcionar! Vamos garantir que o IntelliJ está usando Java 21 mesmo.
+
+#### Como abrir
+
+1
+No IntelliJ, abra o menu File → Project Structure...
+
+2
+Atalho rápido: `⌘ ;` (Mac) ou `Ctrl + Alt + Shift + S` (Windows/Linux)
+
+3
+Na barra lateral esquerda, clique em Project. Deve aparecer essa tela:
+
+Print do IntelliJ
+
+☝️ Assim que tem que estar a sua tela!
+
+#### ✅ Confira esses 2 campos:
+
+📦 SDK
+
+corretto-21 (ou qualquer Java 21 — pode ser `temurin-21`, `openjdk-21` etc). Se aparecer Java 8, 11 ou 17, tem que trocar!
+
+🎯 Language level
+
+21 — Record patterns, pattern matching for switch. Se aparecer outro número, tem que trocar!
+
+#### 🔧 E se estiver errado? Como corrigir:
+
+SDK errado?
+Clique no dropdown do SDK → Add SDK → Download JDK.... Em "Version" escolha 21 e em "Vendor" escolha Amazon Corretto (ou Eclipse Temurin). Clique em Download e aguarde.
+
+Language level errado?
+Clique no dropdown do Language level e selecione "21 - Record patterns, pattern matching for switch". Pronto.
+
+Depois de ajustar:
+Clique em Apply → OK. O IntelliJ vai reindexar o projeto (espere a barrinha embaixo terminar) e tudo já passa a funcionar com Java 21!
+
+🎯
+Por que isso é tão importante? Java 21 traz `record`, `switch expressions`, `text blocks` e várias outras features modernas que vamos usar. Se o IntelliJ estiver configurado para uma versão antiga, ele vai marcar tudo isso como erro mesmo que o código esteja correto. Por isso confira ANTES de começar a codar!
+
+⚠️
+Vale para todo projeto novo! Toda vez que você criar um novo projeto Spring (ou abrir um projeto que veio do colega), confira o Project Structure. É costume profissional!
+
+application.properties
+
+### ⚙️ Configurando o application.properties
+
+É o arquivo que diz para o Spring como conectar ao banco e outras configurações. Fica em `src/main/resources/application.properties`.
+
+src/main/resources/application.properties
+
+```
+
+# Nome da aplicação
+spring.application.name=petshop-api
+
+# Conexão com PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/petshop
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Hibernate (cria/atualiza tabelas automaticamente)
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+🔑
+Atenção na senha! Coloque a senha que você usou ao instalar o PostgreSQL — pode ser `postgres`, `123`, `admin`, etc. Se o app não conectar, o erro vai ser de autenticação.
+
+🐳
+Está usando Docker? Se subiu o PostgreSQL com docker-compose, use a senha que você definiu no docker-compose.yml. A URL `localhost:5432` funciona normalmente.
+
+Estrutura de pastas
+
+### 📂 Estrutura de pacotes que você vai montar
+
+Esta é a estrutura final do projeto — você vai criar os arquivos passo a passo. É a MESMA estrutura do projeto sistema-gestao no cap 2!
+
+Dentro de br.com.petshop.api
+
+```
+
+br.com.petshop.api/
+├── 📄 ApiApplication.java       ← já vem pronto!
+├── 📁 enums/
+│   └── EspeciePetEnum.java
+├── 📁 model/
+│   ├── Tutor.java
+│   └── Pet.java
+├── 📁 dto/
+│   ├── 📁 tutor/
+│   │   ├── TutorRequestDTO.java
+│   │   └── TutorResponseDTO.java
+│   └── 📁 pet/
+│       ├── PetRequestDTO.java
+│       └── PetResponseDTO.java
+├── 📁 mapper/
+│   ├── TutorMapper.java
+│   └── PetMapper.java
+├── 📁 repository/
+│   ├── TutorRepository.java
+│   └── PetRepository.java
+├── 📁 service/
+│   ├── TutorService.java          ← interface
+│   ├── TutorServiceImpl.java      ← implementação
+│   ├── PetService.java            ← interface
+│   └── PetServiceImpl.java        ← implementação
+└── 📁 controller/
+    ├── TutorController.java
+    └── PetController.java
+```
+
+🎯
+Repare na repetição: a estrutura é idêntica ao projeto sistema-gestao após o cap 2. Os pacotes `enums`, `dto`, `mapper`, `service/impl` são o "padrão profissional" que você está aprendendo a aplicar em qualquer projeto Spring!
+
+════════════════════════════════════════ DESAFIO: CRIAR BANCO NO DBEAVER ════════════════════════════════════════
+
+🦫
+
+Criar o banco "petshop" no DBeaver
+
+Antes de rodar — sem isso, NADA funciona!
+
+⚠️
+Erro mais comum aqui: rodar a aplicação sem ter criado o banco antes. O Spring cria as tabelas automaticamente, mas NÃO cria o banco! É como ter um armário lindo mas esquecer de comprar o armário primeiro. 🪑
+
+🔁 Lembra do início do curso?
+
+No tour do PostgreSQL, criamos o banco `bd_sistema_gestao`. Aqui é a mesma coisa, só muda o nome: `petshop`!
+
+#### 📋 Passo a passo no DBeaver
+
+1
+Abra o DBeaver e conecte na sua instância PostgreSQL local (a mesma que você usa pro projeto sistema-gestao).
+
+2
+Na árvore lateral, expanda a conexão e clique com o botão direito em "Databases" → Create New Database.
+
+3
+Em Database name, digite `petshop` (tudo minúsculo, sem espaços). Clique em OK.
+
+4
+O banco aparece na lista. Pronto! Agora pode rodar a aplicação Spring que ela vai conectar e criar as tabelas sozinha via `ddl-auto=update`.
+
+#### 💻 Alternativa: criar via SQL
+
+Se preferir, abra um SQL Editor no DBeaver (clicando na conexão e indo em "SQL Editor") e rode:
+
+SQL
+
+```
+
+CREATE DATABASE petshop;
+```
+
+🎬
+Conferiu que criou? Clique com o botão direito em "Databases" → "Refresh". O `petshop` deve aparecer na lista. Se aparecer, partiu codar! 🚀
+
+════════════════════════════════════════ DESAFIO: FLUXOGRAMA ORDEM DE CONSTRUÇÃO ════════════════════════════════════════
+
+🗺️
+
+A Ordem de Construção — siga sempre nessa sequência!
+
+Antes de codar, entenda a ordem em que cada arquivo deve ser criado
+
+Construir uma API tem uma ordem natural — cada camada depende da anterior. Se você tentar fazer fora de ordem, não vai compilar!
+
+Para cada entidade do PetShop (Tutor e Pet), siga esta sequência de 8 passos:
+
+1
+
+🏷️
+
+Enum
+
+Valores fixos (ex: espécies de pet) — primeiro pacote do projeto
+
+↓
+
+2
+
+🗄️
+
+Model (Entidade)
+
+Classe Java que vira tabela no banco — usa @Entity, @Table, @Id
+
+↓
+
+3
+
+📦
+
+DTOs (Request + Response)
+
+Records que o front envia e recebe — com validações @NotBlank etc
+
+↓
+
+4
+
+🔄
+
+Mapper
+
+Converte DTO ↔ Entidade — métodos estáticos toEntity/toResponseDTO
+
+↓
+
+5
+
+🗃️
+
+Repository
+
+Acesso ao banco — interface que herda JpaRepository
+
+↓
+
+6
+
+📋
+
+Service (Interface)
+
+O contrato — diz QUAIS métodos o CRUD vai ter
+
+↓
+
+7
+
+⚙️
+
+ServiceImpl
+
+A implementação — onde a LÓGICA acontece de verdade
+
+↓
+
+8
+
+🎮
+
+Controller
+
+Endpoints REST — POST, GET, PUT, DELETE expostos pra rede
+
+💡
+Por que essa ordem importa? Cada camada depende da anterior. Você não pode fazer o Repository sem o Model, nem o ServiceImpl sem a Interface. Seguir esta ordem evita erros de compilação e te força a pensar passo a passo!
+
+🐾
+Estratégia neste desafio: Vamos seguir essa sequência de 1 a 8 PRIMEIRO completinho para o Tutor (do passo 2 ao 8), e SÓ DEPOIS repetir tudo para o Pet. Assim você entende um CRUD inteiro de ponta a ponta antes de começar o próximo. Bem mais didático! 🎯
+
+════════════════════════════════════════ DESAFIO: ENUM ESPECIE ════════════════════════════════════════
+
+🐾 1
+
+Enum — EspeciePetEnum
+
+Os tipos de pet aceitos no sistema
+
+💡 Dica para fazer sozinho
+
+É EXATAMENTE igual ao `CategoriaProdutoEnum` que você criou em Produto (cap 2.1)! Crie o pacote `enums` (fora de model), e dentro coloque um arquivo `EspeciePetEnum.java`. É um `public enum` com os valores `CACHORRO, GATO, PASSARO, ROEDOR, OUTROS` separados por vírgula. Tudo MAIÚSCULAS. Sem método nenhum dentro!
+
+🚨
+
+PARE! Tente sozinho primeiro. Abra o cap 2.1 numa aba ao lado e use o `CategoriaProdutoEnum` como referência. Você consegue — é só trocar os nomes!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+enums/EspeciePetEnum.javaJava
+
+```
+
+package br.com.petshop.api.enums;
+
+public enum EspeciePetEnum {
+
+    CACHORRO,
+    GATO,
+    PASSARO,
+    ROEDOR,
+    OUTROS
+}
+```
+
+ENTITY DIVIDER: TUTOR
+
+🧑 Construindo o TUTOR — passos 2 a 8
+
+Vamos fazer o CRUD completo do Tutor primeiro. Depois repetimos tudo para o Pet!
+
+════════════════════════════════════════ DESAFIO: TUTOR MODEL ════════════════════════════════════════
+
+🧑 2
+
+Model — Tutor.java
+
+A entidade da pessoa dona dos pets
+
+💡 Dica para fazer sozinho
+
+O Tutor segue o MESMO PADRÃO do `Fornecedor` do cap 1! Crie a classe com `@NoArgsConstructor`, `@AllArgsConstructor`, `@Data`, `@Table(name="tutor")` e `@Entity`. Os campos: id (Long, com `@Id` e `@GeneratedValue(strategy = IDENTITY)`), nomeCompleto, email, telefone (todos String, com `@Column(nullable = false)`).
+
+🚨
+
+NÃO clique no toggler ainda! Abra `Fornecedor.java` do cap 1.1 e use como base — basicamente é trocar os nomes dos campos!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+model/Tutor.javaJava
+
+```
+
+package br.com.petshop.api.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name = "tutor")
+@Entity
+public class Tutor {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nome_completo", nullable = false)
+    private String nomeCompleto;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "telefone", nullable = false)
+    private String telefone;
+}
+```
+
+════════════════════════════════════════ DESAFIO: TUTOR DTOs ════════════════════════════════════════
+
+🧑 3
+
+DTOs — TutorRequestDTO e TutorResponseDTO
+
+Records com Bean Validation
+
+💡 Dica para fazer sozinho
+
+Crie `dto/tutor/TutorRequestDTO.java` e `dto/tutor/TutorResponseDTO.java` como records. Para o Request, não inclua o id e use `@NotBlank` em `nomeCompleto`, `email` e `telefone`. Para o Response, inclua o id. É identicamente o que você fez em `ProdutoRequestDTO/ResponseDTO` no cap 2.3.
+
+🚨
+
+Lembre-se: em record o nome dos campos é só o tipo + nome, separado por vírgula. `public record TutorRequestDTO(String nomeCompleto, ...)`.
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+dto/tutor/TutorRequestDTO.javaJava
+
+```
+
+package br.com.petshop.api.dto.tutor;
+
+import jakarta.validation.constraints.NotBlank;
+
+public record TutorRequestDTO(
+
+        @NotBlank(message = "O nome completo é obrigatório")
+        String nomeCompleto,
+
+        @NotBlank(message = "O e-mail é obrigatório")
+        String email,
+
+        @NotBlank(message = "O telefone é obrigatório")
+        String telefone
+) {}
+```
+
+dto/tutor/TutorResponseDTO.javaJava
+
+```
+
+package br.com.petshop.api.dto.tutor;
+
+public record TutorResponseDTO(
+        Long id,
+        String nomeCompleto,
+        String email,
+        String telefone
+) {}
+```
+
+▶️ DEMO ANIMADO: Como o front USA o TutorDTO
+
+🎬 Como o frontend (React) usa o TutorDTO 🔄 Replay
+
+👇 Pense numa página de cadastro de Tutor do PetShop! Cada campo do form vira um campo do DTO automaticamente:
+
+🔒petshop.com/tutores/novo
+
+📝 Novo Tutor
+
+Nome completo
+
+E-mail
+
+Telefone
+💾 Cadastrar tutor
+
+JSON
+
+POST /tutores
+
+📦 TutorRequestDTO
+
+```
+public record TutorRequestDTO(
+  String nomeCompleto,
+  String email,
+  String telefone
+) {}
+```
+
+⚙️ Backend salva e responde com a lista...
+
+📦 TutorResponseDTO
+
+```
+public record TutorResponseDTO(
+  Long id,
+  String nomeCompleto,
+  String email,
+  String telefone
+) {}
+```
+
+JSON
+
+200 OK
+
+🔒petshop.com/tutores
+
+📋 Tutores cadastrados
+
+ID | Nome | E-mail
+
+1 | Ana Silva | ana@email.com
+2 | Carlos Souza | carlos@...
+3 | Beatriz Lima | bia@...
+
+🎯
+É EXATAMENTE como no Produto! Repare que o padrão se repete: campos do form ↔ campos do DTO ↔ JSON HTTP. Por isso falamos que o DTO é o "molde do JSON"!
+
+════════════════════════════════════════ DESAFIO: TUTOR MAPPER ════════════════════════════════════════
+
+🧑 4
+
+Mapper — TutorMapper.java
+
+Convertendo DTO ↔ Entidade
+
+💡 Dica para fazer sozinho
+
+Use o `ProdutoMapper` do cap 2.4 como referência! Dois métodos estáticos: `toEntity(TutorRequestDTO dto)` que retorna um Tutor, e `toResponseDTO(Tutor tutor)` que retorna um TutorResponseDTO. Aqui é até mais simples que o ProdutoMapper, porque o Tutor não tem entidade relacionada (não tem o "Fornecedor" do meio)!
+
+🚨
+
+Lembrete: no record usamos `dto.nome()` (sem "get"), na entidade com Lombok usamos `tutor.getNome()` (com "get"). Não confunda!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+mapper/TutorMapper.javaJava
+
+```
+
+package br.com.petshop.api.mapper;
+
+import br.com.petshop.api.dto.tutor.TutorRequestDTO;
+import br.com.petshop.api.dto.tutor.TutorResponseDTO;
+import br.com.petshop.api.model.Tutor;
+
+public class TutorMapper {
+
+    // RequestDTO → Entidade
+    public static Tutor toEntity(TutorRequestDTO dto) {
+
+        Tutor tutor = new Tutor();
+
+        tutor.setNomeCompleto(dto.nomeCompleto());
+        tutor.setEmail(dto.email());
+        tutor.setTelefone(dto.telefone());
+
+        return tutor;
+    }
+
+    // Entidade → ResponseDTO
+    public static TutorResponseDTO toResponseDTO(Tutor tutor) {
+
+        return new TutorResponseDTO(
+                tutor.getId(),
+                tutor.getNomeCompleto(),
+                tutor.getEmail(),
+                tutor.getTelefone()
+        );
+    }
+}
+```
+
+════════════════════════════════════════ DESAFIO: TUTOR REPOSITORY ════════════════════════════════════════
+
+🧑 5
+
+Repository — TutorRepository.java
+
+Você já faz isso de olhos fechados!
+
+💡 Dica para fazer sozinho
+
+Uma interface (não classe!) com `@Repository` que `extends JpaRepository<Tutor, Long>`. Vazia por dentro — exatamente como `ProdutoRepository` do cap 2.5!
+
+🚨
+
+São literalmente 9 linhas. Abra `ProdutoRepository.java` do cap 2.5 e duplique trocando o nome. Você consegue!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+repository/TutorRepository.javaJava
+
+```
+
+package br.com.petshop.api.repository;
+
+import br.com.petshop.api.model.Tutor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface TutorRepository extends JpaRepository<Tutor, Long> {
+}
+```
+
+════════════════════════════════════════ DESAFIO: TUTOR SERVICE INTERFACE ════════════════════════════════════════
+
+🧑 6
+
+Service — Interface TutorService.java
+
+O contrato — apenas as assinaturas dos métodos
+
+💡 Dica para fazer sozinho
+
+Uma interface (não classe!) com 5 métodos — criar, listar, buscar por id, atualizar, deletar. Trabalhando com DTOs, não entidades. Exatamente como `ProdutoService` do cap 2.6!
+
+🚨
+
+Atenção: interface não tem corpo de método nem `@Service` — só as assinaturas terminadas com `;`. Olhe `ProdutoService.java` pra confirmar!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+service/TutorService.javaJava
+
+```
+
+package br.com.petshop.api.service;
+
+import br.com.petshop.api.dto.tutor.TutorRequestDTO;
+import br.com.petshop.api.dto.tutor.TutorResponseDTO;
+
+import java.util.List;
+
+public interface TutorService {
+
+    TutorResponseDTO criarTutor(TutorRequestDTO dto);
+
+    List<TutorResponseDTO> listarTodosTutores();
+
+    TutorResponseDTO buscarTutorPorId(Long id);
+
+    TutorResponseDTO atualizarTutorPorId(Long id, TutorRequestDTO dto);
+
+    void deletarTutorPorId(Long id);
+}
+```
+
+════════════════════════════════════════ DESAFIO: TUTOR SERVICE IMPL ════════════════════════════════════════
+
+🧑 7
+
+ServiceImpl — TutorServiceImpl.java
+
+A implementação real — onde a lógica acontece
+
+💡 Dica para fazer sozinho
+
+Coloque a classe no mesmo pacote `service` (ao lado da interface — sem subpasta!). Use `@Service`, `@RequiredArgsConstructor` e `private final TutorRepository`. Implemente os 5 métodos. Nos que buscam por id, use `orElseThrow` com lambda para 404. Na listagem, use `stream().map(TutorMapper::toResponseDTO).toList()`. Igualzinho ao `ProdutoServiceImpl` do cap 2.7 — só sem o segundo Repository!
+
+🚨
+
+Atenção: o TutorServiceImpl é mais simples que o ProdutoServiceImpl porque o Tutor não tem entidade relacionada — só 1 Repository (TutorRepository). Use o ProdutoServiceImpl como base, mas ignore a parte do FornecedorRepository!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+service/TutorServiceImpl.javaJava
+
+```
+
+package br.com.petshop.api.service;
+
+import br.com.petshop.api.dto.tutor.TutorRequestDTO;
+import br.com.petshop.api.dto.tutor.TutorResponseDTO;
+import br.com.petshop.api.mapper.TutorMapper;
+import br.com.petshop.api.model.Tutor;
+import br.com.petshop.api.repository.TutorRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class TutorServiceImpl implements TutorService {
+
+    private final TutorRepository tutorRepository;
+
+    @Override
+    public TutorResponseDTO criarTutor(TutorRequestDTO dto) {
+
+        Tutor tutor = TutorMapper.toEntity(dto);
+        tutorRepository.save(tutor);
+
+        return TutorMapper.toResponseDTO(tutor);
+    }
+
+    @Override
+    public List<TutorResponseDTO> listarTodosTutores() {
+
+        return tutorRepository.findAll()
+                .stream()
+                .map(TutorMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public TutorResponseDTO buscarTutorPorId(Long id) {
+
+        Tutor tutor = tutorRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Tutor não encontrado"));
+
+        return TutorMapper.toResponseDTO(tutor);
+    }
+
+    @Override
+    public TutorResponseDTO atualizarTutorPorId(Long id, TutorRequestDTO dto) {
+
+        Tutor tutor = tutorRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Tutor não encontrado"));
+
+        tutor.setNomeCompleto(dto.nomeCompleto());
+        tutor.setEmail(dto.email());
+        tutor.setTelefone(dto.telefone());
+
+        tutorRepository.save(tutor);
+
+        return TutorMapper.toResponseDTO(tutor);
+    }
+
+    @Override
+    public void deletarTutorPorId(Long id) {
+
+        Tutor tutor = tutorRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Tutor não encontrado"));
+
+        tutorRepository.deleteById(tutor.getId());
+    }
+}
+```
+
+════════════════════════════════════════ DESAFIO: TUTOR CONTROLLER ════════════════════════════════════════
+
+🧑 8
+
+Controller — TutorController.java
+
+Endpoints REST com @Valid — fechando o CRUD do Tutor!
+
+💡 Dica para fazer sozinho
+
+Use `@RestController`, `@RequestMapping("/tutores")`, `@RequiredArgsConstructor` e `private final TutorService`. Nos métodos POST e PUT use `@Valid @RequestBody` para ativar as validações. Idêntico ao ProdutoController do cap 2.8!
+
+🚨
+
+Não esqueça do @Valid! Sem ele, suas validações @NotBlank etc não fazem nada. É como ligar o segurança e esquecer de pedir pra ele conferir os ingressos!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+controller/TutorController.javaJava
+
+```
+
+package br.com.petshop.api.controller;
+
+import br.com.petshop.api.dto.tutor.TutorRequestDTO;
+import br.com.petshop.api.dto.tutor.TutorResponseDTO;
+import br.com.petshop.api.service.TutorService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/tutores")
+@RequiredArgsConstructor
+public class TutorController {
+
+    private final TutorService tutorService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TutorResponseDTO criarTutor(@Valid @RequestBody TutorRequestDTO dto) {
+        return tutorService.criarTutor(dto);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<TutorResponseDTO> listarTodosTutores() {
+        return tutorService.listarTodosTutores();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TutorResponseDTO buscarTutorPorId(@PathVariable Long id) {
+        return tutorService.buscarTutorPorId(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TutorResponseDTO atualizarTutorPorId(@PathVariable Long id,
+                                                   @Valid @RequestBody TutorRequestDTO dto) {
+        return tutorService.atualizarTutorPorId(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarTutorPorId(@PathVariable Long id) {
+        tutorService.deletarTutorPorId(id);
+    }
+}
+```
+
+🎉 Tutor concluído!
+
+Você acabou de fazer um CRUD completo do Tutor — Model, DTOs, Mapper, Repository, Service, ServiceImpl e Controller. Suba a aplicação e teste no Insomnia se quiser antes de partir pro Pet (rola na seção 🦋 mais à frente). Agora vamos repetir tudo para o Pet, seguindo a MESMA sequência de 8 passos!
+
+▶️ DEMO ANIMADO: Controller → Página (POST simples Tutor)
+
+🎬 O ciclo completo: cadastrar Tutor via POST 🔄 Replay
+
+👇 Esse fluxo é o "hello world" de qualquer CRUD — o usuário clica e o backend roda essa cascata:
+
+🌐
+
+Página clica "Cadastrar Tutor"
+
+fetch('/tutores', {method:'POST', body: json})
+
+↓
+
+🎮
+
+TutorController valida
+
+@Valid @RequestBody TutorRequestDTO
+
+↓
+
+🔄
+
+TutorMapper.toEntity(dto)
+
+DTO record vira entidade Tutor
+
+↓
+
+⚙️
+
+TutorServiceImpl.save()
+
+tutorRepository.save(tutor)
+
+↓
+
+🐘
+
+PostgreSQL
+
+INSERT INTO tutor (nome, email, telefone)
+
+↓
+
+📤
+
+Controller responde 201 Created
+
+JSON: TutorResponseDTO com id gerado
+
+↓
+
+✨
+
+Página mostra "Tutor cadastrado!"
+
+toast.success(json.nomeCompleto)
+
+🎯
+Memorize esse fluxo! Página → Controller → (Mapper) → ServiceImpl → Repository → Banco → Mapper → JSON → Página. Esse é o "caminho de ouro" que se repete em TODA operação POST de qualquer API REST que você for fazer no futuro!
+
+ENTITY DIVIDER: PET
+
+🐶 Construindo o PET — passos 2 a 8
+
+Mesma sequência de 8 passos! O Pet é o "Produto" deste desafio — usa @ManyToOne pro Tutor.
+
+════════════════════════════════════════ DESAFIO: PET MODEL ════════════════════════════════════════
+
+🐶 2
+
+Model — Pet.java
+
+A entidade Pet com Enum e @ManyToOne pro Tutor
+
+💡 Dica para fazer sozinho
+
+O Pet é o "Produto" deste desafio — segue EXATAMENTE a estrutura de `Produto.java` do cap 2.2! Os campos: id, nome, raca, idade (Integer), especie (EspeciePetEnum com `@Enumerated(EnumType.STRING)`) e tutor (Tutor com `@ManyToOne` + `@JoinColumn(name = "tutor_id")`).
+
+🚨
+
+Pare! Abra `Produto.java` do cap 2.2 — você vai ver que o Pet é literalmente uma cópia trocando: `preco/quantidadeEstoque` por `raca/idade`, `CategoriaProdutoEnum` por `EspeciePetEnum`, e `Fornecedor` por `Tutor`!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+model/Pet.javaJava
+
+```
+
+package br.com.petshop.api.model;
+
+import br.com.petshop.api.enums.EspeciePetEnum;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name = "pet")
+@Entity
+public class Pet {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nome", nullable = false)
+    private String nome;
+
+    @Column(name = "raca", nullable = false)
+    private String raca;
+
+    @Column(name = "idade", nullable = false)
+    private Integer idade;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "especie", nullable = false)
+    private EspeciePetEnum especie;
+
+    @ManyToOne
+    @JoinColumn(name = "tutor_id", nullable = false)
+    private Tutor tutor;
+}
+```
+
+════════════════════════════════════════ DESAFIO: PET DTOs ════════════════════════════════════════
+
+🐶 3
+
+DTOs — PetRequestDTO e PetResponseDTO
+
+Com tutorId e tutorNomeCompleto extra (igual fornecedorId/Nome do Produto!)
+
+💡 Dica para fazer sozinho
+
+Idêntico ao `ProdutoRequestDTO/ResponseDTO`! No Request: `nome`, `raca`, `idade`, `especie` e `tutorId` (Long, não o objeto Tutor). Use `@NotBlank` nas Strings, `@NotNull` + `@PositiveOrZero` em idade, `@NotNull` em especie e tutorId. No Response: id, todos os campos + tutorNomeCompleto (extra, igual `fornecedorNome` no Produto!).
+
+🚨
+
+Abra o `ProdutoRequestDTO` e o `ProdutoResponseDTO` do cap 2.3 — você está fazendo a mesma coisa, só trocando os nomes!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+dto/pet/PetRequestDTO.javaJava
+
+```
+
+package br.com.petshop.api.dto.pet;
+
+import br.com.petshop.api.enums.EspeciePetEnum;
+import jakarta.validation.constraints.*;
+
+public record PetRequestDTO(
+
+        @NotBlank(message = "O nome do pet é obrigatório")
+        String nome,
+
+        @NotBlank(message = "A raça é obrigatória")
+        String raca,
+
+        @NotNull(message = "A idade é obrigatória")
+        @PositiveOrZero(message = "A idade não pode ser negativa")
+        Integer idade,
+
+        @NotNull(message = "A espécie é obrigatória")
+        EspeciePetEnum especie,
+
+        @NotNull(message = "O ID do tutor é obrigatório")
+        Long tutorId
+) {}
+```
+
+dto/pet/PetResponseDTO.javaJava
+
+```
+
+package br.com.petshop.api.dto.pet;
+
+import br.com.petshop.api.enums.EspeciePetEnum;
+
+public record PetResponseDTO(
+        Long id,
+        String nome,
+        String raca,
+        Integer idade,
+        EspeciePetEnum especie,
+        Long tutorId,
+        String tutorNomeCompleto
+) {}
+```
+
+✨ Por que `tutorId` e não o objeto Tutor inteiro?
+
+É o mesmo motivo do `fornecedorId` no ProdutoRequestDTO! O front só envia o ID (um número). Quem busca o objeto Tutor completo no banco é o PetServiceImpl. E o `tutorNomeCompleto` no Response é a mesma ideia do `fornecedorNome`: dado extra pra facilitar a vida do front!
+
+▶️ DEMO ANIMADO: Como o front USA o PetDTO
+
+🎬 Como o frontend (React) usa o PetDTO 🔄 Replay
+
+👇 No formulário, o usuário escolhe o tutor num dropdown — só vai o ID. Mas no Response, o backend devolve o nome do tutor pronto pra exibir!
+
+🔒petshop.com/pets/novo
+
+🐾 Cadastrar Pet
+
+Nome
+
+Raça
+
+Idade
+
+Espécie
+
+Tutor (selecionado no dropdown)
+💾 Salvar pet
+
+JSON
+
+POST /pets
+
+📦 PetRequestDTO
+
+```
+public record PetRequestDTO(
+  String nome,
+  String raca,
+  Integer idade,
+  EspeciePetEnum especie,
+  Long tutorId
+) {}
+```
+
+⚙️ Backend busca o Tutor pelo ID, salva o Pet, devolve com o nome do tutor...
+
+📦 PetResponseDTO
+
+```
+public record PetResponseDTO(
+  Long id,
+  String nome,
+  String raca,
+  Integer idade,
+  EspeciePetEnum especie,
+  Long tutorId,
+  String tutorNomeCompleto
+) {}
+```
+
+JSON
+
+200 OK
+
+🔒petshop.com/pets
+
+🐶 Pets do PetShop
+
+ID | Pet | Raça | Tutor
+
+1 | Rex 🐕 | Golden Retriever | Ana Silva
+2 | Mia 🐈 | SRD | Carlos Souza
+3 | Loro 🦜 | Calopsita | Beatriz Lima
+
+🎯
+Compare com o Produto! Lá era `fornecedorId` + `fornecedorNome` extra. Aqui é `tutorId` + `tutorNomeCompleto` extra. O padrão se repete sempre que tem @ManyToOne!
+
+════════════════════════════════════════ DESAFIO: PET MAPPER ════════════════════════════════════════
+
+🐶 4
+
+Mapper — PetMapper.java
+
+Igualzinho ao ProdutoMapper!
+
+💡 Dica para fazer sozinho
+
+Esse é cópia carbono do `ProdutoMapper` do cap 2.4! O `toEntity` recebe dois parâmetros: `(PetRequestDTO dto, Tutor tutor)` — porque o DTO só tem o tutorId, mas a entidade Pet precisa do objeto Tutor inteiro. O `toResponseDTO` usa `pet.getTutor().getId()` e `pet.getTutor().getNomeCompleto()` pra extrair o id e nome do tutor.
+
+🚨
+
+É EXATAMENTE o ProdutoMapper trocando palavras! Abre lá e segue a estrutura — você já fez isso uma vez, lembra como é!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+mapper/PetMapper.javaJava
+
+```
+
+package br.com.petshop.api.mapper;
+
+import br.com.petshop.api.dto.pet.PetRequestDTO;
+import br.com.petshop.api.dto.pet.PetResponseDTO;
+import br.com.petshop.api.model.Pet;
+import br.com.petshop.api.model.Tutor;
+
+public class PetMapper {
+
+    // RequestDTO + Tutor → Pet (entidade)
+    public static Pet toEntity(PetRequestDTO dto, Tutor tutor) {
+
+        Pet pet = new Pet();
+
+        pet.setNome(dto.nome());
+        pet.setRaca(dto.raca());
+        pet.setIdade(dto.idade());
+        pet.setEspecie(dto.especie());
+        pet.setTutor(tutor);   // objeto completo, não o ID!
+
+        return pet;
+    }
+
+    // Pet (entidade) → ResponseDTO
+    public static PetResponseDTO toResponseDTO(Pet pet) {
+
+        return new PetResponseDTO(
+                pet.getId(),
+                pet.getNome(),
+                pet.getRaca(),
+                pet.getIdade(),
+                pet.getEspecie(),
+                pet.getTutor().getId(),
+                pet.getTutor().getNomeCompleto()
+        );
+    }
+}
+```
+
+════════════════════════════════════════ DESAFIO: PET REPOSITORY ════════════════════════════════════════
+
+🐶 5
+
+Repository — PetRepository.java
+
+Igualzinho ao TutorRepository — só muda a entidade!
+
+💡 Dica para fazer sozinho
+
+Uma interface com `@Repository` que `extends JpaRepository<Pet, Long>`. Vazia por dentro. Idêntico ao TutorRepository que você acabou de fazer!
+
+🚨
+
+Você acabou de fazer o `TutorRepository` agora há pouco. Faça igual!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+repository/PetRepository.javaJava
+
+```
+
+package br.com.petshop.api.repository;
+
+import br.com.petshop.api.model.Pet;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface PetRepository extends JpaRepository<Pet, Long> {
+}
+```
+
+════════════════════════════════════════ DESAFIO: PET SERVICE INTERFACE ════════════════════════════════════════
+
+🐶 6
+
+Service — Interface PetService.java
+
+5 métodos, igual ao TutorService — só muda os tipos!
+
+💡 Dica para fazer sozinho
+
+Uma interface com 5 métodos do CRUD trabalhando com DTOs (`PetRequestDTO` e `PetResponseDTO`). Idêntico ao TutorService que você acabou de fazer!
+
+🚨
+
+Pega o TutorService que você acabou de criar e troca `Tutor` por `Pet` nos nomes — pronto!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+service/PetService.javaJava
+
+```
+
+package br.com.petshop.api.service;
+
+import br.com.petshop.api.dto.pet.PetRequestDTO;
+import br.com.petshop.api.dto.pet.PetResponseDTO;
+
+import java.util.List;
+
+public interface PetService {
+
+    PetResponseDTO criarPet(PetRequestDTO dto);
+
+    List<PetResponseDTO> listarTodosPets();
+
+    PetResponseDTO buscarPetPorId(Long id);
+
+    PetResponseDTO atualizarPetPorId(Long id, PetRequestDTO dto);
+
+    void deletarPetPorId(Long id);
+}
+```
+
+════════════════════════════════════════ DESAFIO: PET SERVICE IMPL ════════════════════════════════════════
+
+🐶 7
+
+ServiceImpl — PetServiceImpl.java
+
+A parte mais importante — agora com 2 Repositories!
+
+💡 Dica para fazer sozinho
+
+Coloque no mesmo pacote `service` (sem subpasta!). Use `@Service`, `@RequiredArgsConstructor` e DOIS `private final`: `PetRepository` E `TutorRepository` (precisa do segundo pra buscar o Tutor pelo ID que veio no DTO!). Use `orElseThrow` com lambda. É EXATAMENTE o ProdutoServiceImpl do cap 2.7 — só trocando os nomes!
+
+🚨
+
+Esta é a parte mais importante do desafio! Abra o `ProdutoServiceImpl` e tente reproduzir a estrutura inteira pro Pet. Em `orElseThrow(() -> new ResponseStatusException(...))`, troque "Produto não encontrado" por "Pet não encontrado".
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+service/PetServiceImpl.javaJava
+
+```
+
+package br.com.petshop.api.service;
+
+import br.com.petshop.api.dto.pet.PetRequestDTO;
+import br.com.petshop.api.dto.pet.PetResponseDTO;
+import br.com.petshop.api.mapper.PetMapper;
+import br.com.petshop.api.model.Pet;
+import br.com.petshop.api.model.Tutor;
+import br.com.petshop.api.repository.PetRepository;
+import br.com.petshop.api.repository.TutorRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class PetServiceImpl implements PetService {
+
+    private final PetRepository petRepository;
+    private final TutorRepository tutorRepository;
+
+    @Override
+    public PetResponseDTO criarPet(PetRequestDTO dto) {
+
+        Tutor tutor = tutorRepository.findById(dto.tutorId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Tutor não encontrado"));
+
+        Pet pet = PetMapper.toEntity(dto, tutor);
+        petRepository.save(pet);
+
+        return PetMapper.toResponseDTO(pet);
+    }
+
+    @Override
+    public List<PetResponseDTO> listarTodosPets() {
+
+        return petRepository.findAll()
+                .stream()
+                .map(PetMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public PetResponseDTO buscarPetPorId(Long id) {
+
+        Pet pet = petRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Pet não encontrado"));
+
+        return PetMapper.toResponseDTO(pet);
+    }
+
+    @Override
+    public PetResponseDTO atualizarPetPorId(Long id, PetRequestDTO dto) {
+
+        Pet pet = petRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Pet não encontrado"));
+
+        Tutor tutor = tutorRepository.findById(dto.tutorId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Tutor não encontrado"));
+
+        pet.setNome(dto.nome());
+        pet.setRaca(dto.raca());
+        pet.setIdade(dto.idade());
+        pet.setEspecie(dto.especie());
+        pet.setTutor(tutor);
+
+        petRepository.save(pet);
+
+        return PetMapper.toResponseDTO(pet);
+    }
+
+    @Override
+    public void deletarPetPorId(Long id) {
+
+        Pet pet = petRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Pet não encontrado"));
+
+        petRepository.deleteById(pet.getId());
+    }
+}
+```
+
+✨ Por que o PetServiceImpl precisa do TutorRepository?
+
+Mesmo motivo do `ProdutoServiceImpl` precisar do `FornecedorRepository`! O DTO traz só o `tutorId` (um Long), mas a entidade Pet precisa do objeto Tutor inteiro pra gravar o relacionamento. Por isso buscamos o Tutor antes — e se ele não existir, devolvemos 404 Not Found automaticamente via `orElseThrow`!
+
+════════════════════════════════════════ DESAFIO: PET CONTROLLER ════════════════════════════════════════
+
+🐶 8
+
+Controller — PetController.java
+
+Endpoints REST com @Valid — fechando o CRUD do Pet!
+
+💡 Dica para fazer sozinho
+
+Use `@RestController`, `@RequestMapping("/pets")`, `@RequiredArgsConstructor` e `private final PetService`. Nos métodos POST e PUT use `@Valid @RequestBody`. Igualzinho ao TutorController que você já fez — só muda o nome!
+
+🚨
+
+Pega o TutorController, troca `Tutor` por `Pet`, e `"/tutores"` por `"/pets"`. Pronto!
+
+👀 Só clique aqui DEPOIS de tentar — Ver código completo ▼
+
+controller/PetController.javaJava
+
+```
+
+package br.com.petshop.api.controller;
+
+import br.com.petshop.api.dto.pet.PetRequestDTO;
+import br.com.petshop.api.dto.pet.PetResponseDTO;
+import br.com.petshop.api.service.PetService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/pets")
+@RequiredArgsConstructor
+public class PetController {
+
+    private final PetService petService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public PetResponseDTO criarPet(@Valid @RequestBody PetRequestDTO dto) {
+        return petService.criarPet(dto);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<PetResponseDTO> listarTodosPets() {
+        return petService.listarTodosPets();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PetResponseDTO buscarPetPorId(@PathVariable Long id) {
+        return petService.buscarPetPorId(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PetResponseDTO atualizarPetPorId(@PathVariable Long id,
+                                               @Valid @RequestBody PetRequestDTO dto) {
+        return petService.atualizarPetPorId(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarPetPorId(@PathVariable Long id) {
+        petService.deletarPetPorId(id);
+    }
+}
+```
+
+🎉 PetShop completo!
+
+Você fez os DOIS CRUDs completos seguindo a sequência didática! Hora de testar tudo no Insomnia 👇
+
+▶️ DEMO ANIMADO: Controller → Página (POST com @ManyToOne!)
+
+🎬 O ciclo completo: cadastrar Pet com @ManyToOne 🔄 Replay
+
+👇 Repare na etapa extra: o backend precisa buscar o Tutor primeiro antes de criar o Pet (porque Pet tem @ManyToOne pra Tutor):
+
+🌐
+
+Página clica "Cadastrar Pet"
+
+JSON com tutorId: 1
+
+↓
+
+🎮
+
+PetController valida
+
+@Valid @RequestBody PetRequestDTO
+
+↓
+
+🔍
+
+PetServiceImpl busca o Tutor
+
+tutorRepository.findById(dto.tutorId()).orElseThrow(...)
+
+↓
+
+🔄
+
+PetMapper.toEntity(dto, tutor)
+
+cria Pet apontando pro Tutor encontrado
+
+↓
+
+🐘
+
+PostgreSQL grava
+
+INSERT INTO pet (..., tutor_id = 1)
+
+↓
+
+📤
+
+Controller responde 201 Created
+
+JSON: id, tutorId, tutorNomeCompleto (extra!)
+
+↓
+
+✨
+
+Página mostra "Pet do(a) Ana cadastrado!"
+
+card aparece com nome do tutor
+
+🔗
+Esse é o "etapa extra" do @ManyToOne! Compare com o Tutor (sem relacionamento, sem etapa de busca). Sempre que tem @ManyToOne, o ServiceImpl precisa buscar a entidade pai primeiro pra garantir que existe e construir a referência. Mesma coisa no Produto → Fornecedor!
+
+════════════════════════════════════════ DESAFIO: TESTANDO NO INSOMNIA ════════════════════════════════════════
+
+🦋
+
+Testando tudo no Insomnia
+
+Hora de ver o PetShop funcionando!
+
+▶️ DEMO ANIMADO: Insomnia ↔ Página (PetShop)
+
+🎬 Insomnia vs Página React do PetShop 🔄 Replay
+
+👇 No futuro, sua API vai ser consumida por um app React. Por enquanto, o Insomnia simula o que o app faria:
+
+🦋
+
+Insomnia (agora)
+
+POST /pets
+Body: { nome, raca, tutorId... }
+[ Send ]
+
+Você desenvolve e testa antes do front existir.
+
+🐶
+
+App PetShop (futuro)
+
+// Tela de cadastro do pet
+<button onClick={async () => {
+await api.post('/pets', form);
+}}>Salvar Pet</button>
+
+No app, o usuário clica e a função roda automática.
+
+A requisição HTTP é a mesma — só muda QUEM dispara:
+POST /pets HTTP/1.1 Spring backend não distingue!
+Por isso testar no Insomnia vale como teste real — quando o front for plugado, vai funcionar igual!
+
+🚀
+Filosofia da API REST: "O backend não sabe (e nem se importa) com quem está conversando — só importa que recebeu uma requisição HTTP válida". É por isso que conseguimos testar o backend isolado, e por isso múltiplos apps (web, mobile, terminal) podem consumir a mesma API.
+
+Rode a aplicação Spring (botão verde no IntelliJ ▶️) e abra o Insomnia. Crie uma pasta PetShop e prepare os requests com a URL base `http://localhost:8080`.
+
+⚠️
+Ordem importa: crie o Tutor primeiro! O Pet precisa apontar pra um `tutorId` que já existe no banco.
+
+1. Criar Tutor
+
+#### POST 1. Criar Tutor
+
+URL: `http://localhost:8080/tutores`
+
+JSON
+
+```
+{
+  "nomeCompleto": "Ana Silva",
+  "email": "ana@email.com",
+  "telefone": "(83) 99999-0000"
+}
+```
+
+Resposta: 201 Created com o Tutor + id gerado. Anote o id! 📝
+
+2. Criar Pet
+
+#### POST 2. Criar Pet (do Tutor id=1)
+
+URL: `http://localhost:8080/pets`
+
+JSON
+
+```
+{
+  "nome": "Rex",
+  "raca": "Golden Retriever",
+  "idade": 3,
+  "especie": "CACHORRO",
+  "tutorId": 1
+}
+```
+
+Resposta: 201 Created com o Pet + tutorNomeCompleto preenchido. ✨
+
+3. Listar
+
+#### GET 3. Listar tudo
+
+`GET /tutores` — todos os tutores
+
+`GET /pets` — todos os pets (com tutorNomeCompleto!)
+
+`GET /tutores/1` e `GET /pets/1` — buscar por id
+
+4. Atualizar
+
+#### PUT 4. Atualizar Pet
+
+URL: `http://localhost:8080/pets/1`
+
+JSON
+
+```
+{
+  "nome": "Rex",
+  "raca": "Labrador",        // mudou a raça!
+  "idade": 4,                // fez aniversário!
+  "especie": "CACHORRO",
+  "tutorId": 1
+}
+```
+
+5. Testando validação
+
+#### 🧪 Testando as validações
+
+Tente um POST com campos vazios e idade negativa:
+
+JSON com errosJSON
+
+```
+{
+  "nome": "",                  // ← vazio! @NotBlank vai barrar
+  "raca": "",                  // ← vazio!
+  "idade": -2                 // ← negativo! @PositiveOrZero vai barrar
+}
+```
+
+Resposta: 400 Bad Request com as mensagens que você escreveu nas anotações! 🎯
+
+🎉
+Funcionou tudo? Parabéns — você acabou de construir uma API REST completa do zero, sozinho! Esse é o nível profissional. Tira um print, manda no grupo, comemora! 🎊
+
+════════════════════════════════════════ DESAFIO: RESUMO FINAL ════════════════════════════════════════
+
+🎓
+
+## Desafio Concluído!
+
+Você construiu uma API REST profissional inteira do zero aplicando o padrão que aprendeu em Produto. Isso é enorme!
+
+### 📋 O que você consolidou neste desafio
+
+✅ Setup do zero — Spring Initializr, packaging Jar, Java 21, dependências
+
+✅ application.properties — configurando conexão com o PostgreSQL
+
+✅ Criação do banco — DBeaver e CREATE DATABASE
+
+✅ Enum — EspeciePetEnum com @Enumerated(EnumType.STRING)
+
+✅ Models — Tutor e Pet com Lombok + @ManyToOne
+
+✅ DTOs com record — Request e Response separados
+
+✅ Bean Validation — @NotBlank, @NotNull, @PositiveOrZero, @Valid
+
+✅ Mappers — métodos estáticos toEntity/toResponseDTO
+
+✅ Repositories — JpaRepository
+
+✅ Service Interface + Impl — separação contrato/execução
+
+✅ @RequiredArgsConstructor — injeção pelo construtor (private final)
+
+✅ orElseThrow + lambda — 404 elegante quando não encontra
+
+✅ stream + map + toList — converter listas com elegância
+
+✅ Controllers REST — POST, GET, PUT, DELETE com @Valid
+
+🚀
+Você está pronto para o Capítulo 3! Com o padrão profissional já consolidado, agora vamos aprender uma novidade real: o relacionamento @OneToOne com a entidade `Endereço`. Vamos lá! 👤
+
+╔══════════════════════════════════════════════════════════════╗ ║ CAPÍTULO 3: CLIENTE COM ENDEREÇO ║ ╚══════════════════════════════════════════════════════════════╝

@@ -1,0 +1,1095 @@
+# Capitulo 4 - Refatorar Fornecedor
+(id inicial: cap-forn-refac; ate: fim do documento)
+
+🔧
+Capítulo 4
+
+## Refatorando Fornecedor para usar Endereço
+
+Refactor real: do CRUD básico do cap 1 para o padrão profissional do cap 3
+
+════════════════════════════════════════ 4.1 — POR QUE REFATORAR? ════════════════════════════════════════
+
+4.1
+
+Por que refatorar o Fornecedor?
+
+Antes vs depois — a evolução do nosso código
+
+🎯 O momento "ahá!" do curso
+
+No cap 1 construímos o Fornecedor de um jeito simples e funcional — só com nome, CNPJ, e-mail e telefones, sem endereço, sem DTOs, sem Mapper, sem validações, com `@Autowired` de campo. Funcionava! Agora, depois de aprender o padrão profissional em Produto e Cliente, vamos elevar o Fornecedor ao mesmo nível — adicionando o `Endereco` e aplicando todas as boas práticas.
+
+Analogia: a primeira casa do pedreiro aprendiz
+
+No cap 1 você ergueu sua primeira casa — fez o que sabia, com as ferramentas que tinha. Depois aprendeu técnicas novas (DTOs, Mappers, validações, cascade) e agora está voltando à primeira casa para reformar com o que aprendeu. Esse é um refactor real — exatamente o que acontece em qualquer projeto profissional. 🏗️
+
+#### 📋 Antes vs Depois
+
+⚠️ Antes (cap 1)
+
+• Sem endereço — só nome fantasia, CNPJ, e-mail e telefones
+• Sem DTOs — controller recebia/devolvia a Entidade
+• Sem Mapper
+• Sem validações (`@NotBlank`, `@Email`...)
+• `@Autowired` de campo
+• Service único (sem interface)
+• `Optional<Fornecedor>` exposto no controller
+• `if (isEmpty()) throw...`
+• PUT respondia 204 No Content
+
+✅ Depois (cap 4)
+
+• Ganha um `@OneToOne` com a mesma entidade `Endereco` do Cliente ✨
+• `FornecedorRequestDTO` + `FornecedorResponseDTO` aninhando `EnderecoDTO`
+• `FornecedorMapper` usando `EnderecoMapper`
+• Bean Validation (`@NotBlank`, `@Email`, `@Valid`)
+• `@RequiredArgsConstructor` + `private final`
+• Service Interface + `ServiceImpl`
+• DTO no retorno do controller
+• `orElseThrow` com lambda
+• PUT responde 200 OK com o DTO atualizado
+
+💪
+Você já sabe TUDO que vamos usar! Não tem nenhum conceito novo nesse capítulo — é puro refactor: aplicar no Fornecedor o padrão que já está no Produto e no Cliente. Reaproveitar, deletar duplicação, ganhar consistência.
+
+════════════════════════════════════════ 4.2 — MIGRAÇÃO NO BANCO ════════════════════════════════════════
+
+🦫
+
+Antes de codar — migração da tabela fornecedor
+
+O ddl-auto=update não migra dados existentes!
+
+🚨
+Atenção: Vamos adicionar uma FK `endereco_id NOT NULL` na tabela `fornecedor` existente. O `spring.jpa.hibernate.ddl-auto=update` tenta criar a coluna, mas se já houver fornecedores cadastrados no cap 1, vai falhar — porque essas linhas antigas não têm valor para a nova coluna obrigatória. Precisamos preparar o terreno antes de subir a aplicação refatorada.
+
+🐘 O que fazer no DBeaver
+
+Como ainda estamos em desenvolvimento, a forma mais limpa é dropar a tabela `fornecedor` e deixar o Hibernate recriá-la do zero (com a coluna `endereco_id`) quando subirmos a aplicação. Os fornecedores de teste do cap 1 vão sumir — mas isso é normal num refactor de schema!
+
+SQL
+
+```
+
+-- Rode no SQL Editor do DBeaver, conectado ao bd_sistema_gestao
+DROP TABLE IF EXISTS fornecedor CASCADE;
+```
+
+🔄
+E se eu quiser começar TUDO do zero? Pode ser ainda mais simples: pare a aplicação, no DBeaver dê `DROP DATABASE bd_sistema_gestao;` seguido de `CREATE DATABASE bd_sistema_gestao;`. Quando subir a aplicação, o Hibernate cria todas as tabelas no formato novo. Você só perde os dados de teste — em produção isso seria proibido, mas em curso é o caminho mais rápido!
+
+🧠
+Em projeto de verdade usaríamos uma ferramenta de migração (Flyway, Liquibase) para versionar mudanças de schema sem perder dados. Aqui no curso o foco é o padrão de código — então simplificamos com `DROP`.
+
+════════════════════════════════════════ 4.3 — EXTRAIR EnderecoMapper ════════════════════════════════════════
+
+4.3
+
+Refactor preliminar — extrair EnderecoMapper
+
+Movendo os auxiliares do ClienteMapper para um lugar só deles
+
+🧩 Por que essa etapa?
+
+No cap 3, deixamos os métodos `toEnderecoEntity` e `toEnderecoDTO` dentro do `ClienteMapper` — funcionou! Mas agora o FornecedorMapper também vai precisar deles. Em vez de duplicar (anti-padrão!) ou fazer o FornecedorMapper depender do ClienteMapper (acoplamento estranho!), vamos extrair esses métodos para um `EnderecoMapper` dedicado. É refactor clássico: o segundo consumidor justifica o nome próprio.
+
+Analogia: o utensílio que você só compra quando vai usar duas vezes
+
+Quando você usa o ralador uma vez por mês, ele fica perdido na gaveta da espátula. Mas quando começa a ralar queijo todo dia, vale a pena ele ter o lugar dele. Os métodos do Endereço estavam de "carona" no ClienteMapper — agora que são usados em dois lugares, ganham casa própria. 🧀
+
+#### 1️⃣ Crie o novo `EnderecoMapper.java`
+
+No pacote `mapper` (ao lado do `ClienteMapper`):
+
+mapper/EnderecoMapper.javaJava
+
+```
+
+package br.com.sistemagestao.api.mapper;
+
+import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;
+import br.com.sistemagestao.api.model.Endereco;
+
+public class EnderecoMapper {
+
+    // EnderecoDTO → Endereco (entidade)
+    public static Endereco toEntity(EnderecoDTO dto) {
+
+        Endereco endereco = new Endereco();
+
+        endereco.setCep(dto.cep());
+        endereco.setLogradouro(dto.logradouro());
+        endereco.setNumero(dto.numero());
+        endereco.setComplemento(dto.complemento());
+        endereco.setBairro(dto.bairro());
+        endereco.setCidade(dto.cidade());
+        endereco.setUf(dto.uf());
+
+        return endereco;
+    }
+
+    // Endereco (entidade) → EnderecoDTO
+    public static EnderecoDTO toResponseDTO(Endereco endereco) {
+
+        return new EnderecoDTO(
+                endereco.getId(),
+                endereco.getCep(),
+                endereco.getLogradouro(),
+                endereco.getNumero(),
+                endereco.getComplemento(),
+                endereco.getBairro(),
+                endereco.getCidade(),
+                endereco.getUf()
+        );
+    }
+}
+```
+
+#### 2️⃣ Atualize o `ClienteMapper` para delegar
+
+Tira os auxiliares de lá e delega pro EnderecoMapper. O ClienteMapper fica mais enxuto e com responsabilidade só do Cliente:
+
+mapper/ClienteMapper.java (refatorado)Java
+
+```
+
+package br.com.sistemagestao.api.mapper;
+
+import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;
+import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;
+import br.com.sistemagestao.api.model.Cliente;
+
+public class ClienteMapper {
+
+    // RequestDTO → Entidade (delega Endereco para EnderecoMapper)
+    public static Cliente toEntity(ClienteRequestDTO dto) {
+
+        Cliente cliente = new Cliente();
+
+        cliente.setNomeCompleto(dto.nomeCompleto());
+        cliente.setCpf(dto.cpf());
+        cliente.setEmail(dto.email());
+        cliente.setTelefone(dto.telefone());
+        cliente.setDataNascimento(dto.dataNascimento());
+
+        cliente.setEndereco(EnderecoMapper.toEntity(dto.endereco()));
+
+        return cliente;
+    }
+
+    // Entidade → ResponseDTO (delega Endereco para EnderecoMapper)
+    public static ClienteResponseDTO toResponseDTO(Cliente cliente) {
+
+        return new ClienteResponseDTO(
+                cliente.getId(),
+                cliente.getNomeCompleto(),
+                cliente.getCpf(),
+                cliente.getEmail(),
+                cliente.getTelefone(),
+                cliente.getDataNascimento(),
+                EnderecoMapper.toResponseDTO(cliente.getEndereco())
+        );
+    }
+}
+```
+
+✨ O que ganhamos com a extração
+
+Single Responsibility Principle (SRP) — cada Mapper cuida de uma entidade só. Zero duplicação: quando o FornecedorMapper precisar do Endereço, vai usar `EnderecoMapper.toEntity()` exatamente como o ClienteMapper faz agora. Manutenção fácil: se o Endereço ganhar um campo novo (tipo "tipoLogradouro"), você muda em um lugar só.
+
+🔧
+"Refactor é código que muda sem mudar o comportamento." O Cliente continua funcionando exatamente igual depois dessa extração — nenhum endpoint quebrou. Foi só uma reorganização dos arquivos para preparar terreno pro Fornecedor reaproveitar. Esse é o tipo de refactor mais saudável que existe!
+
+════════════════════════════════════════ 4.4 — REFATORAR Fornecedor.java ════════════════════════════════════════
+
+4.4
+
+Refatorar Fornecedor.java — adicionar @OneToOne para Endereco
+
+Mantém os campos próprios e ganha o relacionamento, igualzinho ao Cliente
+
+O Fornecedor do cap 1 estava sem endereço. Agora vamos acrescentar um campo do tipo `Endereco` com `@OneToOne` + cascade — exatamente como fizemos no Cliente. Os 5 campos que já existiam continuam intactos!
+
+#### ⚠️ Antes (cap 1) — sem endereço
+
+model/Fornecedor.java (antes)Java
+
+```
+
+// ...
+@Entity
+public class Fornecedor {
+
+    @Id private Long id;
+    @Column(name = "nome_fantasia", nullable = false)
+    private String nomeFantasia;
+
+    @Column(name = "cnpj", nullable = false, updatable = false, unique = true)
+    private String cnpj;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "telefone_principal", nullable = false)
+    private String telefonePrincipal;
+
+    @Column(name = "telefone_secundario")
+    private String telefoneSecundario;
+
+    // ⚠️ ainda não existe nenhum campo de endereço aqui!
+}
+```
+
+#### ✅ Depois (cap 4) — com @OneToOne para Endereco
+
+model/Fornecedor.java (refatorado)Java
+
+```
+
+package br.com.sistemagestao.api.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name = "fornecedor")
+@Entity
+public class Fornecedor {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nome_fantasia", nullable = false)
+    private String nomeFantasia;
+
+    @Column(name = "cnpj", nullable = false, updatable = false, unique = true)
+    private String cnpj;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "telefone_principal", nullable = false)
+    private String telefonePrincipal;
+
+    @Column(name = "telefone_secundario")
+    private String telefoneSecundario;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)  // 🆕
+    @JoinColumn(name = "endereco_id", nullable = false)        // 🆕
+    private Endereco endereco;                                      // 🆕
+}
+```
+
+🌊
+O cascade resolve a vida! Mesmo padrão do Cliente: `cascade=ALL` + `orphanRemoval=true` garantem que salvar/deletar o Fornecedor afeta o Endereço junto, sem precisar de `EnderecoRepository`.
+
+🔒
+`updatable = false` no CNPJ — herança do cap 1. O CNPJ é a "identidade" do fornecedor: não muda. O JPA ignora esse campo quando emite o UPDATE, então mesmo que o ServiceImpl chame `setCnpj(...)`, o banco mantém o valor original. Vamos manter essa proteção no refactor!
+
+════════════════════════════════════════ 4.5 — DTOs DO FORNECEDOR ════════════════════════════════════════
+
+4.5
+
+DTOs do Fornecedor — com EnderecoDTO aninhado
+
+A "estrela" do refactor: agora com validações e endereço aninhado!
+
+### 📥 FornecedorRequestDTO — o que o front envia
+
+Records, validações em todos os campos e `@Valid` no `endereco` — exatamente como o ClienteRequestDTO.
+
+dto/fornecedor/FornecedorRequestDTO.javaJava
+
+```
+
+package br.com.sistemagestao.api.dto.fornecedor;
+
+import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
+public record FornecedorRequestDTO(
+
+        @NotBlank(message = "O nome fantasia é obrigatório")
+        String nomeFantasia,
+
+        @NotBlank(message = "O CNPJ é obrigatório")
+        String cnpj,
+
+        @NotBlank(message = "O e-mail é obrigatório")
+        @Email(message = "E-mail inválido")
+        String email,
+
+        @NotBlank(message = "O telefone principal é obrigatório")
+        String telefonePrincipal,
+
+        String telefoneSecundario,                                // opcional!
+
+        @NotNull(message = "O endereço é obrigatório")
+        @Valid  // ← ATIVA validações DENTRO do EnderecoDTO!
+        EnderecoDTO endereco
+) {}
+```
+
+🔁
+Repare: esse DTO é praticamente um clone do ClienteRequestDTO — só muda os campos próprios (nome/cnpj/telefone vs nomeCompleto/cpf/dataNascimento). O bloco do endereço é 100% igual! Esse é o ganho da reutilização.
+
+### 📤 FornecedorResponseDTO — o que o front recebe
+
+Inclui o `id` gerado pelo banco e o EnderecoDTO completo (com seu próprio id).
+
+dto/fornecedor/FornecedorResponseDTO.javaJava
+
+```
+
+package br.com.sistemagestao.api.dto.fornecedor;
+
+import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;
+
+public record FornecedorResponseDTO(
+        Long id,
+        String nomeFantasia,
+        String cnpj,
+        String email,
+        String telefonePrincipal,
+        String telefoneSecundario,
+        EnderecoDTO endereco
+) {}
+```
+
+▶️ DEMO ANIMADO: Como o front USA o FornecedorDTO
+
+🎬 Como o frontend (React) usa o FornecedorDTO 🔄 Replay
+
+👇 Mesma estrutura aninhada do Cliente — formulário principal + sub-formulário de endereço viram um JSON com objeto dentro de objeto:
+
+🔒meu-app.com/fornecedores/novo
+
+📝 Cadastrar Fornecedor
+
+Nome fantasia
+
+CNPJ
+
+E-mail
+
+Telefone principal
+
+🏠 Endereço (sub-formulário aninhado)
+💾 Salvar fornecedor
+
+JSON
+
+POST /fornecedores
+
+📦 FornecedorRequestDTO
+
+```
+public record FornecedorRequestDTO(
+  String nomeFantasia,
+  String cnpj,
+  String email,
+  String telefonePrincipal,
+  String telefoneSecundario,
+  EnderecoDTO endereco
+) {}
+```
+
+⚙️ Backend processa Fornecedor + Endereço (cascade) e responde...
+
+📦 FornecedorResponseDTO
+
+```
+public record FornecedorResponseDTO(
+  Long id,
+  String nomeFantasia,
+  String cnpj,
+  String email,
+  String telefonePrincipal,
+  EnderecoDTO endereco
+) {}
+```
+
+JSON
+
+200 OK
+
+🔒meu-app.com/fornecedores
+
+📋 Lista de Fornecedores
+
+ID | Nome | CNPJ | Cidade
+
+1 | Distribuidora ABC | 12.345... | São Paulo
+2 | Fornecedor XYZ | 98.765... | Rio de Janeiro
+3 | Teste LTDA | 23.323... | João Pessoa
+
+🪆
+Mesma magia do Cliente! O JSON aninhado vira DTO aninhado, que vira Entidade aninhada. O front nem precisa pensar — só envia a árvore e o Spring desserializa todos os níveis automaticamente.
+
+════════════════════════════════════════ 4.6 — FornecedorMapper ════════════════════════════════════════
+
+4.6
+
+FornecedorMapper.java — reaproveitando EnderecoMapper
+
+Olha como ficou enxuto delegando o Endereço!
+
+Como já temos o `EnderecoMapper` (extraído na seção 4.3), aqui o trabalho é só delegar. Compare com o ClienteMapper que você refatorou — a estrutura é idêntica!
+
+mapper/FornecedorMapper.javaJava
+
+```
+
+package br.com.sistemagestao.api.mapper;
+
+import br.com.sistemagestao.api.dto.fornecedor.FornecedorRequestDTO;
+import br.com.sistemagestao.api.dto.fornecedor.FornecedorResponseDTO;
+import br.com.sistemagestao.api.model.Fornecedor;
+
+public class FornecedorMapper {
+
+    // RequestDTO → Entidade (delega Endereco para EnderecoMapper)
+    public static Fornecedor toEntity(FornecedorRequestDTO dto) {
+
+        Fornecedor fornecedor = new Fornecedor();
+
+        fornecedor.setNomeFantasia(dto.nomeFantasia());
+        fornecedor.setCnpj(dto.cnpj());
+        fornecedor.setEmail(dto.email());
+        fornecedor.setTelefonePrincipal(dto.telefonePrincipal());
+        fornecedor.setTelefoneSecundario(dto.telefoneSecundario());
+
+        fornecedor.setEndereco(EnderecoMapper.toEntity(dto.endereco()));
+
+        return fornecedor;
+    }
+
+    // Entidade → ResponseDTO (delega Endereco para EnderecoMapper)
+    public static FornecedorResponseDTO toResponseDTO(Fornecedor fornecedor) {
+
+        return new FornecedorResponseDTO(
+                fornecedor.getId(),
+                fornecedor.getNomeFantasia(),
+                fornecedor.getCnpj(),
+                fornecedor.getEmail(),
+                fornecedor.getTelefonePrincipal(),
+                fornecedor.getTelefoneSecundario(),
+                EnderecoMapper.toResponseDTO(fornecedor.getEndereco())
+        );
+    }
+}
+```
+
+🎯 Olha o ganho da extração
+
+Sem o `EnderecoMapper`, esse arquivo teria 20 linhas a mais (os métodos auxiliares duplicados). E mais: se o Endereço ganhasse um campo novo, você teria que mexer em dois Mappers diferentes — fácil esquecer um. Agora muda em um lugar só!
+
+════════════════════════════════════════ 4.7 — Repository ════════════════════════════════════════
+
+4.7
+
+Repository — sem mudança real
+
+Continua igual ao do cap 1 — interface vazia herda tudo
+
+O `FornecedorRepository` já era uma interface vazia herdando de `JpaRepository` — não precisa mudar nada! E continuamos sem precisar de `EnderecoRepository`: o cascade do `@OneToOne` cuida da tabela endereco automaticamente, igual no Cliente.
+
+repository/FornecedorRepository.javaJava
+
+```
+
+package br.com.sistemagestao.api.repository;
+
+import br.com.sistemagestao.api.model.Fornecedor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
+}
+```
+
+🪄
+Repositórios são "à prova de refactor"! Como herdamos de `JpaRepository`, ele se ajusta automaticamente à entidade — qualquer mudança no `Fornecedor.java` reflete aqui sem precisar mexer.
+
+════════════════════════════════════════ 4.8 — FornecedorService (interface) ════════════════════════════════════════
+
+4.8
+
+Service — Interface FornecedorService.java
+
+Antes era classe única; agora interface + impl (igual ao Cliente!)
+
+#### ⚠️ Antes (cap 1) — classe única retornando entidade
+
+service/FornecedorService.java (antes)Java
+
+```
+
+@Service
+public class FornecedorService {
+
+    @Autowired                                 // ⚠️ injeção de campo
+    FornecedorRepository fornecedorRepository;
+
+    public void criarFornecedor(Fornecedor fornecedor) { // ⚠️ recebe entidade
+        fornecedorRepository.save(fornecedor);
+    }
+
+    public Optional<Fornecedor> buscarFornecedorPorId(Long id) {
+        return fornecedorRepository.findById(id);  // ⚠️ Optional vazando
+    }
+    // ... + listar/atualizar/deletar com if/isEmpty/throw
+}
+```
+
+#### ✅ Depois (cap 4) — interface + ServiceImpl, trabalhando com DTOs
+
+Primeiro, a interface com as 5 assinaturas — todas trabalhando com DTOs:
+
+service/FornecedorService.java (refatorado)Java
+
+```
+
+package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.fornecedor.FornecedorRequestDTO;
+import br.com.sistemagestao.api.dto.fornecedor.FornecedorResponseDTO;
+
+import java.util.List;
+
+public interface FornecedorService {
+
+    FornecedorResponseDTO criarFornecedor(FornecedorRequestDTO dto);
+
+    List<FornecedorResponseDTO> listarTodosFornecedores();
+
+    FornecedorResponseDTO buscarFornecedorPorId(Long id);
+
+    FornecedorResponseDTO atualizarFornecedorPorId(Long id, FornecedorRequestDTO dto);
+
+    void deletarFornecedorPorId(Long id);
+}
+```
+
+📜
+O contrato em uma só tela. A interface mostra O QUE o serviço faz sem se importar com COMO. Isso facilita testes (você pode mockar a interface) e troca de implementação no futuro.
+
+════════════════════════════════════════ 4.9 — FornecedorServiceImpl ════════════════════════════════════════
+
+4.9
+
+ServiceImpl — FornecedorServiceImpl.java
+
+Onde toda a lógica do refactor se conecta
+
+`@Service`, `@RequiredArgsConstructor`, `private final`, `orElseThrow`, `stream().map().toList()` — você já fez isso no Cliente. Aqui é só repetir para o Fornecedor!
+
+service/FornecedorServiceImpl.javaJava
+
+```
+
+package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.fornecedor.FornecedorRequestDTO;
+import br.com.sistemagestao.api.dto.fornecedor.FornecedorResponseDTO;
+import br.com.sistemagestao.api.mapper.FornecedorMapper;
+import br.com.sistemagestao.api.model.Endereco;
+import br.com.sistemagestao.api.model.Fornecedor;
+import br.com.sistemagestao.api.repository.FornecedorRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class FornecedorServiceImpl implements FornecedorService {
+
+    private final FornecedorRepository fornecedorRepository;
+
+    @Override
+    public FornecedorResponseDTO criarFornecedor(FornecedorRequestDTO dto) {
+
+        Fornecedor fornecedor = FornecedorMapper.toEntity(dto);
+
+        // 🌊 Salva o Fornecedor — o Endereco é salvo junto via cascade!
+        fornecedorRepository.save(fornecedor);
+
+        return FornecedorMapper.toResponseDTO(fornecedor);
+    }
+
+    @Override
+    public List<FornecedorResponseDTO> listarTodosFornecedores() {
+
+        return fornecedorRepository.findAll()
+                .stream()
+                .map(FornecedorMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public FornecedorResponseDTO buscarFornecedorPorId(Long id) {
+
+        Fornecedor fornecedor = fornecedorRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Fornecedor não encontrado"));
+
+        return FornecedorMapper.toResponseDTO(fornecedor);
+    }
+
+    @Override
+    public FornecedorResponseDTO atualizarFornecedorPorId(Long id, FornecedorRequestDTO dto) {
+
+        Fornecedor fornecedor = fornecedorRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Fornecedor não encontrado"));
+
+        // Atualiza os campos simples do fornecedor
+        fornecedor.setNomeFantasia(dto.nomeFantasia());
+        // CNPJ não é atualizado: @Column(updatable = false) protege a coluna no banco
+        fornecedor.setEmail(dto.email());
+        fornecedor.setTelefonePrincipal(dto.telefonePrincipal());
+        fornecedor.setTelefoneSecundario(dto.telefoneSecundario());
+
+        // Atualiza os campos do Endereco que JÁ EXISTE (mantemos o mesmo id!)
+        Endereco endereco = fornecedor.getEndereco();
+        endereco.setCep(dto.endereco().cep());
+        endereco.setLogradouro(dto.endereco().logradouro());
+        endereco.setNumero(dto.endereco().numero());
+        endereco.setComplemento(dto.endereco().complemento());
+        endereco.setBairro(dto.endereco().bairro());
+        endereco.setCidade(dto.endereco().cidade());
+        endereco.setUf(dto.endereco().uf());
+
+        fornecedorRepository.save(fornecedor);
+
+        return FornecedorMapper.toResponseDTO(fornecedor);
+    }
+
+    @Override
+    public void deletarFornecedorPorId(Long id) {
+
+        Fornecedor fornecedor = fornecedorRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Fornecedor não encontrado"));
+
+        // 🗑️ Deleta o Fornecedor — o Endereco é deletado junto via orphanRemoval!
+        fornecedorRepository.deleteById(fornecedor.getId());
+    }
+}
+```
+
+🤔
+No `atualizarFornecedorPorId`, mantemos o ID do Endereço! Igualzinho ao ClienteServiceImpl: pegamos o `Endereco` que já existe e setamos os campos novos nele, em vez de criar um `new Endereco()`. Isso mantém o mesmo `endereco_id` no banco e evita uma operação a mais com o orphanRemoval.
+
+🔥 Compare com o cap 1
+
+No cap 1 o `atualizar` chamava 4 `setters` direto no Fornecedor (sem CNPJ, por causa do `updatable=false`). Aqui mantemos esses 4 e somamos 7 do Endereço aninhado, num bloco separado e bem nomeado. O Cliente já fez o caminho idêntico — quando o terceiro consumidor aparecer (uma Empresa, um Cliente Corporativo...), ele já tem a estrutura pronta sem inventar nada.
+
+════════════════════════════════════════ 4.10 — FornecedorController ════════════════════════════════════════
+
+4.10
+
+Controller — FornecedorController.java
+
+Endpoints REST com @Valid e DTO no retorno
+
+#### ⚠️ Antes (cap 1) — recebia/devolvia entidade, expunha Optional
+
+controller/FornecedorController.java (antes)Java
+
+```
+
+@RestController
+@RequestMapping("/fornecedores")
+public class FornecedorController {
+
+    @Autowired FornecedorService fornecedorService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void criarFornecedor(@RequestBody Fornecedor fornecedor) { // ⚠️ entidade exposta, sem @Valid
+        fornecedorService.criarFornecedor(fornecedor);
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Fornecedor> buscarFornecedorPorId(@PathVariable Long id) { // ⚠️ Optional na resposta
+        return fornecedorService.buscarFornecedorPorId(id);
+    }
+    // ... PUT respondia 204 No Content (sem corpo)
+}
+```
+
+#### ✅ Depois (cap 4) — DTOs, @Valid, status corretos
+
+controller/FornecedorController.java (refatorado)Java
+
+```
+
+package br.com.sistemagestao.api.controller;
+
+import br.com.sistemagestao.api.dto.fornecedor.FornecedorRequestDTO;
+import br.com.sistemagestao.api.dto.fornecedor.FornecedorResponseDTO;
+import br.com.sistemagestao.api.service.FornecedorService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/fornecedores")
+@RequiredArgsConstructor
+public class FornecedorController {
+
+    private final FornecedorService fornecedorService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public FornecedorResponseDTO criarFornecedor(@Valid @RequestBody FornecedorRequestDTO dto) {
+        return fornecedorService.criarFornecedor(dto);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<FornecedorResponseDTO> listarTodosFornecedores() {
+        return fornecedorService.listarTodosFornecedores();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public FornecedorResponseDTO buscarFornecedorPorId(@PathVariable Long id) {
+        return fornecedorService.buscarFornecedorPorId(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public FornecedorResponseDTO atualizarFornecedorPorId(@PathVariable Long id,
+                                                            @Valid @RequestBody FornecedorRequestDTO dto) {
+        return fornecedorService.atualizarFornecedorPorId(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarFornecedorPorId(@PathVariable Long id) {
+        fornecedorService.deletarFornecedorPorId(id);
+    }
+}
+```
+
+#### 📍 Endpoints do Fornecedor (refatorado)
+
+Método | URL | Ação | Status | Mudou em relação ao cap 1?
+
+POST | `/fornecedores` | Criar (com endereço aninhado) | 201 Created | retorna DTO + @Valid
+GET | `/fornecedores` | Listar todos | 200 OK | retorna List<DTO>
+GET | `/fornecedores/{id}` | Buscar por ID | 200 OK | retorna DTO (sem Optional!)
+PUT | `/fornecedores/{id}` | Atualizar fornecedor | 200 OK | era 204; agora retorna DTO atualizado
+DELETE | `/fornecedores/{id}` | Deletar (e endereço junto) | 204 No Content | igual ao cap 1
+
+▶️ DEMO ANIMADO: Controller → Página (POST com cascade)
+
+🎬 O ciclo completo: cadastrar Fornecedor com Endereço via POST 🔄 Replay
+
+👇 Mesmo fluxo do Cliente — o cascade salva o Endereço junto. Repare como o pipeline ficou idêntico aos demais CRUDs profissionais:
+
+🌐
+
+Página clica "Salvar Fornecedor"
+
+fetch('/fornecedores', {method:'POST', body: json})
+
+↓
+
+🎮
+
+FornecedorController valida
+
+@Valid @RequestBody FornecedorRequestDTO
+
+↓
+
+🔄
+
+FornecedorMapper.toEntity(dto)
+
+delega para EnderecoMapper.toEntity(dto.endereco())
+
+↓
+
+⚙️
+
+FornecedorServiceImpl.save()
+
+cascade = ALL → salva os dois!
+
+↓
+
+🐘
+
+PostgreSQL grava
+
+INSERT endereco; INSERT fornecedor (com FK endereco_id)
+
+↓
+
+📤
+
+Controller responde 201 Created
+
+JSON: FornecedorResponseDTO + endereco aninhado
+
+↓
+
+✨
+
+Página exibe "Fornecedor cadastrado!"
+
+redirect('/fornecedores/' + json.id)
+
+🎯
+Igualzinho ao Cliente! Compare esse pipeline com o do cap 3 — só muda o nome da entidade. Quando você dominar esse fluxo, qualquer CRUD novo no Spring vira só "preencher os nomes" do mesmo padrão.
+
+════════════════════════════════════════ 4.11 — TESTANDO NO INSOMNIA ════════════════════════════════════════
+
+🦋
+
+Testando o Fornecedor refatorado no Insomnia
+
+Atenção ao novo formato do JSON — agora aninhado!
+
+▶️ DEMO ANIMADO: Insomnia ↔ Página (Fornecedor refatorado)
+
+🎬 Insomnia vs Página React — Fornecedor refatorado 🔄 Replay
+
+👇 O backend recebe a mesma requisição, venha de onde vier — só importa que o JSON esteja no formato novo (aninhado):
+
+🦋
+
+Insomnia (agora)
+
+POST /fornecedores
+Body com endereco: { ... }
+[ Send ]
+
+Você cola o JSON aninhado e clica Send.
+
+⚛️
+
+Página React (futuro)
+
+await fetch('/fornecedores', {
+method: 'POST',
+body: JSON.stringify({
+...form, endereco
+})
+})
+
+Form principal + sub-form de endereço, montados num único objeto.
+
+A requisição HTTP é idêntica:
+POST /fornecedores HTTP/1.1 Body: { ..., "endereco": {...} }
+O Spring desserializa o JSON aninhado direto pra FornecedorRequestDTO + EnderecoDTO — exatamente como faz com Cliente. ✨
+
+🪆
+Reutilização também no front! Quem cria a tela de cadastro de Fornecedor pode reaproveitar o componente de Endereço que já fez para o Cliente. O mesmo princípio do backend (uma entidade Endereço só) vira "um componente Endereço só" no React.
+
+⚠️
+Se você guardou os requests do cap 1 no Insomnia, eles vão precisar de ajuste! O body antigo não tinha `endereco`. Agora ele é obrigatório (`nullable=false` + `@NotNull`). Atualize os bodies dos requests da pasta Fornecedor incluindo o sub-objeto.
+
+#### ⚠️ Antes (cap 1) — body sem endereço
+
+POST /fornecedores (antes)JSON
+
+```
+{
+  "nomeFantasia": "Distribuidora ABC",
+  "cnpj": "12.345.678/0001-99",
+  "email": "contato@abc.com",
+  "telefonePrincipal": "(11) 99999-0001",
+  "telefoneSecundario": "(11) 4002-8922"
+                                       // ⚠️ sem endereco — ainda não existia!
+}
+```
+
+#### ✅ Depois (cap 4) — body aninhado com endereco
+POST
+
+#### POST Criar Fornecedor
+
+URL: `_.baseUrl/fornecedores`
+
+JSON
+
+```
+{
+  "nomeFantasia": "Distribuidora ABC",
+  "cnpj": "12.345.678/0001-99",
+  "email": "contato@abc.com",
+  "telefonePrincipal": "(11) 99999-0001",
+  "telefoneSecundario": "(11) 4002-8922",
+  "endereco": {
+    "cep": "01310-100",
+    "logradouro": "Avenida Paulista",
+    "numero": "1000",
+    "complemento": "Sala 305",
+    "bairro": "Bela Vista",
+    "cidade": "São Paulo",
+    "uf": "SP"
+  }
+}
+```
+
+Resposta: 201 Created com o JSON de volta — agora com o DTO completo (id do fornecedor + id do endereço gerado pelo cascade!) ✨
+
+PUT
+
+#### PUT Atualizar Fornecedor
+
+URL: `_.baseUrl/fornecedores/1`
+
+Mesmo body do POST. Resposta agora é 200 OK com o DTO atualizado (era 204 No Content no cap 1!).
+
+Testando @Valid aninhado
+
+#### 🧪 Testando @Valid no DTO aninhado
+
+Tente enviar com o endereço com campos vazios — para confirmar que o @Valid aninhado pegou:
+
+JSON com endereço incompletoJSON
+
+```
+{
+  "nomeFantasia": "Teste",
+  "cnpj": "00.000.000/0001-00",
+  "email": "teste@email.com",
+  "telefonePrincipal": "(11) 99999-0000",
+  "endereco": {
+    "cep": "",            // ← vazio!
+    "logradouro": "",     // ← vazio!
+    "numero": "123",
+    "bairro": "Centro",
+    "cidade": "São Paulo",
+    "uf": "SP"
+  }
+}
+```
+
+Resposta: 400 Bad Request com as mensagens "O CEP é obrigatório" e "O logradouro é obrigatório". 🎯
+Testando @Email
+
+#### 🧪 Testando @Email
+
+JSON com e-mail inválidoJSON
+
+```
+{
+  // ...
+  "email": "isso-nao-e-email",    // ← falta @ e domínio
+  // ...
+}
+```
+
+Resposta: 400 Bad Request com "E-mail inválido". ✅
+Testando CNPJ unique
+
+#### 🧪 Testando `unique = true` do CNPJ
+
+Cadastre um Fornecedor, depois tente cadastrar outro com o mesmo CNPJ. O banco vai barrar antes mesmo do código rodar:
+
+Resposta: 500 Internal Server Error com erro de constraint `uk_fornecedor_cnpj`. (Em projeto profissional, capturaríamos esse erro com um `@ExceptionHandler` e devolveríamos 409 Conflict — fica de exercício avançado!)
+
+🎉
+Funcionou tudo? Você acabou de fazer um refactor real num CRUD existente — o tipo de tarefa mais comum no dia a dia profissional. Saber refatorar com confiança é diferencial gigante!
+
+════════════════════════════════════════ 4.12 — RESUMO FINAL ════════════════════════════════════════
+
+🔧
+
+## Refactor Concluído!
+
+Você acabou de fazer o tipo de trabalho mais valorizado no mercado: refatorar código existente elevando para o padrão profissional, sem quebrar funcionalidade. 💪
+
+### 📋 O que você consolidou neste refactor
+
+✅ Migração de schema — DROP TABLE + ddl-auto recriando do zero (com a nova FK `endereco_id`)
+
+✅ Adicionar @OneToOne — reaproveitando a entidade `Endereco` do cap 3
+
+✅ Extract Mapper — auxiliares do Endereço viraram `EnderecoMapper` dedicado
+
+✅ DTOs aninhados no Fornecedor — @Valid no campo Endereco
+
+✅ Service único → Interface + Impl — mesma quebra do Cliente
+
+✅ @Autowired campo → @RequiredArgsConstructor
+
+✅ Optional vazando → orElseThrow + DTO de retorno
+
+✅ Bean Validation — @NotBlank, @Email, @Valid, unique CNPJ
+
+✅ Status HTTP corretos — PUT 204 → 200 com DTO atualizado
+
+✅ cascade + orphanRemoval — Endereço acompanha vida/morte do Fornecedor
+
+🚀
+Próximo passo (Capítulo 5): Agora que o backend está sólido e consistente, vamos plugar o React nele! CORS, fetch, tipagem e a página de verdade consumindo a API.
+
+════════════════════════════════════════ PRÓXIMOS CAPÍTULOS ════════════════════════════════════════
+
+🔮
+
+Próximo Capítulo
+
+O que vem por aí...
+
+Em breve
+
+#### 🔗 Capítulo 5 — Integração com React
+
+Conectando o backend com o frontend React. CORS, fetch/axios, tipando respostas.
+
+════════════════════════════════════════ RESUMO FINAL ════════════════════════════════════════
+
+📦
+
+## Fornecedor Completo!
+
+Você construiu seu primeiro CRUD completo com Spring Boot — Model, Repository, Service e Controller. O padrão que se repete para toda entidade!
+
+### 📋 O que você aprendeu neste capítulo
+
+✅ Criar entidades JPA com @Entity, @Table, @Column, @Id
+
+✅ Usar Lombok (@Data, @NoArgsConstructor, @AllArgsConstructor)
+
+✅ Criar repositórios com JpaRepository
+
+✅ Services com lógica de CRUD
+
+✅ Controllers REST (GET, POST, PUT, DELETE)
+
+✅ Injeção de Dependência com @Autowired
+
+✅ Tratamento de erros (404 Not Found)
+
+✅ HTTP Status Codes (201, 200, 204)
+
+✅ Optional para evitar NullPointerException
+
+🚀
+Próximo passo: No Capítulo 2 (Produto), vamos evoluir esse padrão introduzindo DTOs, Mappers e ServiceImpl — boas práticas que toda API profissional utiliza!
+
+Feito com 💜 para os alunos da Programa AI — Curso Presencial Programação Fullstack
+Backend com Java/Spring Boot — Prof. Kelson Almeida

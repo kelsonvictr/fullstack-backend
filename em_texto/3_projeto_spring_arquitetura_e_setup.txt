@@ -1,0 +1,290 @@
+# Projeto Spring - Arquitetura e Setup
+(id inicial: overview; ate: cap-forn)
+
+🎯
+
+O que vamos construir?
+
+O backend que o seu frontend React precisa!
+
+Lembra do JSON Server que usamos no frontend como banco de dados simulado? Agora vamos substituí-lo por uma API REST real feita com Java e Spring Boot!
+
+📦FornecedorCRUD completo (refactor + endereço no cap 4)
+
+🏷️ProdutoCom vínculo ao fornecedor
+
+👤ClienteDados + endereço
+
+🔗RelacionamentosProduto ↔ Fornecedor
+
+Analogia: De garçom para cozinheiro
+
+No frontend você era o cliente do restaurante fazendo pedidos. Agora vamos montar a cozinha inteira: o Controller é o garçom que anota seu pedido, o Service é o cozinheiro que prepara, o Repository é a despensa onde os ingredientes ficam guardados, e o Model é a receita que diz o que tem em cada prato.
+
+ROADMAP VISUAL
+
+#### 🗺️ Nosso Roadmap Progressivo:
+
+#### 📦 Fase 1 — Fornecedor CONCLUÍDO ✅
+
+CRUD simples. Sem DTOs, sem ServiceImpl. Foco em entender o fluxo Model → Repository → Service → Controller.
+
+#### 🏷️ Fase 2 — Produto CONCLUÍDO ✅
+
+Introduz DTOs, Mappers, ServiceImpl, @ManyToOne. Evolução natural das boas práticas.
+
+#### 🐶 Desafio PetShop PRÁTICA
+
+Antes do Cliente, exercite TUDO do Produto num novo domínio: API de PetShop com Tutor + Pet (@ManyToOne). Sem nada novo — só fixação para virar muscle memory!
+
+#### 👤 Fase 3 — Cliente AGORA
+
+Consolida o padrão profissional + relacionamento @OneToOne com a entidade Endereço (cascade, orphanRemoval, DTO aninhado, @CPF, @Email, @Past).
+
+════════════════════════════════════════ INTRO: ARQUITETURA EM CAMADAS ════════════════════════════════════════
+
+🏗️
+
+Arquitetura em Camadas
+
+Cada camada tem uma responsabilidade clara
+
+🤔 Por que dividir em camadas?
+
+Imagine uma pizzaria: o atendente anota o pedido, o pizzaiolo prepara a massa, e o estoquista organiza os ingredientes. Cada um faz uma coisa só e faz bem feito. No código é igual — separação de responsabilidades torna tudo organizado.
+
+🌐 Cliente (React / Swagger / Insomnia)
+Envia requisições HTTP
+
+↕️ JSON
+
+🎮 Controller
+Recebe requests, devolve responses — @RestController
+
+@Autowired ↕️ injeta Service no Controller
+
+⚙️ Service
+Regras de negócio — @Service
+
+@Autowired ↕️ injeta Repository no Service
+
+🗄️ Repository
+Acesso ao banco de dados — extends JpaRepository
+
+↕️ Entidades (Models)
+
+📐 Model
+Modela as entidades — @Entity / @Table / @Column
+
+↕️ SQL (automático via Hibernate)
+
+🐘 PostgreSQL
+Banco de dados — onde os dados ficam salvos de verdade
+
+📐
+O que é o Model? É a classe Java que representa uma tabela do banco de dados. Cada atributo da classe vira uma coluna. A classe `Fornecedor` com os atributos `nome`, `cnpj`, `email` gera automaticamente uma tabela `fornecedor` com essas colunas. Isso é ORM (Object-Relational Mapping) — o Hibernate traduz seus objetos Java em estrutura de banco!
+
+💡
+O Spring Boot gera o SQL automaticamente! Você trabalha com objetos Java e o Hibernate traduz tudo para SQL. Nunca mais `INSERT INTO` na mão!
+
+SYRINGE INJECTION DIAGRAM
+
+### 💉 Injeção de Dependência — @Autowired
+
+O Spring "injeta" automaticamente as dependências entre as camadas. É como uma seringa que conecta tudo pra você!
+
+🤔 O que é @Autowired?
+
+Quando o Controller precisa usar o Service, você não faz `new Service()` manualmente. O Spring injeta automaticamente a dependência — como uma seringa que entrega o componente certo no lugar certo. Isso é o padrão de Inversão de Controle (IoC).
+
+Repository Box
+
+🗄️ FornecedorRepository @Repository
+
+Syringe: Repository → Service
+
+@Autowired injeta Repository no Service
+
+Service Box
+
+⚙️ FornecedorService @Service
+
+Syringe: Service → Controller
+
+@Autowired injeta Service no Controller
+
+Controller Box
+
+🎮 FornecedorController @RestController
+
+💉
+Na prática: Quando você declara `@Autowired FornecedorService fornecedorService;` dentro do Controller, o Spring automaticamente cria e injeta uma instância do Service. Você nunca precisa fazer `new FornecedorService()` — o Spring cuida disso!
+
+ANIMATED FLOW
+
+### 🔄 Fluxo de uma Requisição
+
+Clique para ver o caminho que um POST /fornecedores faz:
+▶️ Animar Fluxo
+
+Cliente (React)
+📮 POST /fornecedores { "nome": "ABC" }
+
+JSON → HTTP Request
+
+Controller
+🎮 FornecedorController.criar()
+
+@Autowired 💉 injeta Service
+
+chama o service
+
+Service
+⚙️ FornecedorService.criar()
+
+@Autowired 💉 injeta Repository
+
+chama o repository
+
+Repository
+🗄️ fornecedorRepository.save()
+
+INSERT INTO fornecedor...
+
+Banco de Dados
+🐘 Salvo na tabela "fornecedor"!
+
+201 Created ✅
+
+Resposta
+✅ HTTP 201 — Fornecedor criado!
+
+════════════════════════════════════════ SETUP DO PROJETO ════════════════════════════════════════
+
+🍃
+
+Setup do Projeto
+
+Spring Initializr + Configuração
+
+🚀 Spring Initializr
+
+Acesse start.spring.io e gere o projeto com essas opções:
+
+🍃
+
+Sobre a versão do Spring Boot: Sempre utilize a versão mais recente disponível no Spring Initializr — ela já vem selecionada por padrão.
+
+📦 Project
+
+Maven
+
+☕ Language
+
+Java 21
+
+🍃 Spring Boot
+
+Mais recente disponível
+
+📂 Group
+
+br.com.sistemagestao
+
+📄 Artifact
+
+api
+
+#### 📚 Dependências:
+
+Spring Web
+
+Para criar endpoints REST
+
+Spring Data JPA
+
+Para acessar o banco de dados
+
+PostgreSQL Driver
+
+Driver de conexão com PostgreSQL
+
+Lombok
+
+Gera getters, setters, construtores
+
+application.properties
+
+### ⚙️ application.properties
+
+Este arquivo configura a conexão com o banco de dados:
+
+src/main/resources/application.propertiesproperties
+
+```
+
+# Nome da aplicação
+spring.application.name=Programa AI - API
+
+# Conexão com o Banco de Dados PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/bd_sistema_gestao
+spring.datasource.username=postgres
+spring.datasource.password=123
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Hibernate: cria/atualiza tabelas automaticamente!
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+🔍 O que cada linha faz? ▼
+
+`spring.datasource.url` — Endereço do banco: protocolo + host + porta + nome do banco
+
+`spring.datasource.username/password` — Credenciais do PostgreSQL
+
+`ddl-auto=update` — O Hibernate CRIA e ATUALIZA as tabelas automaticamente baseado nas classes @Entity 🪄
+
+`show-sql=true` — Mostra no console o SQL que o Hibernate gera (ótimo para aprender!)
+
+⚠️
+Importante: Crie o banco `bd_sistema_gestao` no PostgreSQL antes de rodar o projeto! O Hibernate cria as tabelas, mas não o banco.
+
+Estrutura de Pacotes
+
+### 📂 Estrutura de Pacotes
+
+Organize assim dentro de `br.com.sistemagestao.api`:
+
+Estrutura do projeto
+
+```
+
+br.com.sistemagestao.api/
+├── 📄 ApiApplication.java       ← Classe principal (já vem pronta!)
+├── 📁 model/                   ← Entidades JPA (tabelas)
+│   ├── Fornecedor.java
+│   ├── Produto.java            ← fase 2
+│   ├── Endereco.java           ← fase 3
+│   └── Cliente.java            ← fase 3
+├── 📁 repository/              ← Acesso ao banco
+│   ├── FornecedorRepository.java
+│   ├── ProdutoRepository.java  ← fase 2
+│   └── ClienteRepository.java  ← fase 3
+├── 📁 service/                 ← Regras de negócio
+│   ├── FornecedorService.java
+│   ├── ProdutoService.java     ← fase 2 (interface)
+│   └── ClienteService.java     ← fase 3
+├── 📁 controller/              ← Endpoints REST
+│   ├── FornecedorController.java
+│   ├── ProdutoController.java  ← fase 2
+│   └── ClienteController.java  ← fase 3
+├── 📁 dtos/                    ← fase 2 em diante
+└── 📁 config/                   ← Configurações (CORS, etc.)
+```
+
+📌
+Sempre crie os pacotes dentro do pacote principal `br.com.sistemagestao.api`. Se criar fora, o Spring não vai encontrar as classes!
+
+╔══════════════════════════════════════════════════════════════╗ ║ CAPÍTULO 1: FORNECEDOR ║ ╚══════════════════════════════════════════════════════════════╝

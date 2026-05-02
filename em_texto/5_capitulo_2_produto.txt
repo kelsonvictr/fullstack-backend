@@ -1,0 +1,1245 @@
+# Capitulo 2 - Produto
+(id inicial: cap-prod; ate: cap-petshop)
+
+🏷️
+Capítulo 2
+
+## CRUD de Produto
+
+Evoluindo para boas práticas do mercado — DTOs, Mappers, ServiceImpl e Validações
+
+PRODUTO: INTRODUÇÃO / O QUE MUDA
+
+🎯
+
+O que muda em relação ao Fornecedor?
+
+Por que evoluir o padrão? Porque o mercado exige!
+
+No Fornecedor, fizemos tudo da forma mais simples possível — para você entender o fluxo básico. Agora vamos evoluir o padrão para o que as empresas realmente usam no dia a dia. Pense assim: no Fornecedor você aprendeu a andar de bicicleta. Agora vamos colocar as marchas! 🚲→🏍️
+
+#### 🆕 Novidades do Capítulo 2
+
+DTO
+Data Transfer Object — Separa o que o front envia do que o banco armazena. Segurança e organização!
+
+Mapper
+Conversor — Converte DTO → Entidade e Entidade → DTO. Uma "ponte" entre as camadas.
+
+ServiceImpl
+Interface + Implementação — Separa o "contrato" da execução. Padrão de mercado.
+
+Validation
+Bean Validation — Valida os dados automaticamente com anotações (@NotBlank, @Positive).
+
+@ManyToOne
+Relacionamento — Produto pertence a um Fornecedor. Chave estrangeira!
+
+Lombok
+Injeção pelo construtor — Troca @Autowired por @RequiredArgsConstructor. Mais limpo!
+
+record
+Java Record — Forma moderna e enxuta de criar DTOs. Menos código!
+
+💼
+Por que isso importa para o mercado? Em entrevistas de emprego para desenvolvedor Java, perguntas sobre DTOs, separação de camadas, validações e boas práticas são extremamente comuns. Um candidato que sabe explicar por que usa DTO ao invés de expor a entidade direto já se destaca. Esse capítulo é o que transforma um código de estudante em código de profissional! 🎯
+
+════════════════════════════════════════ CONCEITOS NOVOS — EXPLICAÇÃO DIDÁTICA ════════════════════════════════════════
+
+📖
+
+Entendendo os Conceitos Novos
+
+Antes de codar, vamos entender o "porquê" de cada novidade
+
+DTO
+
+### 📦 DTO — Data Transfer Object
+
+O conceito mais importante desta aula!
+
+🤔 O que é um DTO?
+
+DTO é uma classe simples que carrega dados de um lugar para outro. Ela serve como um "filtro" entre o que o front envia e o que o banco armazena. O front nunca conversa diretamente com a entidade do banco!
+
+Analogia: O Formulário vs A Ficha Interna
+
+Imagine um hotel. Quando você chega, preenche um formulário na recepção com nome, documento e quantos dias vai ficar. Esse formulário é o RequestDTO — só tem as informações que o hóspede precisa fornecer.
+
+Internamente, o hotel tem uma ficha completa com número do quarto, data de check-in, valor total, status do pagamento. Essa ficha interna é a Entidade (Model).
+
+Quando o hotel mostra o resumo da reserva, ele não mostra TUDO da ficha interna — mostra só o necessário em um comprovante bonito. Esse comprovante é o ResponseDTO! 🏨
+
+#### ❌ Sem DTO (como fizemos no Fornecedor):
+
+O front envia a entidade inteira (Fornecedor.java). Problemas:
+
+❌ O front pode mandar o campo `id` e tentar sobrescrever
+
+❌ Se a entidade mudar (nova coluna), a API quebra
+
+❌ Expõe a estrutura interna do banco para quem consome
+
+❌ Não tem validação automática dos campos
+
+#### ✅ Com DTO (como vamos fazer em Produto):
+
+O front envia um DTO enxuto, com validações. Vantagens:
+
+✅ O front só envia o que precisa (sem `id`, sem dados internos)
+
+✅ Validações automáticas (@NotBlank, @Positive) antes de chegar no Service
+
+✅ A entidade pode mudar sem quebrar a API
+
+✅ O response mostra só o que o front precisa ver
+
+Visual: Fluxo Request → DTO → Entidade → DTO → Response
+
+#### 🔄 Fluxo com DTOs:
+
+Front-end (React)
+📮 Envia ProdutoRequestDTO
+
+JSON com dados do form
+
+Controller
+🎮 Recebe RequestDTO + @Valid
+
+Mapper converte DTO → Entidade
+
+Service
+⚙️ Trabalha com Entidade (Produto)
+
+salva no banco
+
+Banco de Dados
+🐘 Tabela produto
+
+Mapper converte Entidade → DTO
+
+Resposta
+✅ Devolve ProdutoResponseDTO
+
+RECORD
+
+### 📝 Java Record — DTOs Modernos
+
+🤔 O que é um Record?
+
+O `record` é uma forma moderna e enxuta do Java para criar classes que só carregam dados. É perfeito para DTOs! Em vez de escrever uma classe com atributos + getters + construtor + toString (umas 30 linhas), você escreve 3 linhas.
+
+#### ❌ Classe tradicional (muitas linhas):
+
+Java
+
+```
+
+// Classe tradicional para DTO — MUITO código repetitivo!
+public class ProdutoRequestDTO {
+    private String nome;
+    private BigDecimal preco;
+
+    // Construtor
+    public ProdutoRequestDTO(String nome, BigDecimal preco) {
+        this.nome = nome;
+        this.preco = preco;
+    }
+
+    // Getters
+    public String getNome() { return nome; }
+    public BigDecimal getPreco() { return preco; }
+
+    // toString, equals, hashCode... mais 20 linhas 😴
+}
+```
+
+#### ✅ Com Record (3 linhas!):
+
+Java
+
+```
+
+// Record — faz TUDO que a classe acima faz, em 3 linhas!
+public record ProdutoRequestDTO(
+    String nome,
+    BigDecimal preco
+) {}
+```
+
+💡
+Diferença importante: No record, para acessar os dados, usamos `dto.nome()` ao invés de `dto.getNome()`. Sem o "get" na frente! O record gera isso automaticamente.
+
+MAPPER
+
+### 🔄 Mapper — O Tradutor
+
+🤔 O que é um Mapper?
+
+O Mapper é uma classe que converte objetos de um tipo para outro. No nosso caso, converte RequestDTO → Entidade (quando recebe dados do front) e Entidade → ResponseDTO (quando devolve dados pro front).
+
+Analogia: O Tradutor de Idiomas
+
+Imagine dois países que falam idiomas diferentes: o País do Front (fala "DTO") e o País do Banco (fala "Entidade"). O Mapper é o tradutor que fica na fronteira convertendo de uma língua para outra. Quando o front manda uma mensagem (DTO), o tradutor converte para a língua do banco (Entidade). Quando o banco responde, o tradutor converte de volta para o front! 🌐
+
+📥
+
+RequestDTO
+
+O que vem do front
+
+🔄
+
+ProdutoMapper
+
+.toEntity() / .toResponseDTO()
+
+🗄️
+
+Entidade
+
+O que vai pro banco
+
+SERVICE IMPL
+
+### 📋 ServiceImpl — Interface + Implementação
+
+🤔 O que é essa separação?
+
+No Fornecedor, tínhamos apenas `FornecedorService` (uma classe só). Agora vamos separar em duas coisas: uma interface (o contrato, que diz "quais métodos existem") e uma implementação (a classe que realmente faz o trabalho).
+
+Analogia: O Cardápio e a Cozinha
+
+A interface `ProdutoService` é o cardápio do restaurante — diz quais pratos existem (criarProduto, listarTodos, etc). A implementação `ProdutoServiceImpl` é a cozinha — é onde cada prato é realmente preparado. O cliente (Controller) olha só o cardápio, não precisa saber como a cozinha funciona! 🍽️
+
+📋 Interface (Contrato)
+`
+public interface ProdutoService {
+
+criarProduto(...);
+
+listarTodos(...);
+
+buscarPorId(...);
+
+}
+`
+Diz O QUÊ fazer
+
+⚙️ Implementação (Execução)
+`
+public class ProdutoServiceImpl
+
+implements ProdutoService {
+
+// código real aqui
+
+}
+`
+Diz COMO fazer
+
+BEAN VALIDATION
+
+### ✅ Bean Validation — Validações Automáticas
+
+🤔 O que é Bean Validation?
+
+Bean Validation permite validar os dados automaticamente usando anotações. Em vez de escrever `if (nome == null) throw ...` na mão, você simplesmente coloca `@NotBlank` no campo e o Spring valida sozinho!
+
+Analogia: O Segurança da Porta
+
+Sem validação, é como uma festa sem segurança na porta — qualquer pessoa entra, com dados faltando, com preço negativo, com email inválido. Com Bean Validation, você coloca um segurança que confere cada campo antes de deixar entrar! Se algo estiver errado, o segurança barra e devolve uma mensagem dizendo o que falta. 🚪👮
+
+#### 🏷️ Anotações que vamos usar:
+
+@NotBlank
+
+Texto não pode ser vazio nem só espaços. Ideal para nomes e descrições.
+
+@NotNull
+
+O campo é obrigatório — não pode ser null. Para números, enums e objetos.
+
+@Positive
+
+O número deve ser maior que zero. Perfeito para preço!
+
+@PositiveOrZero
+
+Zero ou positivo. Ideal para estoque (pode ter zero em estoque).
+
+⚡
+Detalhe importante: As validações só funcionam se colocar `@Valid` no parâmetro do Controller! Sem o @Valid, as anotações ficam lá mas não fazem nada. É como ligar o segurança mas esquecer de pedir pra ele conferir os ingressos!
+
+@RequiredArgsConstructor
+
+### 💉 @RequiredArgsConstructor — Adeus @Autowired
+
+🤔 O que muda na injeção de dependência?
+
+No Fornecedor, usamos `@Autowired` para injetar o Repository no Service. Funciona, mas o Spring recomenda injeção pelo construtor como melhor prática. O `@RequiredArgsConstructor` do Lombok gera esse construtor automaticamente!
+
+❌ Antes (Fornecedor)
+`
+@Autowired
+
+FornecedorRepository repo;
+`
+
+✅ Agora (Produto)
+`
+@RequiredArgsConstructor
+
+private final ProdutoRepository repo;
+`
+
+💡
+O segredo é o `private final`! O `@RequiredArgsConstructor` gera um construtor com todos os atributos que são `final`. O Spring vê esse construtor e injeta automaticamente. Resultado: mesma funcionalidade, código mais limpo!
+
+LAMBDA E STREAM
+
+### ⚡ Lambda e Stream — Simplificando Código
+
+🤔 O que é Lambda?
+
+Lambda é uma forma de escrever uma função pequena em uma linha. Em vez de criar um método inteiro, você escreve `(parametro) -> ação`. Vamos usar em dois lugares: no `orElseThrow` e no `stream().map()`.
+
+LAMBDA NO orElseThrow
+
+#### 1️⃣ Lambda no `orElseThrow`
+
+Analogia: O Entregador
+
+Quando você pede uma pizza, o entregador vai no endereço. Se encontra alguém, entrega a pizza (retorna o produto). Se não encontra ninguém, ele liga reclamando: "não tem ninguém aqui!" (lança o erro). O `orElseThrow` funciona assim: "busca no banco, se não achar, reclama!" 🍕
+
+❌ Antes (6 linhas)
+`
+Optional<Produto> opt = repo.findById(id);
+
+if (opt.isEmpty()) {
+
+throw new ResponseStatusException(...);
+
+}
+
+Produto produto = opt.get();
+`
+
+✅ Agora (1 linha!)
+`
+Produto produto = repo.findById(id)
+
+.orElseThrow(() -> new
+
+ResponseStatusException(...));
+`
+O `() ->` é a lambda!
+"Se não achar, execute isso"
+
+#### 🔬 Decompondo a lambda:
+
+`repo.findById(id)` → busca no banco pelo ID
+`.orElseThrow(` → se não encontrou...
+`  () ->` → a lambda! "execute o que vem depois da seta"
+`  new ResponseStatusException(NOT_FOUND, "...")` → lança erro 404
+`);`
+
+STREAM
+
+#### 2️⃣ Stream + Map — Convertendo Listas
+
+Analogia: A Esteira de Fábrica
+
+Imagine uma esteira de fábrica 🏭. Você coloca laranjas (entidades) na esteira, e no meio do caminho tem uma máquina de suco (o Mapper) que transforma cada laranja em suco (DTO). No final da esteira, sai uma lista de sucos! Isso é o `stream().map().toList()`!
+
+❌ Sem Stream (5 linhas)
+`
+List<Produto> produtos = repo.findAll();
+
+List<ResponseDTO> lista = new ArrayList<>();
+
+for (Produto p : produtos) {
+
+lista.add(Mapper.toResponseDTO(p));
+
+}
+
+return lista;
+`
+
+✅ Com Stream (1 return!)
+`
+return repo.findAll()
+
+.stream()
+
+.map(ProdutoMapper::toResponseDTO)
+
+.toList();
+`
+
+#### 🔬 Decompondo o Stream:
+
+`repo.findAll()` → busca todos do banco (lista de Produtos)
+`.stream()` → liga a esteira! Transforma a lista num fluxo processável
+`.map(ProdutoMapper::toResponseDTO)` → a máquina! Aplica a conversão em cada item
+`.toList()` → empacota! Junta tudo numa lista de DTOs
+
+💡
+O `ProdutoMapper::toResponseDTO` é chamado de method reference. É a mesma coisa que `produto -> ProdutoMapper.toResponseDTO(produto)`, só que mais curto. O Java e o IntelliJ preferem essa forma!
+
+@ManyToOne
+
+### 🔗 @ManyToOne — Relacionamento entre Tabelas
+
+🤔 O que é @ManyToOne?
+
+Essa anotação diz que MUITOS produtos pertencem a UM fornecedor. No banco, isso cria uma chave estrangeira (foreign key) — uma coluna `fornecedor_id` na tabela produto que aponta para a tabela fornecedor.
+
+Analogia: Funcionários e Empresa
+
+Uma empresa (fornecedor) tem muitos funcionários (produtos). Cada funcionário pertence a uma empresa só. Na ficha de cada funcionário, tem anotado "empresa: XYZ" — esse é o `fornecedor_id`! 🏢👥
+
+Visual das tabelas relacionadas
+
+#### 🗄️ Como fica no banco:
+
+📋 fornecedor
+
+id 🔑 | nome
+
+1 | Dist. ABC
+2 | Forn. XYZ
+
+📋 produto
+
+id 🔑 | nome | fornecedor_id 🔗
+
+1 | Notebook | 1 → Dist. ABC
+2 | Mouse | 1 → Dist. ABC
+3 | Cadeira | 2 → Forn. XYZ
+
+☝️ Os produtos 1 e 2 pertencem ao fornecedor 1 (Dist. ABC). O produto 3 pertence ao fornecedor 2 (Forn. XYZ). A coluna `fornecedor_id` é a chave estrangeira que cria esse vínculo!
+
+════════════════════════════════════════ PRODUTO: DEPENDÊNCIA POM.XML ════════════════════════════════════════
+
+⚙️
+
+Dependência — pom.xml
+
+Precisamos adicionar o Bean Validation ao projeto
+
+Antes de começar, precisamos adicionar uma nova dependência no `pom.xml`. Sem ela, as anotações @NotBlank, @Positive, etc não funcionam!
+
+pom.xml (dentro de <dependencies>)XML
+
+```
+
+<!-- Bean Validation (para usar @NotBlank, @Positive, etc) -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+```
+
+⚠️
+Após adicionar, salve o pom.xml e clique no ícone do Maven (🔄) que aparece no IntelliJ para recarregar as dependências. Aguarde o download concluir antes de prosseguir!
+
+════════════════════════════════════════ PRODUTO: ENUM ════════════════════════════════════════
+
+2.1
+
+Enum — CategoriaProdutoEnum
+
+Valores fixos para categorias
+
+🤔 O que é um Enum?
+
+Enum (enumeração) é um tipo especial que define um conjunto fixo de valores possíveis. Em vez de o usuário digitar qualquer texto no campo "categoria" (e escrever "eletronico", "eletrônico", "ELETRÔNICO"...), com enum ele só pode escolher os valores que definimos!
+
+enums/CategoriaProdutoEnum.javaJava
+
+```
+
+package br.com.sistemagestao.api.enums;
+
+public enum CategoriaProdutoEnum {
+
+    ELETRONICOS,
+    ALIMENTOS,
+    VESTUARIO,
+    MOVEIS,
+    INFORMATICA,
+    LIMPEZA,
+    OUTROS
+}
+```
+
+💡
+Convenção: Valores de enum são escritos em MAIÚSCULAS. O pacote é `enums` (fora de `model`) e o nome termina com `Enum` para ficar claro no código.
+
+════════════════════════════════════════ PRODUTO: MODEL ════════════════════════════════════════
+
+2.2
+
+Model — Produto.java
+
+Entidade com Enum e @ManyToOne
+
+A entidade Produto segue o mesmo padrão do Fornecedor, mas com duas novidades: o campo `categoria` que usa Enum e o campo `fornecedor` que cria o relacionamento @ManyToOne.
+
+model/Produto.javaJava
+
+```
+
+package br.com.sistemagestao.api.model;
+
+import br.com.sistemagestao.api.enums.CategoriaProdutoEnum;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name = "produto")
+@Entity
+public class Produto {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nome", nullable = false)
+    private String nome;
+
+    @Column(name = "descricao")
+    private String descricao;
+
+    @Column(name = "preco", nullable = false)
+    private BigDecimal preco;
+
+    @Column(name = "quantidade_estoque", nullable = false)
+    private Integer quantidadeEstoque;
+
+    @Enumerated(EnumType.STRING)  // Salva o NOME do enum (ex: "INFORMATICA")
+    @Column(name = "categoria", nullable = false)
+    private CategoriaProdutoEnum categoria;
+
+    @ManyToOne  // MUITOS produtos para UM fornecedor
+    @JoinColumn(name = "fornecedor_id", nullable = false)  // Nome da coluna FK
+    private Fornecedor fornecedor;
+}
+```
+
+Anotacoes:
+- @Enumerated(EnumType.STRING) Salva o nome do enum como texto no banco. Sem isso, salvaria o número da posição (0, 1, 2...) — que é confuso e frágil.
+- @ManyToOne Define o relacionamento: muitos Produtos pertencem a um Fornecedor. Cria a coluna fornecedor_id como chave estrangeira.
+- @JoinColumn(name = "fornecedor_id") Define o nome da coluna de chave estrangeira no banco. O nullable=false obriga todo produto a ter um fornecedor.
+
+💡
+Por que `BigDecimal` e não `double` para preço? O `double` tem problemas de precisão com decimais (famoso 0.1 + 0.2 = 0.30000000000000004). Para valores monetários, sempre use `BigDecimal` — ele calcula com precisão exata!
+
+════════════════════════════════════════ PRODUTO: DTOs ════════════════════════════════════════
+
+2.3
+
+DTOs — Request e Response
+
+Usando records com Bean Validation
+
+### 📥 ProdutoRequestDTO — O que o front envia
+
+Esse é o DTO de entrada. Repare que não tem `id` (o banco gera) e usa `fornecedorId` (um Long) ao invés do objeto Fornecedor inteiro.
+
+dto/produto/ProdutoRequestDTO.javaJava
+
+```
+
+package br.com.sistemagestao.api.dto.produto;
+
+import br.com.sistemagestao.api.enums.CategoriaProdutoEnum;
+import jakarta.validation.constraints.*;
+
+import java.math.BigDecimal;
+
+public record ProdutoRequestDTO(
+
+        @NotBlank(message = "O nome do produto é obrigatório")
+        String nome,
+
+        String descricao,  // sem validação — descrição é opcional!
+
+        @NotNull(message = "O preço é obrigatório")
+        @Positive(message = "O preço deve ser maior que zero")
+        BigDecimal preco,
+
+        @NotNull(message = "A quantidade em estoque é obrigatória")
+        @PositiveOrZero(message = "A quantidade em estoque não pode ser negativa")
+        Integer quantidadeEstoque,
+
+        @NotNull(message = "A categoria é obrigatória")
+        CategoriaProdutoEnum categoria,
+
+        @NotNull(message = "O ID do fornecedor é obrigatório")
+        Long fornecedorId   // só o ID! Não o objeto inteiro!
+) {}
+```
+
+Anotacoes:
+- @NotBlank Valida que o campo não é null, não é vazio ("") e não é só espaços (" "). Perfeito para Strings obrigatórias!
+- @NotNull Valida que o campo não é null. Usado para números e objetos. Para Strings, prefira @NotBlank.
+- @Positive O valor deve ser maior que zero. Um produto não pode ter preço 0 ou negativo!
+- @NotNull Obrigatório informar a quantidade.
+- @PositiveOrZero Permite zero (pode ter 0 em estoque) mas não permite negativo.
+
+🎯
+Por que `fornecedorId` e não `fornecedor`? O front não precisa enviar o objeto Fornecedor inteiro! Ele só manda o ID (um número). Quem busca o Fornecedor completo no banco é o ServiceImpl — essa é a responsabilidade do backend!
+
+### 📤 ProdutoResponseDTO — O que o front recebe
+
+Esse é o DTO de saída. Agora sim tem o `id` (gerado pelo banco) e inclui o nome do fornecedor para o front poder exibir.
+
+dto/produto/ProdutoResponseDTO.javaJava
+
+```
+
+package br.com.sistemagestao.api.dto.produto;
+
+import br.com.sistemagestao.api.enums.CategoriaProdutoEnum;
+
+import java.math.BigDecimal;
+
+public record ProdutoResponseDTO(
+        Long id,                       // agora TEM o id!
+        String nome,
+        String descricao,
+        BigDecimal preco,
+        Integer quantidadeEstoque,
+        CategoriaProdutoEnum categoria,
+        Long fornecedorId,              // ID do fornecedor
+        String fornecedorNome            // nome do fornecedor (extra!)
+) {}
+```
+
+💡
+Perceba o `fornecedorNome`! Ele não existe na entidade Produto — é um campo extra que criamos no DTO para facilitar a vida do front. Em vez do React ter que fazer outra requisição para buscar o nome do fornecedor, já mandamos junto! Isso é uma vantagem do DTO.
+
+▶️ DEMO ANIMADO: Como o front USA esse DTO
+
+🎬 Como o frontend (React) usa esse DTO 🔄 Replay
+
+👇 No futuro, sua página React vai ter um formulário que monta o JSON do RequestDTO. Quando o usuário clica em Salvar, esse JSON é enviado pro backend. Veja:
+LINHA 1: Form web → RequestDTO
+
+🔒meu-app.com/produtos/novo
+
+📝 Cadastrar Produto
+
+Nome
+
+Preço
+
+Estoque
+
+Categoria
+💾 Salvar produto
+
+JSON
+
+POST /produtos
+
+📦 ProdutoRequestDTO
+
+```
+public record ProdutoRequestDTO(
+  String nome,
+  BigDecimal preco,
+  Integer quantidadeEstoque,
+  CategoriaProdutoEnum categoria,
+  Long fornecedorId
+) {}
+```
+
+DIVISOR
+⚙️ Backend processa, salva no banco e responde...
+LINHA 2: ResponseDTO → Lista web
+
+📦 ProdutoResponseDTO (lista)
+
+```
+public record ProdutoResponseDTO(
+  Long id,
+  String nome,
+  BigDecimal preco,
+  Integer quantidadeEstoque,
+  CategoriaProdutoEnum categoria,
+  String fornecedorNome
+) {}
+```
+
+JSON
+
+200 OK
+
+🔒meu-app.com/produtos
+
+📋 Lista de Produtos
+
+ID | Nome | Preço | Estoque
+
+1 | Notebook Dell | R$ 3499,90 | 15
+2 | Mouse | R$ 89,90 | 120
+3 | Cadeira Gamer | R$ 1299,00 | 8
+
+🎯
+Por isso o DTO existe! O RequestDTO é o "molde" do que a página envia. O ResponseDTO é o "molde" do que a página recebe pra exibir. Os campos do DTO casam 1:1 com os campos do form e da listagem do front!
+
+════════════════════════════════════════ PRODUTO: MAPPER ════════════════════════════════════════
+
+2.4
+
+Mapper — ProdutoMapper.java
+
+A ponte entre DTO e Entidade
+
+O Mapper tem dois métodos estáticos: um para converter Request → Entidade e outro para converter Entidade → Response.
+
+mapper/ProdutoMapper.javaJava
+
+```
+
+package br.com.sistemagestao.api.mapper;
+
+import br.com.sistemagestao.api.dto.produto.ProdutoRequestDTO;
+import br.com.sistemagestao.api.dto.produto.ProdutoResponseDTO;
+import br.com.sistemagestao.api.model.Fornecedor;
+import br.com.sistemagestao.api.model.Produto;
+
+public class ProdutoMapper {
+
+    // Converte RequestDTO → Entidade
+    // Precisa do Fornecedor porque o DTO só tem o ID
+    public static Produto toEntity(ProdutoRequestDTO dto, Fornecedor fornecedor) {
+
+        Produto produto = new Produto();
+
+        produto.setNome(dto.nome());          // record usa .nome() sem "get"!
+        produto.setDescricao(dto.descricao());
+        produto.setPreco(dto.preco());
+        produto.setQuantidadeEstoque(dto.quantidadeEstoque());
+        produto.setCategoria(dto.categoria());
+        produto.setFornecedor(fornecedor);    // objeto completo, não o ID!
+
+        return produto;
+    }
+
+    // Converte Entidade → ResponseDTO
+    public static ProdutoResponseDTO toResponseDTO(Produto produto) {
+
+        ProdutoResponseDTO dto = new ProdutoResponseDTO(
+                produto.getId(),
+                produto.getNome(),
+                produto.getDescricao(),
+                produto.getPreco(),
+                produto.getQuantidadeEstoque(),
+                produto.getCategoria(),
+                produto.getFornecedor().getId(),          // pega o ID do fornecedor
+                produto.getFornecedor().getNomeFantasia() // pega o nome do fornecedor
+        );
+
+        return dto;
+    }
+}
+```
+
+🔍
+Repare na diferença: No `toEntity`, usamos `dto.nome()` (sem get, porque é record). No `toResponseDTO`, usamos `produto.getNome()` (com get, porque é classe normal com Lombok).
+
+════════════════════════════════════════ PRODUTO: REPOSITORY ════════════════════════════════════════
+
+2.5
+
+Repository — ProdutoRepository.java
+
+Igualzinho ao do Fornecedor!
+
+O Repository não muda! Continua sendo uma interface vazia que herda do JpaRepository. A mágica está toda no JPA.
+
+repository/ProdutoRepository.javaJava
+
+```
+
+package br.com.sistemagestao.api.repository;
+
+import br.com.sistemagestao.api.model.Produto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ProdutoRepository extends JpaRepository<Produto, Long> {
+}
+```
+
+════════════════════════════════════════ PRODUTO: SERVICE INTERFACE ════════════════════════════════════════
+
+2.6
+
+Service — Interface ProdutoService.java
+
+O contrato — quais métodos existem
+
+A interface define apenas as assinaturas dos métodos — sem implementação. Repare que agora os métodos trabalham com DTOs, não mais com a entidade diretamente!
+
+service/ProdutoService.javaJava
+
+```
+
+package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.produto.ProdutoRequestDTO;
+import br.com.sistemagestao.api.dto.produto.ProdutoResponseDTO;
+
+import java.util.List;
+
+public interface ProdutoService {
+
+    ProdutoResponseDTO criarProduto(ProdutoRequestDTO dto);
+
+    List<ProdutoResponseDTO> listarTodosProdutos();
+
+    ProdutoResponseDTO buscarProdutoPorId(Long id);
+
+    ProdutoResponseDTO atualizarProdutoPorId(Long id, ProdutoRequestDTO dto);
+
+    void deletarProdutoPorId(Long id);
+}
+```
+
+📋
+Compare com o Fornecedor: Lá os métodos recebiam e retornavam `Fornecedor` (entidade). Aqui recebem `ProdutoRequestDTO` e retornam `ProdutoResponseDTO`. A entidade nunca sai do Service!
+
+════════════════════════════════════════ PRODUTO: SERVICE IMPL ════════════════════════════════════════
+
+2.7
+
+ServiceImpl — ProdutoServiceImpl.java
+
+Onde a mágica acontece — a implementação real
+
+Esta é a classe mais importante! Aqui temos todas as novidades juntas: @RequiredArgsConstructor, orElseThrow com lambda, stream, e o Mapper convertendo tudo.
+
+service/ProdutoServiceImpl.javaJava
+
+```
+
+package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.produto.ProdutoRequestDTO;
+import br.com.sistemagestao.api.dto.produto.ProdutoResponseDTO;
+import br.com.sistemagestao.api.mapper.ProdutoMapper;
+import br.com.sistemagestao.api.model.Fornecedor;
+import br.com.sistemagestao.api.model.Produto;
+import br.com.sistemagestao.api.repository.FornecedorRepository;
+import br.com.sistemagestao.api.repository.ProdutoRepository;
+import br.com.sistemagestao.api.service.ProdutoService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor  // Lombok gera o construtor com os campos "final"
+public class ProdutoServiceImpl implements ProdutoService {
+
+    // Injeção de dependência pelo construtor (via Lombok)
+    private final ProdutoRepository produtoRepository;
+    private final FornecedorRepository fornecedorRepository;
+
+    @Override
+    public ProdutoResponseDTO criarProduto(ProdutoRequestDTO dto) {
+
+        // Busca o fornecedor pelo ID. Se não existir, lança 404.
+        Fornecedor fornecedor = fornecedorRepository.findById(dto.fornecedorId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Fornecedor não encontrado"));
+
+        // Converte DTO → Entidade usando o Mapper
+        Produto produto = ProdutoMapper.toEntity(dto, fornecedor);
+        produtoRepository.save(produto);
+
+        // Converte Entidade → ResponseDTO e retorna
+        return ProdutoMapper.toResponseDTO(produto);
+    }
+
+    @Override
+    public List<ProdutoResponseDTO> listarTodosProdutos() {
+
+        // Busca todos → stream → converte cada um → lista de DTOs
+        return produtoRepository.findAll()
+                .stream()
+                .map(ProdutoMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public ProdutoResponseDTO buscarProdutoPorId(Long id) {
+
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Produto não encontrado"));
+
+        return ProdutoMapper.toResponseDTO(produto);
+    }
+
+    @Override
+    public ProdutoResponseDTO atualizarProdutoPorId(Long id, ProdutoRequestDTO dto) {
+
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Produto não encontrado"));
+
+        Fornecedor fornecedor = fornecedorRepository.findById(dto.fornecedorId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Fornecedor não encontrado"));
+
+        produto.setNome(dto.nome());
+        produto.setDescricao(dto.descricao());
+        produto.setPreco(dto.preco());
+        produto.setQuantidadeEstoque(dto.quantidadeEstoque());
+        produto.setCategoria(dto.categoria());
+        produto.setFornecedor(fornecedor);
+
+        produtoRepository.save(produto);
+
+        return ProdutoMapper.toResponseDTO(produto);
+    }
+
+    @Override
+    public void deletarProdutoPorId(Long id) {
+
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Produto não encontrado"));
+
+        produtoRepository.deleteById(produto.getId());
+    }
+}
+```
+
+Anotacoes:
+- @RequiredArgsConstructor O Lombok gera um construtor com TODOS os campos marcados como final. O Spring usa esse construtor para injetar automaticamente. Substitui o @Autowired!
+
+════════════════════════════════════════ PRODUTO: CONTROLLER ════════════════════════════════════════
+
+2.8
+
+Controller — ProdutoController.java
+
+Endpoints REST com @Valid
+
+O Controller agora usa `@RequiredArgsConstructor` e `@Valid` nos métodos que recebem dados.
+
+controller/ProdutoController.javaJava
+
+```
+
+package br.com.sistemagestao.api.controller;
+
+import br.com.sistemagestao.api.dto.produto.ProdutoRequestDTO;
+import br.com.sistemagestao.api.dto.produto.ProdutoResponseDTO;
+import br.com.sistemagestao.api.service.ProdutoService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/produtos")
+@RequiredArgsConstructor
+public class ProdutoController {
+
+    private final ProdutoService produtoService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProdutoResponseDTO criarProduto(@Valid @RequestBody ProdutoRequestDTO dto) {
+        return produtoService.criarProduto(dto);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProdutoResponseDTO> listarTodosProdutos() {
+        return produtoService.listarTodosProdutos();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProdutoResponseDTO buscarProdutoPorId(@PathVariable Long id) {
+        return produtoService.buscarProdutoPorId(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProdutoResponseDTO atualizarProdutoPorId(@PathVariable Long id,
+                                                     @Valid @RequestBody ProdutoRequestDTO dto) {
+        return produtoService.atualizarProdutoPorId(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarProdutoPorId(@PathVariable Long id) {
+        produtoService.deletarProdutoPorId(id);
+    }
+}
+```
+
+Anotacoes:
+- @Valid ATIVA as validações do DTO! Sem o @Valid, as anotações @NotBlank, @Positive etc não fazem nada. É o "interruptor" das validações.
+
+Endpoint Table
+
+#### 📍 Endpoints do Produto
+
+Método | URL | Ação | Status
+
+POST | `/produtos` | Criar produto | 201 Created
+GET | `/produtos` | Listar todos | 200 OK
+GET | `/produtos/{id}` | Buscar por ID | 200 OK
+PUT | `/produtos/{id}` | Atualizar produto | 200 OK
+DELETE | `/produtos/{id}` | Deletar produto | 204 No Content
+
+🔍
+Diferença do Fornecedor: Agora o POST e GET retornam o `ProdutoResponseDTO` com os dados salvos (incluindo o ID gerado). No Fornecedor, o POST retornava `void`. Devolver o objeto criado é uma boa prática — o front sabe imediatamente o que foi salvo!
+
+▶️ DEMO ANIMADO: Controller → Página (ciclo HTTP completo)
+
+🎬 O ciclo completo: Página clica → Controller → Banco → Página renderiza 🔄 Replay
+
+👇 Quando o usuário clica em "Listar Produtos" na página, essa cascata acontece em milissegundos:
+
+🌐
+
+Página React clica "Listar"
+
+fetch('/produtos')
+
+↓
+
+🎮
+
+ProdutoController
+
+@GetMapping listarTodosProdutos()
+
+↓
+
+⚙️
+
+ProdutoServiceImpl
+
+produtoRepository.findAll()
+
+↓
+
+🐘
+
+PostgreSQL
+
+SELECT * FROM produto
+
+↓
+
+🔄
+
+ProdutoMapper converte
+
+.stream().map(::toResponseDTO).toList()
+
+↓
+
+📤
+
+Controller responde JSON
+
+200 OK + List<ProdutoResponseDTO>
+
+↓
+
+✨
+
+Página renderiza a tabela
+
+setProdutos(json) → <tr> aparecem na tela
+
+⚡
+Tudo isso em ~50ms! Para o usuário, ele só clicou no botão e a tabela apareceu. Mas no backend rolou esse pipeline inteiro. O Controller é a "porta de entrada" que orquestra tudo!
+
+════════════════════════════════════════ PRODUTO: INSOMNIA ════════════════════════════════════════
+
+🦋
+
+Testando Produto no Insomnia
+
+JSONs de exemplo para testar
+
+▶️ DEMO ANIMADO: Insomnia ↔ Página (a "Aha!" do Insomnia)
+
+🎬 Insomnia vs Página React — fazem a MESMA coisa! 🔄 Replay
+
+👇 Por baixo dos panos, os dois mandam exatamente a mesma requisição HTTP. O Insomnia é só mais "manual" — você simula o que sua página vai fazer automaticamente!
+
+🦋
+
+Insomnia
+
+POST /produtos
+Body: { "nome": "...", "preco": ... }
+[ Send ]
+
+Você escolhe método, URL, body e clica em Send na mão.
+
+⚛️
+
+Página React
+
+await fetch('/produtos', {
+method: 'POST',
+body: JSON.stringify(form)
+})
+
+Sua futura página dispara automaticamente ao clicar no botão.
+
+Por baixo dos panos, ambos mandam a mesma requisição HTTP:
+POST /produtos HTTP/1.1 Content-Type: application/json
+Pra o backend Spring tanto faz de onde a requisição veio — ele processa do mesmo jeito! 🎯
+
+💡
+Por isso o Insomnia é tão útil: ele permite testar a API sem precisar do front pronto. Você desenvolve o backend, testa no Insomnia, e quando o front estiver pronto, ele vai disparar exatamente as mesmas requisições. Backend e front são independentes!
+
+Crie uma pasta Produto no Insomnia e monte os requests:
+
+⚠️
+Importante: Antes de testar Produto, crie pelo menos um Fornecedor primeiro! O campo `fornecedorId` precisa apontar para um fornecedor que já existe no banco.
+
+POST
+
+#### POST Criar Produto
+
+URL: `_.baseUrl/produtos`
+
+JSON
+
+```
+{
+  "nome": "Notebook Dell Inspiron",
+  "descricao": "Notebook Dell Inspiron 15, 8GB RAM, 256GB SSD",
+  "preco": 3499.90,
+  "quantidadeEstoque": 15,
+  "categoria": "INFORMATICA",
+  "fornecedorId": 1
+}
+```
+
+✅
+Resposta esperada: 201 Created com o JSON de volta contendo o `id` gerado, o `fornecedorId` e o `fornecedorNome`!
+
+Testando validação
+
+#### 🧪 Testando as Validações
+
+Tente enviar esse JSON com erro — campos faltando e preço negativo:
+
+JSON com erros (para testar validação)JSON
+
+```
+{
+  "nome": "",           // ← vazio! @NotBlank vai barrar
+  "preco": -50,          // ← negativo! @Positive vai barrar
+  "quantidadeEstoque": -3 // ← negativo! @PositiveOrZero vai barrar
+}
+```
+
+🎯
+Resultado: O Spring retorna 400 Bad Request com as mensagens de erro que definimos! As validações funcionaram automaticamente — sem nenhum `if` no código! Esse é o poder do Bean Validation.
+
+════════════════════════════════════════ PRODUTO: ESTRUTURA DE PASTAS ════════════════════════════════════════
+
+📂
+
+Estrutura Final de Pastas
+
+Como ficou o projeto completo
+
+Estrutura do projeto — atualizada
+
+```
+
+br.com.sistemagestao.api/
+├── 📄 ApiApplication.java
+├── 📁 model/
+│   ├── Fornecedor.java
+│   └── Produto.java                    ← 🆕
+├── 📁 enums/                               ← 🆕 pacote novo!
+│   └── CategoriaProdutoEnum.java       ← 🆕
+├── 📁 dto/                                 ← 🆕 pacote novo!
+│   └── 📁 produto/
+│       ├── ProdutoRequestDTO.java     ← 🆕
+│       └── ProdutoResponseDTO.java    ← 🆕
+├── 📁 mapper/                              ← 🆕 pacote novo!
+│   └── ProdutoMapper.java              ← 🆕
+├── 📁 repository/
+│   ├── FornecedorRepository.java
+│   └── ProdutoRepository.java         ← 🆕
+├── 📁 service/
+│   ├── FornecedorService.java
+│   ├── ProdutoService.java            ← 🆕 (interface)
+│   └── ProdutoServiceImpl.java        ← 🆕 (implementação)
+└── 📁 controller/
+    ├── FornecedorController.java
+    └── ProdutoController.java         ← 🆕
+```
+
+════════════════════════════════════════ PRODUTO: RESUMO FINAL ════════════════════════════════════════
+
+🏷️
+
+## Produto Completo!
+
+Você evoluiu o CRUD para o padrão profissional — com DTOs, Mapper, ServiceImpl, validações, relacionamentos e injeção por construtor!
+
+### 📋 O que você aprendeu neste capítulo
+
+✅ DTOs (record) — Separar request e response da entidade
+
+✅ Mapper — Converter DTO ↔ Entidade com métodos estáticos
+
+✅ ServiceImpl — Interface + implementação (contrato + execução)
+
+✅ Bean Validation — @NotBlank, @NotNull, @Positive, @PositiveOrZero
+
+✅ @Valid — Ativar validações no Controller
+
+✅ @ManyToOne — Relacionamento entre entidades (FK)
+
+✅ Enum — Valores fixos para categorias
+
+✅ @RequiredArgsConstructor — Injeção pelo construtor (melhor prática)
+
+✅ Lambda (→) — Funções inline no orElseThrow
+
+✅ Stream + Map — Converter listas de forma elegante
+
+✅ Method Reference (::) — Atalho aceito pelo IntelliJ
+
+🐶
+Próximo passo — Desafio PetShop: Antes de avançar para o cap 3, vamos PRATICAR! No próximo capítulo você vai construir uma API de PetShop sozinho, aplicando tudo que aprendeu em Produto. Não tem nada novo — é puro reforço para virar muscle memory. É o exercício mais importante até aqui. Não pule! 💪
+
+╔══════════════════════════════════════════════════════════════╗ ║ CAPÍTULO DESAFIO: PETSHOP API ║ ╚══════════════════════════════════════════════════════════════╝
