@@ -746,8 +746,22 @@ footer .heart{color:var(--accent2);animation:pulse 2s ease-in-out infinite;displ
     <a class="sidebar-link" onclick="goTo('cli-insomnia')"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
   </div>
   <div class="sidebar-group">
+    <div class="sidebar-group-title">🔧 Capítulo 4 — Refatorar Fornecedor</div>
+    <a class="sidebar-link" onclick="goTo('forn4-intro')"><span class="dot" style="background:var(--accent3)"></span>Por que refatorar?</a>
+    <a class="sidebar-link" onclick="goTo('forn4-migracao')"><span class="dot" style="background:var(--accent4)"></span>🦫 Migração no banco</a>
+    <a class="sidebar-link" onclick="goTo('forn4-extrair-mapper')"><span class="dot" style="background:var(--accent6)"></span>Extrair EnderecoMapper</a>
+    <a class="sidebar-link" onclick="goTo('forn4-model')"><span class="dot" style="background:var(--accent5)"></span>Refatorar Model</a>
+    <a class="sidebar-link" onclick="goTo('forn4-dtos')"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" onclick="goTo('forn4-mapper')"><span class="dot" style="background:var(--accent6)"></span>FornecedorMapper</a>
+    <a class="sidebar-link" onclick="goTo('forn4-repo')"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" onclick="goTo('forn4-service')"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" onclick="goTo('forn4-serviceimpl')"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" onclick="goTo('forn4-controller')"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" onclick="goTo('forn4-insomnia')"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
     <div class="sidebar-group-title">🔜 Próximos capítulos</div>
-    <a class="sidebar-link" onclick="goTo('proximos')"><span class="dot" style="background:var(--accent3)"></span>Refatorar Fornecedor + React</a>
+    <a class="sidebar-link" onclick="goTo('proximos')"><span class="dot" style="background:var(--accent7)"></span>Integração com React</a>
   </div>
 </nav>
 
@@ -8208,6 +8222,1283 @@ br.com.sistemagestao.api/
 
 <div class="section-connector"><div class="line"></div></div>
 
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║          CAPÍTULO 4: REFATORANDO FORNECEDOR                 ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="chapter-divider" id="cap-forn-refac">
+  <span class="chapter-icon">🔧</span>
+  <div class="chapter-number">Capítulo 4</div>
+  <h2 style="font-size:clamp(1.8rem,4vw,2.6rem);font-weight:900;margin-bottom:8px;background:linear-gradient(135deg,var(--accent5),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Refatorando Fornecedor para usar Endereço</h2>
+  <p class="chapter-subtitle">Refactor real: do CRUD básico do cap 1 para o padrão profissional do cap 3</p>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.1 — POR QUE REFATORAR?                 -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-intro">
+  <div class="step-header">
+    <div class="step-number sn-purple">4.1</div>
+    <div>
+      <div class="step-title">Por que refatorar o Fornecedor?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Antes vs depois — a evolução do nosso código</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🎯 O momento "ahá!" do curso</div>
+      <p>No <strong style="color:var(--accent5)">cap 1</strong> construímos o Fornecedor de um jeito <strong>simples e funcional</strong> — endereço com 6 colunas direto na entidade, sem DTOs, sem Mapper, sem validações, com <code>@Autowired</code> de campo. <strong style="color:var(--text)">Funcionava!</strong> Agora, depois de aprender o padrão profissional em Produto e Cliente, vamos <strong style="color:var(--accent3)">elevar o Fornecedor ao mesmo nível</strong>.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: a primeira casa do pedreiro aprendiz</div>
+      <p style="color:var(--text-dim)">No cap 1 você ergueu sua <strong style="color:var(--text)">primeira casa</strong> — fez o que sabia, com as ferramentas que tinha. Depois aprendeu técnicas novas (DTOs, Mappers, validações, cascade) e agora está <strong style="color:var(--text)">voltando à primeira casa para reformar</strong> com o que aprendeu. Esse é um <strong style="color:var(--accent3)">refactor real</strong> — exatamente o que acontece em qualquer projeto profissional. 🏗️</p>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">📋 Antes vs Depois</h4>
+    <div class="annotation-grid">
+      <div class="annotation-card" style="border-color:rgba(247,183,49,0.3);background:rgba(247,183,49,0.04)">
+        <div class="anno-name" style="color:var(--accent5)">⚠️ Antes (cap 1)</div>
+        <div class="anno-desc" style="font-size:0.82rem;line-height:1.7">
+          • package <code>br.com.programaai.api</code><br>
+          • Endereço <strong>flat</strong> (cep, logradouro, numero... direto na entidade)<br>
+          • Sem DTOs — controller recebia/devolvia a Entidade<br>
+          • Sem Mapper<br>
+          • Sem validações (<code>@NotBlank</code>, <code>@Email</code>...)<br>
+          • <code>@Autowired</code> de campo<br>
+          • Service único (sem interface)<br>
+          • <code>Optional&lt;Fornecedor&gt;</code> exposto no controller<br>
+          • <code>if (isEmpty()) throw...</code><br>
+          • PUT respondia <strong>204 No Content</strong>
+        </div>
+      </div>
+      <div class="annotation-card" style="border-color:rgba(78,205,196,0.3);background:rgba(78,205,196,0.04)">
+        <div class="anno-name" style="color:var(--accent3)">✅ Depois (cap 4)</div>
+        <div class="anno-desc" style="font-size:0.82rem;line-height:1.7">
+          • package <code>br.com.sistemagestao.api</code> ✨<br>
+          • <code>@OneToOne</code> com a <strong>mesma</strong> entidade <code>Endereco</code> do Cliente<br>
+          • <code>FornecedorRequestDTO</code> + <code>FornecedorResponseDTO</code> aninhando <code>EnderecoDTO</code><br>
+          • <code>FornecedorMapper</code> usando <code>EnderecoMapper</code><br>
+          • Bean Validation (<code>@NotBlank</code>, <code>@Email</code>, <code>@Valid</code>)<br>
+          • <code>@RequiredArgsConstructor</code> + <code>private final</code><br>
+          • Service Interface + <code>ServiceImpl</code><br>
+          • DTO no retorno do controller<br>
+          • <code>orElseThrow</code> com lambda<br>
+          • PUT responde <strong>200 OK</strong> com o DTO atualizado
+        </div>
+      </div>
+    </div>
+
+    <div class="warning" style="margin-top:20px;border-left-color:var(--accent3)">
+      <span class="warning-icon">⚡</span>
+      <div style="color:var(--text-dim);font-size:0.9rem">
+        <strong style="color:var(--accent3)">Renomeando o package:</strong> Lá no cap 1, o package raiz era <code>br.com.programaai.api</code> (resíduo do início do curso). A partir do cap 2 (Produto) padronizamos para <code>br.com.sistemagestao.api</code>. <strong style="color:var(--text)">Antes de começar este capítulo</strong>, no IntelliJ: clique com o direito no package <code>br.com.programaai</code> → <strong>Refactor</strong> → <strong>Rename</strong> → digite <code>sistemagestao</code> → ele atualiza tudo automaticamente!
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:12px">
+      <span class="tip-icon">💪</span>
+      <div class="tip-content"><strong>Você já sabe TUDO que vamos usar!</strong> Não tem nenhum conceito novo nesse capítulo — é puro <strong>refactor</strong>: aplicar no Fornecedor o padrão que já está no Produto e no Cliente. Reaproveitar, deletar duplicação, ganhar consistência.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.2 — MIGRAÇÃO NO BANCO                  -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-migracao">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent4)">🦫</div>
+    <div>
+      <div class="step-title">Antes de codar — migração da tabela fornecedor</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">O ddl-auto=update não migra dados existentes!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="warning">
+      <span class="warning-icon">🚨</span>
+      <div style="color:var(--text-dim);font-size:0.9rem">
+        <strong style="color:var(--accent2)">Atenção:</strong> Vamos <strong>mudar a estrutura</strong> da tabela <code>fornecedor</code> — sair de 10 colunas flat (cep, logradouro... dentro de fornecedor) para 4 colunas + uma FK <code>endereco_id</code>. O <code>spring.jpa.hibernate.ddl-auto=update</code> vai <strong style="color:var(--text)">ADICIONAR a coluna nova</strong>, mas <strong>NÃO vai apagar as antigas</strong> nem migrar os dados.
+      </div>
+    </div>
+
+    <div class="concept" style="margin-top:16px">
+      <div class="concept-title">🐘 O que fazer no DBeaver</div>
+      <p>Como ainda estamos em desenvolvimento, a forma <strong>mais limpa</strong> é dropar a tabela <code>fornecedor</code> e deixar o Hibernate recriá-la do zero quando subirmos a aplicação. Os dados de teste do cap 1 vão sumir — mas isso é normal num refactor de schema!</p>
+    </div>
+
+    <div class="code-block" style="margin-top:14px">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge" style="background:rgba(69,183,209,0.15);color:var(--accent4)">SQL</span>
+      </div>
+      <pre>
+<span class="cm">-- Rode no SQL Editor do DBeaver, conectado ao bd_sistema_gestao</span>
+<span class="kw">DROP TABLE IF EXISTS</span> fornecedor <span class="kw">CASCADE</span>;</pre>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">🔄</span>
+      <div class="tip-content"><strong>E se eu quiser começar TUDO do zero?</strong> Pode ser ainda mais simples: pare a aplicação, no DBeaver dê <code>DROP DATABASE bd_sistema_gestao;</code> seguido de <code>CREATE DATABASE bd_sistema_gestao;</code>. Quando subir a aplicação, o Hibernate cria todas as tabelas no formato novo. Você só perde os dados de teste — em produção isso seria proibido, mas em curso é o caminho mais rápido!</div>
+    </div>
+
+    <div class="warning" style="margin-top:12px;border-left-color:var(--accent5)">
+      <span class="warning-icon">🧠</span>
+      <div style="color:var(--text-dim);font-size:0.9rem">
+        <strong style="color:var(--accent5)">Em projeto de verdade</strong> usaríamos uma ferramenta de migração (Flyway, Liquibase) para versionar mudanças de schema sem perder dados. Aqui no curso o foco é o padrão de código — então simplificamos com <code>DROP</code>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.3 — EXTRAIR EnderecoMapper             -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-extrair-mapper">
+  <div class="step-header">
+    <div class="step-number sn-purple">4.3</div>
+    <div>
+      <div class="step-title">Refactor preliminar — extrair EnderecoMapper</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Movendo os auxiliares do ClienteMapper para um lugar só deles</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🧩 Por que essa etapa?</div>
+      <p>No cap 3, deixamos os métodos <code>toEnderecoEntity</code> e <code>toEnderecoDTO</code> <strong>dentro</strong> do <code>ClienteMapper</code> — funcionou! Mas agora o <strong style="color:var(--accent5)">FornecedorMapper</strong> também vai precisar deles. Em vez de duplicar (anti-padrão!) ou fazer o FornecedorMapper depender do ClienteMapper (acoplamento estranho!), vamos <strong style="color:var(--accent3)">extrair</strong> esses métodos para um <code>EnderecoMapper</code> dedicado. É <strong>refactor clássico</strong>: o segundo consumidor justifica o nome próprio.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: o utensílio que você só compra quando vai usar duas vezes</div>
+      <p style="color:var(--text-dim)">Quando você usa o ralador <strong>uma vez por mês</strong>, ele fica perdido na gaveta da espátula. Mas quando começa a ralar queijo <strong>todo dia</strong>, vale a pena ele <strong>ter o lugar dele</strong>. Os métodos do Endereço estavam de "carona" no ClienteMapper — agora que são usados em dois lugares, ganham casa própria. 🧀</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent3)">1️⃣ Crie o novo <code>EnderecoMapper.java</code></h4>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:8px">No pacote <code>mapper</code> (ao lado do <code>ClienteMapper</code>):</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">mapper/EnderecoMapper.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.mapper;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Endereco;</span>
+
+<span class="kw">public class</span> <span class="tp">EnderecoMapper</span> {
+
+    <span class="cm">// EnderecoDTO → Endereco (entidade)</span>
+    <span class="kw">public static</span> <span class="tp">Endereco</span> <span class="fn">toEntity</span>(<span class="tp">EnderecoDTO</span> dto) {
+
+        <span class="tp">Endereco</span> endereco = <span class="kw">new</span> <span class="tp">Endereco</span>();
+
+        endereco.<span class="fn">setCep</span>(dto.<span class="fn">cep</span>());
+        endereco.<span class="fn">setLogradouro</span>(dto.<span class="fn">logradouro</span>());
+        endereco.<span class="fn">setNumero</span>(dto.<span class="fn">numero</span>());
+        endereco.<span class="fn">setComplemento</span>(dto.<span class="fn">complemento</span>());
+        endereco.<span class="fn">setBairro</span>(dto.<span class="fn">bairro</span>());
+        endereco.<span class="fn">setCidade</span>(dto.<span class="fn">cidade</span>());
+        endereco.<span class="fn">setUf</span>(dto.<span class="fn">uf</span>());
+
+        <span class="kw">return</span> endereco;
+    }
+
+    <span class="cm">// Endereco (entidade) → EnderecoDTO</span>
+    <span class="kw">public static</span> <span class="tp">EnderecoDTO</span> <span class="fn">toResponseDTO</span>(<span class="tp">Endereco</span> endereco) {
+
+        <span class="kw">return new</span> <span class="tp">EnderecoDTO</span>(
+                endereco.<span class="fn">getId</span>(),
+                endereco.<span class="fn">getCep</span>(),
+                endereco.<span class="fn">getLogradouro</span>(),
+                endereco.<span class="fn">getNumero</span>(),
+                endereco.<span class="fn">getComplemento</span>(),
+                endereco.<span class="fn">getBairro</span>(),
+                endereco.<span class="fn">getCidade</span>(),
+                endereco.<span class="fn">getUf</span>()
+        );
+    }
+}</pre>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent6)">2️⃣ Atualize o <code>ClienteMapper</code> para delegar</h4>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:8px">Tira os auxiliares de lá e <strong>delega</strong> pro EnderecoMapper. O ClienteMapper fica mais enxuto e com responsabilidade só do Cliente:</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">mapper/ClienteMapper.java <span style="color:var(--accent3);font-size:0.7rem">(refatorado)</span></span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.mapper;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteRequestDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.cliente.ClienteResponseDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Cliente;</span>
+
+<span class="kw">public class</span> <span class="tp">ClienteMapper</span> {
+
+    <span class="cm">// RequestDTO → Entidade (delega Endereco para EnderecoMapper)</span>
+    <span class="kw">public static</span> <span class="tp">Cliente</span> <span class="fn">toEntity</span>(<span class="tp">ClienteRequestDTO</span> dto) {
+
+        <span class="tp">Cliente</span> cliente = <span class="kw">new</span> <span class="tp">Cliente</span>();
+
+        cliente.<span class="fn">setNomeCompleto</span>(dto.<span class="fn">nomeCompleto</span>());
+        cliente.<span class="fn">setCpf</span>(dto.<span class="fn">cpf</span>());
+        cliente.<span class="fn">setEmail</span>(dto.<span class="fn">email</span>());
+        cliente.<span class="fn">setTelefone</span>(dto.<span class="fn">telefone</span>());
+        cliente.<span class="fn">setDataNascimento</span>(dto.<span class="fn">dataNascimento</span>());
+
+        cliente.<span class="fn">setEndereco</span>(<span class="tp">EnderecoMapper</span>.<span class="fn">toEntity</span>(dto.<span class="fn">endereco</span>()));
+
+        <span class="kw">return</span> cliente;
+    }
+
+    <span class="cm">// Entidade → ResponseDTO (delega Endereco para EnderecoMapper)</span>
+    <span class="kw">public static</span> <span class="tp">ClienteResponseDTO</span> <span class="fn">toResponseDTO</span>(<span class="tp">Cliente</span> cliente) {
+
+        <span class="kw">return new</span> <span class="tp">ClienteResponseDTO</span>(
+                cliente.<span class="fn">getId</span>(),
+                cliente.<span class="fn">getNomeCompleto</span>(),
+                cliente.<span class="fn">getCpf</span>(),
+                cliente.<span class="fn">getEmail</span>(),
+                cliente.<span class="fn">getTelefone</span>(),
+                cliente.<span class="fn">getDataNascimento</span>(),
+                <span class="tp">EnderecoMapper</span>.<span class="fn">toResponseDTO</span>(cliente.<span class="fn">getEndereco</span>())
+        );
+    }
+}</pre>
+    </div>
+
+    <div class="solution-box" style="margin-top:16px">
+      <div class="solution-title">✨ O que ganhamos com a extração</div>
+      <p style="color:var(--text-dim)">Single Responsibility Principle (SRP) — cada Mapper cuida de <strong>uma entidade só</strong>. <strong style="color:var(--text)">Zero duplicação</strong>: quando o FornecedorMapper precisar do Endereço, vai usar <code>EnderecoMapper.toEntity()</code> exatamente como o ClienteMapper faz agora. <strong style="color:var(--text)">Manutenção fácil</strong>: se o Endereço ganhar um campo novo (tipo "tipoLogradouro"), você muda em <strong>um lugar</strong> só.</p>
+    </div>
+
+    <div class="tip" style="margin-top:12px">
+      <span class="tip-icon">🔧</span>
+      <div class="tip-content"><strong>"Refactor é código que muda sem mudar o comportamento."</strong> O Cliente continua funcionando exatamente igual depois dessa extração — nenhum endpoint quebrou. Foi só uma <strong>reorganização</strong> dos arquivos para preparar terreno pro Fornecedor reaproveitar. Esse é o tipo de refactor mais saudável que existe!</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.4 — REFATORAR Fornecedor.java          -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-model">
+  <div class="step-header">
+    <div class="step-number sn-red">4.4</div>
+    <div>
+      <div class="step-title">Refatorar Fornecedor.java — adeus endereço flat</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">@OneToOne para Endereco, igualzinho ao Cliente</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">A entidade Fornecedor sai de <strong>10 colunas planas</strong> para <strong>4 colunas próprias + 1 FK</strong>. A novidade é o relacionamento <code>@OneToOne</code> — exatamente como o Cliente!</p>
+
+    <h4 style="margin:0 0 12px;color:var(--accent5)">⚠️ Antes (cap 1) — endereço flat</h4>
+    <div class="code-block" style="opacity:0.7">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">model/Fornecedor.java <span style="color:var(--accent2);font-size:0.7rem">(antes)</span></span><span class="lang-badge java">Java</span></div>
+      </div>
+      <pre>
+<span class="cm">// ...</span>
+<span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="tp">Fornecedor</span> {
+
+    <span class="an">@Id</span> <span class="kw">private</span> <span class="tp">Long</span> id;
+    <span class="an">@Column</span>(name = <span class="st">"nome"</span>)        <span class="kw">private</span> <span class="tp">String</span> nome;
+    <span class="an">@Column</span>(name = <span class="st">"cnpj"</span>)        <span class="kw">private</span> <span class="tp">String</span> cnpj;
+    <span class="an">@Column</span>(name = <span class="st">"email"</span>)       <span class="kw">private</span> <span class="tp">String</span> email;
+    <span class="an">@Column</span>(name = <span class="st">"telefone"</span>)    <span class="kw">private</span> <span class="tp">String</span> telefone;
+    <span class="an">@Column</span>(name = <span class="st">"cep"</span>)         <span class="kw">private</span> <span class="tp">String</span> cep;          <span class="cm">// ⬅️</span>
+    <span class="an">@Column</span>(name = <span class="st">"logradouro"</span>)  <span class="kw">private</span> <span class="tp">String</span> logradouro;   <span class="cm">// ⬅️</span>
+    <span class="an">@Column</span>(name = <span class="st">"numero"</span>)      <span class="kw">private</span> <span class="tp">String</span> numero;       <span class="cm">// ⬅️</span>
+    <span class="an">@Column</span>(name = <span class="st">"bairro"</span>)      <span class="kw">private</span> <span class="tp">String</span> bairro;       <span class="cm">// ⬅️</span>
+    <span class="an">@Column</span>(name = <span class="st">"cidade"</span>)      <span class="kw">private</span> <span class="tp">String</span> cidade;       <span class="cm">// ⬅️</span>
+    <span class="an">@Column</span>(name = <span class="st">"uf"</span>)          <span class="kw">private</span> <span class="tp">String</span> uf;           <span class="cm">// ⬅️</span>
+}</pre>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">✅ Depois (cap 4) — @OneToOne com Endereco</h4>
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">model/Fornecedor.java <span style="color:var(--accent3);font-size:0.7rem">(refatorado)</span></span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.model;</span>
+
+<span class="pkg">import jakarta.persistence.*;</span>
+<span class="pkg">import lombok.AllArgsConstructor;</span>
+<span class="pkg">import lombok.Data;</span>
+<span class="pkg">import lombok.NoArgsConstructor;</span>
+
+<span class="an">@NoArgsConstructor</span>
+<span class="an">@AllArgsConstructor</span>
+<span class="an">@Data</span>
+<span class="an">@Table</span>(name = <span class="st">"fornecedor"</span>)
+<span class="an">@Entity</span>
+<span class="kw">public class</span> <span class="tp">Fornecedor</span> {
+
+    <span class="an">@Id</span>
+    <span class="an">@GeneratedValue</span>(strategy = <span class="tp">GenerationType</span>.<span class="nb">IDENTITY</span>)
+    <span class="kw">private</span> <span class="tp">Long</span> id;
+
+    <span class="an">@Column</span>(name = <span class="st">"nome"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> nome;
+
+    <span class="an">@Column</span>(name = <span class="st">"cnpj"</span>, nullable = <span class="bool">false</span>, unique = <span class="bool">true</span>)
+    <span class="kw">private</span> <span class="tp">String</span> cnpj;
+
+    <span class="an">@Column</span>(name = <span class="st">"email"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> email;
+
+    <span class="an">@Column</span>(name = <span class="st">"telefone"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">String</span> telefone;
+
+    <span class="an">@OneToOne</span>(cascade = <span class="tp">CascadeType</span>.<span class="nb">ALL</span>, orphanRemoval = <span class="bool">true</span>)
+    <span class="an">@JoinColumn</span>(name = <span class="st">"endereco_id"</span>, nullable = <span class="bool">false</span>)
+    <span class="kw">private</span> <span class="tp">Endereco</span> endereco;
+}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">🌊</span>
+      <div class="tip-content"><strong>O cascade resolve a vida!</strong> Mesmo padrão do Cliente: <code>cascade=ALL</code> + <code>orphanRemoval=true</code> garantem que salvar/deletar o Fornecedor afeta o Endereço junto, sem precisar de <code>EnderecoRepository</code>.</div>
+    </div>
+
+    <div class="tip" style="margin-top:12px">
+      <span class="tip-icon">🛡️</span>
+      <div class="tip-content"><strong>Bônus: <code>unique = true</code> no CNPJ!</strong> No cap 1 essa constraint não existia. Agora, ao tentar cadastrar dois fornecedores com o mesmo CNPJ, o banco já barra. Igualzinho ao <code>cpf unique</code> do Cliente.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.5 — DTOs DO FORNECEDOR                 -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-dtos">
+  <div class="step-header">
+    <div class="step-number sn-blue">4.5</div>
+    <div>
+      <div class="step-title">DTOs do Fornecedor — com EnderecoDTO aninhado</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A "estrela" do refactor: agora com validações e endereço aninhado!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:6px;color:var(--accent4)">📥 FornecedorRequestDTO — o que o front envia</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Records, validações em todos os campos e <code>@Valid</code> no <code>endereco</code> — exatamente como o ClienteRequestDTO.</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/fornecedor/FornecedorRequestDTO.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.dto.fornecedor;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;</span>
+<span class="pkg">import jakarta.validation.Valid;</span>
+<span class="pkg">import jakarta.validation.constraints.*;</span>
+
+<span class="kw">public record</span> <span class="tp">FornecedorRequestDTO</span>(
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O nome é obrigatório"</span>)
+        <span class="tp">String</span> nome,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O CNPJ é obrigatório"</span>)
+        <span class="tp">String</span> cnpj,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O e-mail é obrigatório"</span>)
+        <span class="an">@Email</span>(message = <span class="st">"E-mail inválido"</span>)
+        <span class="tp">String</span> email,
+
+        <span class="an">@NotBlank</span>(message = <span class="st">"O telefone é obrigatório"</span>)
+        <span class="tp">String</span> telefone,
+
+        <span class="an">@NotNull</span>(message = <span class="st">"O endereço é obrigatório"</span>)
+        <span class="an">@Valid</span>  <span class="cm">// ← ATIVA validações DENTRO do EnderecoDTO!</span>
+        <span class="tp">EnderecoDTO</span> endereco
+) {}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">🔁</span>
+      <div class="tip-content"><strong>Repare:</strong> esse DTO é praticamente um <strong>clone</strong> do ClienteRequestDTO — só muda os campos próprios (nome/cnpj/telefone vs nomeCompleto/cpf/dataNascimento). O bloco do endereço é <strong style="color:var(--accent3)">100% igual</strong>! Esse é o ganho da reutilização.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <h3 style="margin-bottom:6px;color:var(--accent3)">📤 FornecedorResponseDTO — o que o front recebe</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Inclui o <code>id</code> gerado pelo banco e o EnderecoDTO completo (com seu próprio id).</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">dto/fornecedor/FornecedorResponseDTO.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.dto.fornecedor;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.endereco.EnderecoDTO;</span>
+
+<span class="kw">public record</span> <span class="tp">FornecedorResponseDTO</span>(
+        <span class="tp">Long</span> id,
+        <span class="tp">String</span> nome,
+        <span class="tp">String</span> cnpj,
+        <span class="tp">String</span> email,
+        <span class="tp">String</span> telefone,
+        <span class="tp">EnderecoDTO</span> endereco
+) {}</pre>
+    </div>
+  </div>
+
+  <!-- ▶️ DEMO ANIMADO: Como o front USA o FornecedorDTO -->
+  <div class="web-demo" data-demo="dto">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 Como o frontend (React) <strong style="color:var(--accent5)">usa</strong> o FornecedorDTO</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 Mesma estrutura aninhada do Cliente — formulário principal + sub-formulário de endereço viram um JSON com objeto dentro de objeto:</p>
+
+    <div class="web-demo-row">
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>meu-app.com/fornecedores/novo</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-form-title">📝 Cadastrar Fornecedor</div>
+          <div class="web-form-group"><label class="web-form-label">Nome</label><input class="web-form-input" data-fill="Distribuidora ABC" data-target="nome" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">CNPJ</label><input class="web-form-input" data-fill="12.345.678/0001-99" data-target="cnpj" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">E-mail</label><input class="web-form-input" data-fill="contato@abc.com" data-target="email" readonly></div>
+          <div class="web-form-group"><label class="web-form-label">Telefone</label><input class="web-form-input" data-fill="(11) 99999-0001" data-target="telefone" readonly></div>
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(78,205,196,0.06);border:1px dashed rgba(78,205,196,0.3);border-radius:8px;font-size:0.78rem;color:var(--accent3);font-weight:700">🏠 Endereço (sub-formulário aninhado)</div>
+          <button class="web-form-submit" style="margin-top:12px">💾 Salvar fornecedor</button>
+        </div>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-post">POST /fornecedores</div>
+      </div>
+
+      <div class="dto-mock">
+        <div class="dto-mock-header">📦 FornecedorRequestDTO</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">FornecedorRequestDTO</span>(
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="nome">nome</span><span class="dto-value" data-field="nome"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="cnpj">cnpj</span><span class="dto-value" data-field="cnpj"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="email">email</span><span class="dto-value" data-field="email"></span>,
+  <span class="dto-tp">String</span> <span class="dto-field" data-field="telefone">telefone</span><span class="dto-value" data-field="telefone"></span>,
+  <span class="dto-tp">EnderecoDTO</span> endereco
+) {}</pre>
+      </div>
+    </div>
+
+    <div class="web-demo-divider"><span>⚙️ Backend processa Fornecedor + Endereço (cascade) e responde...</span></div>
+
+    <div class="web-demo-row">
+      <div class="dto-mock response-dto">
+        <div class="dto-mock-header" style="color:var(--accent5)">📦 FornecedorResponseDTO</div>
+        <pre class="dto-mock-body"><span class="dto-kw">public record</span> <span class="dto-name">FornecedorResponseDTO</span>(
+  <span class="dto-tp">Long</span> <span class="dto-field">id</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">nome</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">cnpj</span>,
+  <span class="dto-tp">String</span> <span class="dto-field">email</span>,
+  <span class="dto-tp">EnderecoDTO</span> <span class="dto-field">endereco</span>
+) {}</pre>
+      </div>
+
+      <div class="web-demo-arrow">
+        <div class="arrow-label">JSON</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-tip"></div>
+        <div class="arrow-method method-get">200 OK</div>
+      </div>
+
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="browser-traffic">
+            <span class="traffic-light tl-red"></span><span class="traffic-light tl-yellow"></span><span class="traffic-light tl-green"></span>
+          </div>
+          <div class="browser-url"><span class="browser-url-lock">🔒</span>meu-app.com/fornecedores</div>
+        </div>
+        <div class="browser-content">
+          <div class="web-list-title">📋 Lista de Fornecedores</div>
+          <table class="web-list-table">
+            <thead><tr><th>ID</th><th>Nome</th><th>CNPJ</th><th>Cidade</th></tr></thead>
+            <tbody>
+              <tr><td class="col-id">1</td><td>Distribuidora ABC</td><td>12.345...</td><td>São Paulo</td></tr>
+              <tr><td class="col-id">2</td><td>Fornecedor XYZ</td><td>98.765...</td><td>Rio de Janeiro</td></tr>
+              <tr><td class="col-id">3</td><td>Teste LTDA</td><td>23.323...</td><td>João Pessoa</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🪆</span>
+      <div class="tip-content"><strong>Mesma magia do Cliente!</strong> O JSON aninhado vira DTO aninhado, que vira Entidade aninhada. O front nem precisa pensar — só envia a árvore e o Spring desserializa todos os níveis automaticamente.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.6 — FornecedorMapper                   -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-mapper">
+  <div class="step-header">
+    <div class="step-number sn-purple">4.6</div>
+    <div>
+      <div class="step-title">FornecedorMapper.java — reaproveitando EnderecoMapper</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Olha como ficou enxuto delegando o Endereço!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">Como já temos o <code>EnderecoMapper</code> (extraído na seção 4.3), aqui o trabalho é <strong style="color:var(--text)">só delegar</strong>. Compare com o ClienteMapper que você refatorou — a estrutura é idêntica!</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">mapper/FornecedorMapper.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.mapper;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.fornecedor.FornecedorRequestDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.fornecedor.FornecedorResponseDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Fornecedor;</span>
+
+<span class="kw">public class</span> <span class="tp">FornecedorMapper</span> {
+
+    <span class="cm">// RequestDTO → Entidade (delega Endereco para EnderecoMapper)</span>
+    <span class="kw">public static</span> <span class="tp">Fornecedor</span> <span class="fn">toEntity</span>(<span class="tp">FornecedorRequestDTO</span> dto) {
+
+        <span class="tp">Fornecedor</span> fornecedor = <span class="kw">new</span> <span class="tp">Fornecedor</span>();
+
+        fornecedor.<span class="fn">setNome</span>(dto.<span class="fn">nome</span>());
+        fornecedor.<span class="fn">setCnpj</span>(dto.<span class="fn">cnpj</span>());
+        fornecedor.<span class="fn">setEmail</span>(dto.<span class="fn">email</span>());
+        fornecedor.<span class="fn">setTelefone</span>(dto.<span class="fn">telefone</span>());
+
+        fornecedor.<span class="fn">setEndereco</span>(<span class="tp">EnderecoMapper</span>.<span class="fn">toEntity</span>(dto.<span class="fn">endereco</span>()));
+
+        <span class="kw">return</span> fornecedor;
+    }
+
+    <span class="cm">// Entidade → ResponseDTO (delega Endereco para EnderecoMapper)</span>
+    <span class="kw">public static</span> <span class="tp">FornecedorResponseDTO</span> <span class="fn">toResponseDTO</span>(<span class="tp">Fornecedor</span> fornecedor) {
+
+        <span class="kw">return new</span> <span class="tp">FornecedorResponseDTO</span>(
+                fornecedor.<span class="fn">getId</span>(),
+                fornecedor.<span class="fn">getNome</span>(),
+                fornecedor.<span class="fn">getCnpj</span>(),
+                fornecedor.<span class="fn">getEmail</span>(),
+                fornecedor.<span class="fn">getTelefone</span>(),
+                <span class="tp">EnderecoMapper</span>.<span class="fn">toResponseDTO</span>(fornecedor.<span class="fn">getEndereco</span>())
+        );
+    }
+}</pre>
+    </div>
+
+    <div class="solution-box" style="margin-top:14px">
+      <div class="solution-title">🎯 Olha o ganho da extração</div>
+      <p style="color:var(--text-dim)">Sem o <code>EnderecoMapper</code>, esse arquivo teria <strong>20 linhas a mais</strong> (os métodos auxiliares duplicados). E mais: se o Endereço ganhasse um campo novo, você teria que mexer em dois Mappers diferentes — fácil esquecer um. Agora muda em <strong>um lugar só</strong>!</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.7 — Repository                         -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-repo">
+  <div class="step-header">
+    <div class="step-number sn-green">4.7</div>
+    <div>
+      <div class="step-title">Repository — sem mudança real</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Só precisa atualizar o package após o rename</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px">O <code>FornecedorRepository</code> já era uma interface vazia herdando de <code>JpaRepository</code> — não precisa mudar nada além do package (que o IntelliJ já atualizou no rename). E <strong style="color:var(--text)">continuamos sem precisar de <code>EnderecoRepository</code></strong>: o cascade do <code>@OneToOne</code> cuida da tabela endereco automaticamente, igual no Cliente.</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">repository/FornecedorRepository.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.repository;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.model.Fornecedor;</span>
+<span class="pkg">import org.springframework.data.jpa.repository.JpaRepository;</span>
+<span class="pkg">import org.springframework.stereotype.Repository;</span>
+
+<span class="an">@Repository</span>
+<span class="kw">public interface</span> <span class="tp">FornecedorRepository</span> <span class="kw">extends</span> <span class="tp">JpaRepository</span>&lt;<span class="tp">Fornecedor</span>, <span class="tp">Long</span>&gt; {
+}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">🪄</span>
+      <div class="tip-content"><strong>Repositórios são "à prova de refactor"!</strong> Como herdamos de <code>JpaRepository</code>, ele se ajusta automaticamente à entidade — qualquer mudança no <code>Fornecedor.java</code> reflete aqui sem precisar mexer.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.8 — FornecedorService (interface)      -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-service">
+  <div class="step-header">
+    <div class="step-number sn-yellow">4.8</div>
+    <div>
+      <div class="step-title">Service — Interface FornecedorService.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Antes era classe única; agora interface + impl (igual ao Cliente!)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin:0 0 12px;color:var(--accent5)">⚠️ Antes (cap 1) — classe única retornando entidade</h4>
+    <div class="code-block" style="opacity:0.7">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/FornecedorService.java <span style="color:var(--accent2);font-size:0.7rem">(antes)</span></span><span class="lang-badge java">Java</span></div>
+      </div>
+      <pre>
+<span class="an">@Service</span>
+<span class="kw">public class</span> <span class="tp">FornecedorService</span> {
+
+    <span class="an">@Autowired</span>                                 <span class="cm">// ⚠️ injeção de campo</span>
+    <span class="tp">FornecedorRepository</span> fornecedorRepository;
+
+    <span class="kw">public void</span> <span class="fn">criarFornecedor</span>(<span class="tp">Fornecedor</span> fornecedor) { <span class="cm">// ⚠️ recebe entidade</span>
+        fornecedorRepository.<span class="fn">save</span>(fornecedor);
+    }
+
+    <span class="kw">public</span> <span class="tp">Optional</span>&lt;<span class="tp">Fornecedor</span>&gt; <span class="fn">buscarFornecedorPorId</span>(<span class="tp">Long</span> id) {
+        <span class="kw">return</span> fornecedorRepository.<span class="fn">findById</span>(id);  <span class="cm">// ⚠️ Optional vazando</span>
+    }
+    <span class="cm">// ... + listar/atualizar/deletar com if/isEmpty/throw</span>
+}</pre>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">✅ Depois (cap 4) — interface + ServiceImpl, trabalhando com DTOs</h4>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:8px">Primeiro, a <strong>interface</strong> com as 5 assinaturas — todas trabalhando com DTOs:</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/FornecedorService.java <span style="color:var(--accent3);font-size:0.7rem">(refatorado)</span></span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.service;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.fornecedor.FornecedorRequestDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.fornecedor.FornecedorResponseDTO;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="kw">public interface</span> <span class="tp">FornecedorService</span> {
+
+    <span class="tp">FornecedorResponseDTO</span> <span class="fn">criarFornecedor</span>(<span class="tp">FornecedorRequestDTO</span> dto);
+
+    <span class="tp">List</span>&lt;<span class="tp">FornecedorResponseDTO</span>&gt; <span class="fn">listarTodosFornecedores</span>();
+
+    <span class="tp">FornecedorResponseDTO</span> <span class="fn">buscarFornecedorPorId</span>(<span class="tp">Long</span> id);
+
+    <span class="tp">FornecedorResponseDTO</span> <span class="fn">atualizarFornecedorPorId</span>(<span class="tp">Long</span> id, <span class="tp">FornecedorRequestDTO</span> dto);
+
+    <span class="kw">void</span> <span class="fn">deletarFornecedorPorId</span>(<span class="tp">Long</span> id);
+}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">📜</span>
+      <div class="tip-content"><strong>O contrato em uma só tela.</strong> A interface mostra <strong>O QUE</strong> o serviço faz sem se importar com <strong>COMO</strong>. Isso facilita testes (você pode mockar a interface) e troca de implementação no futuro.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.9 — FornecedorServiceImpl              -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-serviceimpl">
+  <div class="step-header">
+    <div class="step-number sn-yellow">4.9</div>
+    <div>
+      <div class="step-title">ServiceImpl — FornecedorServiceImpl.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Onde toda a lógica do refactor se conecta</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:16px"><code>@Service</code>, <code>@RequiredArgsConstructor</code>, <code>private final</code>, <code>orElseThrow</code>, <code>stream().map().toList()</code> — você já fez isso no Cliente. Aqui é só repetir para o Fornecedor!</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">service/FornecedorServiceImpl.java</span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65<br>66<br>67<br>68<br>69<br>70<br>71<br>72<br>73<br>74<br>75<br>76<br>77<br>78<br>79<br>80<br>81<br>82<br>83<br>84</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.service;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.fornecedor.FornecedorRequestDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.fornecedor.FornecedorResponseDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.mapper.FornecedorMapper;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Endereco;</span>
+<span class="pkg">import br.com.sistemagestao.api.model.Fornecedor;</span>
+<span class="pkg">import br.com.sistemagestao.api.repository.FornecedorRepository;</span>
+<span class="pkg">import lombok.RequiredArgsConstructor;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.stereotype.Service;</span>
+<span class="pkg">import org.springframework.web.server.ResponseStatusException;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="an">@Service</span>
+<span class="an">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="tp">FornecedorServiceImpl</span> <span class="kw">implements</span> <span class="tp">FornecedorService</span> {
+
+    <span class="kw">private final</span> <span class="tp">FornecedorRepository</span> fornecedorRepository;
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">FornecedorResponseDTO</span> <span class="fn">criarFornecedor</span>(<span class="tp">FornecedorRequestDTO</span> dto) {
+
+        <span class="tp">Fornecedor</span> fornecedor = <span class="tp">FornecedorMapper</span>.<span class="fn">toEntity</span>(dto);
+
+        <span class="cm">// 🌊 Salva o Fornecedor — o Endereco é salvo junto via cascade!</span>
+        fornecedorRepository.<span class="fn">save</span>(fornecedor);
+
+        <span class="kw">return</span> <span class="tp">FornecedorMapper</span>.<span class="fn">toResponseDTO</span>(fornecedor);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">FornecedorResponseDTO</span>&gt; <span class="fn">listarTodosFornecedores</span>() {
+
+        <span class="kw">return</span> fornecedorRepository.<span class="fn">findAll</span>()
+                .<span class="fn">stream</span>()
+                .<span class="fn">map</span>(<span class="tp">FornecedorMapper</span>::<span class="fn">toResponseDTO</span>)
+                .<span class="fn">toList</span>();
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">FornecedorResponseDTO</span> <span class="fn">buscarFornecedorPorId</span>(<span class="tp">Long</span> id) {
+
+        <span class="tp">Fornecedor</span> fornecedor = fornecedorRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Fornecedor não encontrado"</span>));
+
+        <span class="kw">return</span> <span class="tp">FornecedorMapper</span>.<span class="fn">toResponseDTO</span>(fornecedor);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="tp">FornecedorResponseDTO</span> <span class="fn">atualizarFornecedorPorId</span>(<span class="tp">Long</span> id, <span class="tp">FornecedorRequestDTO</span> dto) {
+
+        <span class="tp">Fornecedor</span> fornecedor = fornecedorRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Fornecedor não encontrado"</span>));
+
+        <span class="cm">// Atualiza os campos simples do fornecedor</span>
+        fornecedor.<span class="fn">setNome</span>(dto.<span class="fn">nome</span>());
+        fornecedor.<span class="fn">setCnpj</span>(dto.<span class="fn">cnpj</span>());
+        fornecedor.<span class="fn">setEmail</span>(dto.<span class="fn">email</span>());
+        fornecedor.<span class="fn">setTelefone</span>(dto.<span class="fn">telefone</span>());
+
+        <span class="cm">// Atualiza os campos do Endereco que JÁ EXISTE (mantemos o mesmo id!)</span>
+        <span class="tp">Endereco</span> endereco = fornecedor.<span class="fn">getEndereco</span>();
+        endereco.<span class="fn">setCep</span>(dto.<span class="fn">endereco</span>().<span class="fn">cep</span>());
+        endereco.<span class="fn">setLogradouro</span>(dto.<span class="fn">endereco</span>().<span class="fn">logradouro</span>());
+        endereco.<span class="fn">setNumero</span>(dto.<span class="fn">endereco</span>().<span class="fn">numero</span>());
+        endereco.<span class="fn">setComplemento</span>(dto.<span class="fn">endereco</span>().<span class="fn">complemento</span>());
+        endereco.<span class="fn">setBairro</span>(dto.<span class="fn">endereco</span>().<span class="fn">bairro</span>());
+        endereco.<span class="fn">setCidade</span>(dto.<span class="fn">endereco</span>().<span class="fn">cidade</span>());
+        endereco.<span class="fn">setUf</span>(dto.<span class="fn">endereco</span>().<span class="fn">uf</span>());
+
+        fornecedorRepository.<span class="fn">save</span>(fornecedor);
+
+        <span class="kw">return</span> <span class="tp">FornecedorMapper</span>.<span class="fn">toResponseDTO</span>(fornecedor);
+    }
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> <span class="fn">deletarFornecedorPorId</span>(<span class="tp">Long</span> id) {
+
+        <span class="tp">Fornecedor</span> fornecedor = fornecedorRepository.<span class="fn">findById</span>(id)
+                .<span class="fn">orElseThrow</span>(() -> <span class="kw">new</span> <span class="tp">ResponseStatusException</span>(
+                        <span class="tp">HttpStatus</span>.<span class="nb">NOT_FOUND</span>, <span class="st">"Fornecedor não encontrado"</span>));
+
+        <span class="cm">// 🗑️ Deleta o Fornecedor — o Endereco é deletado junto via orphanRemoval!</span>
+        fornecedorRepository.<span class="fn">deleteById</span>(fornecedor.<span class="fn">getId</span>());
+    }
+}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">🤔</span>
+      <div class="tip-content">
+        <strong>No <code>atualizarFornecedorPorId</code>, mantemos o ID do Endereço!</strong> Igualzinho ao ClienteServiceImpl: pegamos o <code>Endereco</code> que <strong>já existe</strong> e setamos os campos novos nele, em vez de criar um <code>new Endereco()</code>. Isso mantém o mesmo <code>endereco_id</code> no banco e evita uma operação a mais com o orphanRemoval.
+      </div>
+    </div>
+
+    <div class="solution-box" style="margin-top:14px">
+      <div class="solution-title">🔥 Compare com o cap 1</div>
+      <p style="color:var(--text-dim)">No cap 1 o <code>atualizar</code> tinha 11 <code>setters</code> (4 do fornecedor + 7 do endereço flat) tudo no mesmo objeto. Aqui mantemos a mesma quantidade total de setters, mas <strong style="color:var(--text)">organizados em duas entidades</strong>: 4 no Fornecedor, 7 no Endereço. Quando outra entidade (tipo Cliente) precisar de Endereço, ela <strong>já tem a estrutura</strong> sem inventar nada.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.10 — FornecedorController              -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-controller">
+  <div class="step-header">
+    <div class="step-number sn-main">4.10</div>
+    <div>
+      <div class="step-title">Controller — FornecedorController.java</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Endpoints REST com @Valid e DTO no retorno</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin:0 0 12px;color:var(--accent5)">⚠️ Antes (cap 1) — recebia/devolvia entidade, expunha Optional</h4>
+    <div class="code-block" style="opacity:0.7">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">controller/FornecedorController.java <span style="color:var(--accent2);font-size:0.7rem">(antes)</span></span><span class="lang-badge java">Java</span></div>
+      </div>
+      <pre>
+<span class="an">@RestController</span>
+<span class="an">@RequestMapping</span>(<span class="st">"/fornecedores"</span>)
+<span class="kw">public class</span> <span class="tp">FornecedorController</span> {
+
+    <span class="an">@Autowired</span> <span class="tp">FornecedorService</span> fornecedorService;
+
+    <span class="an">@PostMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">CREATED</span>)
+    <span class="kw">public void</span> <span class="fn">criarFornecedor</span>(<span class="an">@RequestBody</span> <span class="tp">Fornecedor</span> fornecedor) { <span class="cm">// ⚠️ entidade exposta, sem @Valid</span>
+        fornecedorService.<span class="fn">criarFornecedor</span>(fornecedor);
+    }
+
+    <span class="an">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="kw">public</span> <span class="tp">Optional</span>&lt;<span class="tp">Fornecedor</span>&gt; <span class="fn">buscarFornecedorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) { <span class="cm">// ⚠️ Optional na resposta</span>
+        <span class="kw">return</span> fornecedorService.<span class="fn">buscarFornecedorPorId</span>(id);
+    }
+    <span class="cm">// ... PUT respondia 204 No Content (sem corpo)</span>
+}</pre>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">✅ Depois (cap 4) — DTOs, @Valid, status corretos</h4>
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">controller/FornecedorController.java <span style="color:var(--accent3);font-size:0.7rem">(refatorado)</span></span><span class="lang-badge java">Java</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48</div>
+      <pre>
+<span class="pkg">package br.com.sistemagestao.api.controller;</span>
+
+<span class="pkg">import br.com.sistemagestao.api.dto.fornecedor.FornecedorRequestDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.dto.fornecedor.FornecedorResponseDTO;</span>
+<span class="pkg">import br.com.sistemagestao.api.service.FornecedorService;</span>
+<span class="pkg">import jakarta.validation.Valid;</span>
+<span class="pkg">import lombok.RequiredArgsConstructor;</span>
+<span class="pkg">import org.springframework.http.HttpStatus;</span>
+<span class="pkg">import org.springframework.web.bind.annotation.*;</span>
+
+<span class="pkg">import java.util.List;</span>
+
+<span class="an">@RestController</span>
+<span class="an">@RequestMapping</span>(<span class="st">"/fornecedores"</span>)
+<span class="an">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="tp">FornecedorController</span> {
+
+    <span class="kw">private final</span> <span class="tp">FornecedorService</span> fornecedorService;
+
+    <span class="an">@PostMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">CREATED</span>)
+    <span class="kw">public</span> <span class="tp">FornecedorResponseDTO</span> <span class="fn">criarFornecedor</span>(<span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">FornecedorRequestDTO</span> dto) {
+        <span class="kw">return</span> fornecedorService.<span class="fn">criarFornecedor</span>(dto);
+    }
+
+    <span class="an">@GetMapping</span>
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">FornecedorResponseDTO</span>&gt; <span class="fn">listarTodosFornecedores</span>() {
+        <span class="kw">return</span> fornecedorService.<span class="fn">listarTodosFornecedores</span>();
+    }
+
+    <span class="an">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">FornecedorResponseDTO</span> <span class="fn">buscarFornecedorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        <span class="kw">return</span> fornecedorService.<span class="fn">buscarFornecedorPorId</span>(id);
+    }
+
+    <span class="an">@PutMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">OK</span>)
+    <span class="kw">public</span> <span class="tp">FornecedorResponseDTO</span> <span class="fn">atualizarFornecedorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id,
+                                                            <span class="an">@Valid</span> <span class="an">@RequestBody</span> <span class="tp">FornecedorRequestDTO</span> dto) {
+        <span class="kw">return</span> fornecedorService.<span class="fn">atualizarFornecedorPorId</span>(id, dto);
+    }
+
+    <span class="an">@DeleteMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="an">@ResponseStatus</span>(<span class="tp">HttpStatus</span>.<span class="nb">NO_CONTENT</span>)
+    <span class="kw">public void</span> <span class="fn">deletarFornecedorPorId</span>(<span class="an">@PathVariable</span> <span class="tp">Long</span> id) {
+        fornecedorService.<span class="fn">deletarFornecedorPorId</span>(id);
+    }
+}</pre>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent5)">📍 Endpoints do Fornecedor (refatorado)</h4>
+    <table class="endpoint-table">
+      <thead><tr><th>Método</th><th>URL</th><th>Ação</th><th>Status</th><th>Mudou em relação ao cap 1?</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-badge post">POST</span></td><td><code>/fornecedores</code></td><td>Criar (com endereço aninhado)</td><td>201 Created</td><td><span style="color:var(--accent3)">retorna DTO + @Valid</span></td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/fornecedores</code></td><td>Listar todos</td><td>200 OK</td><td><span style="color:var(--accent3)">retorna List&lt;DTO&gt;</span></td></tr>
+        <tr><td><span class="method-badge get">GET</span></td><td><code>/fornecedores/{id}</code></td><td>Buscar por ID</td><td>200 OK</td><td><span style="color:var(--accent3)">retorna DTO (sem Optional!)</span></td></tr>
+        <tr><td><span class="method-badge put">PUT</span></td><td><code>/fornecedores/{id}</code></td><td>Atualizar fornecedor</td><td><strong style="color:var(--accent3)">200 OK</strong></td><td><span style="color:var(--accent3)">era 204; agora retorna DTO atualizado</span></td></tr>
+        <tr><td><span class="method-badge delete">DELETE</span></td><td><code>/fornecedores/{id}</code></td><td>Deletar (e endereço junto)</td><td>204 No Content</td><td><span style="color:var(--text-dim)">igual ao cap 1</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ▶️ DEMO ANIMADO: Controller → Página (POST com cascade) -->
+  <div class="web-demo" data-demo="pipeline">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 O ciclo completo: <strong style="color:var(--accent5)">cadastrar Fornecedor com Endereço</strong> via POST</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:6px">👇 Mesmo fluxo do Cliente — o cascade salva o Endereço junto. Repare como o pipeline ficou <strong>idêntico</strong> aos demais CRUDs profissionais:</p>
+
+    <div class="pipeline-flow">
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">🌐</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página clica "Salvar Fornecedor"</div>
+          <div class="pipeline-desc">fetch('/fornecedores', &#123;method:'POST', body: json&#125;)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-controller">
+        <div class="pipeline-icon">🎮</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">FornecedorController valida</div>
+          <div class="pipeline-desc">@Valid @RequestBody FornecedorRequestDTO</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-mapper">
+        <div class="pipeline-icon">🔄</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">FornecedorMapper.toEntity(dto)</div>
+          <div class="pipeline-desc">delega para EnderecoMapper.toEntity(dto.endereco())</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-service">
+        <div class="pipeline-icon">⚙️</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">FornecedorServiceImpl.save()</div>
+          <div class="pipeline-desc">cascade = ALL → salva os dois!</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-db">
+        <div class="pipeline-icon">🐘</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">PostgreSQL grava</div>
+          <div class="pipeline-desc">INSERT endereco; INSERT fornecedor (com FK endereco_id)</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-response">
+        <div class="pipeline-icon">📤</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Controller responde 201 Created</div>
+          <div class="pipeline-desc">JSON: FornecedorResponseDTO + endereco aninhado</div>
+        </div>
+      </div>
+      <div class="pipeline-arrow">↓</div>
+
+      <div class="pipeline-step ps-page">
+        <div class="pipeline-icon">✨</div>
+        <div class="pipeline-text">
+          <div class="pipeline-name">Página exibe "Fornecedor cadastrado!"</div>
+          <div class="pipeline-desc">redirect('/fornecedores/' + json.id)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content"><strong>Igualzinho ao Cliente!</strong> Compare esse pipeline com o do cap 3 — só muda o nome da entidade. Quando você dominar esse fluxo, qualquer CRUD novo no Spring vira só "preencher os nomes" do mesmo padrão.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.11 — TESTANDO NO INSOMNIA              -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="forn4-insomnia">
+  <div class="step-header">
+    <div class="step-number" style="background:#7B68EE">🦋</div>
+    <div>
+      <div class="step-title">Testando o Fornecedor refatorado no Insomnia</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Atenção ao novo formato do JSON — agora aninhado!</div>
+    </div>
+  </div>
+
+  <!-- ▶️ DEMO ANIMADO: Insomnia ↔ Página (Fornecedor refatorado) -->
+  <div class="web-demo" data-demo="compare">
+    <div class="web-demo-header">
+      <span class="web-demo-title">🎬 <strong style="color:#7B68EE">Insomnia</strong> vs <strong style="color:#61dafb">Página React</strong> — Fornecedor refatorado</span>
+      <button class="web-demo-replay" onclick="replayWebDemo(this)">🔄 Replay</button>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">👇 O backend recebe a mesma requisição, venha de onde vier — só importa que o JSON esteja no formato novo (aninhado):</p>
+
+    <div class="compare-tools">
+      <div class="compare-tool tool-insomnia">
+        <div class="compare-tool-icon">🦋</div>
+        <div class="compare-tool-name">Insomnia (agora)</div>
+        <div class="compare-tool-action">
+          <strong style="color:#49cc90">POST</strong> /fornecedores<br>
+          <span style="opacity:0.7">Body com endereco: &#123; ... &#125;</span><br>
+          <span style="color:var(--text);font-size:0.7rem">[ Send ]</span>
+        </div>
+        <p style="color:var(--text-dim);font-size:0.8rem;margin:0">Você cola o JSON aninhado e clica Send.</p>
+      </div>
+
+      <div class="compare-tool tool-react">
+        <div class="compare-tool-icon">⚛️</div>
+        <div class="compare-tool-name">Página React (futuro)</div>
+        <div class="compare-tool-action">
+<span style="color:#c792ea">await</span> <span style="color:#fca130">fetch</span>(<span style="color:#a8e6a4">'/fornecedores'</span>, &#123;<br>
+&nbsp;&nbsp;method: <span style="color:#a8e6a4">'POST'</span>,<br>
+&nbsp;&nbsp;body: <span style="color:#fca130">JSON</span>.<span style="color:#fca130">stringify</span>(&#123;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...form, endereco<br>
+&nbsp;&nbsp;&#125;)<br>
+&#125;)
+        </div>
+        <p style="color:var(--text-dim);font-size:0.8rem;margin:0">Form principal + sub-form de endereço, montados num único objeto.</p>
+      </div>
+    </div>
+
+    <div class="compare-merge">
+      <div style="font-size:0.92rem;margin-bottom:6px">A requisição HTTP é idêntica:</div>
+      <span class="http-pulse">POST /fornecedores HTTP/1.1</span>
+      <span class="http-pulse">Body: &#123; ..., "endereco": &#123;...&#125; &#125;</span>
+      <div style="margin-top:8px;color:var(--text-dim);font-size:0.85rem">O <strong style="color:var(--text)">Spring desserializa o JSON aninhado</strong> direto pra FornecedorRequestDTO + EnderecoDTO — exatamente como faz com Cliente. ✨</div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🪆</span>
+      <div class="tip-content"><strong>Reutilização também no front!</strong> Quem cria a tela de cadastro de Fornecedor pode <strong>reaproveitar o componente de Endereço</strong> que já fez para o Cliente. O mesmo princípio do backend (uma entidade Endereço só) vira "um componente Endereço só" no React.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="warning" style="margin-bottom:20px">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Se você guardou os requests do cap 1 no Insomnia, eles vão quebrar!</strong> O JSON era flat (cep/logradouro/... no nível principal). Agora precisa estar com o objeto <code>endereco</code> aninhado. Atualize os bodies dos requests da pasta <strong>Fornecedor</strong> seguindo os exemplos abaixo.</div>
+    </div>
+
+    <h4 style="margin:0 0 12px;color:var(--accent5)">⚠️ Antes (cap 1) — body flat</h4>
+    <div class="code-block" style="opacity:0.7">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">POST /fornecedores (antes)</span><span class="lang-badge json">JSON</span></div>
+      </div>
+      <pre>{
+  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,
+  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,
+  <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,
+  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0001"</span>,
+  <span class="json-key">"cep"</span>: <span class="json-val">"01310-100"</span>,           <span class="cm">// ⚠️ campos flat</span>
+  <span class="json-key">"logradouro"</span>: <span class="json-val">"Avenida Paulista"</span>,
+  <span class="json-key">"numero"</span>: <span class="json-val">"1000"</span>,
+  <span class="json-key">"bairro"</span>: <span class="json-val">"Bela Vista"</span>,
+  <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,
+  <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>
+}</pre>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">✅ Depois (cap 4) — body aninhado</h4>
+
+    <!-- POST -->
+    <div style="background:rgba(73,204,144,0.04);border:1px solid rgba(73,204,144,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge post" style="font-size:0.8rem;padding:4px 14px">POST</span> <span style="color:var(--text)">Criar Fornecedor</span></h4>
+      <div style="font-size:0.88rem;color:var(--text-dim);margin-bottom:8px"><strong style="color:var(--text)">URL:</strong> <code>_.baseUrl/fornecedores</code></div>
+      <div class="code-block" style="margin:8px 0 0">
+        <div class="code-header">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <span class="lang-badge json">JSON</span>
+        </div>
+        <pre>{
+  <span class="json-key">"nome"</span>: <span class="json-val">"Distribuidora ABC"</span>,
+  <span class="json-key">"cnpj"</span>: <span class="json-val">"12.345.678/0001-99"</span>,
+  <span class="json-key">"email"</span>: <span class="json-val">"contato@abc.com"</span>,
+  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0001"</span>,
+  <span class="json-key">"endereco"</span>: {
+    <span class="json-key">"cep"</span>: <span class="json-val">"01310-100"</span>,
+    <span class="json-key">"logradouro"</span>: <span class="json-val">"Avenida Paulista"</span>,
+    <span class="json-key">"numero"</span>: <span class="json-val">"1000"</span>,
+    <span class="json-key">"complemento"</span>: <span class="json-val">"Sala 305"</span>,
+    <span class="json-key">"bairro"</span>: <span class="json-val">"Bela Vista"</span>,
+    <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,
+    <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>
+  }
+}</pre>
+      </div>
+      <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px"><strong style="color:#49cc90">Resposta:</strong> 201 Created com o JSON de volta — agora <strong>com o DTO completo</strong> (id do fornecedor + id do endereço gerado pelo cascade!) ✨</p>
+    </div>
+
+    <!-- PUT -->
+    <div style="background:rgba(252,161,48,0.04);border:1px solid rgba(252,161,48,0.12);border-radius:16px;padding:24px;margin:16px 0">
+      <h4 style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span class="method-badge put" style="font-size:0.8rem;padding:4px 14px">PUT</span> <span style="color:var(--text)">Atualizar Fornecedor</span></h4>
+      <div style="font-size:0.88rem;color:var(--text-dim);margin-bottom:8px"><strong style="color:var(--text)">URL:</strong> <code>_.baseUrl/fornecedores/1</code></div>
+      <div style="font-size:0.88rem;color:var(--text-dim);margin-bottom:8px">Mesmo body do POST. <strong style="color:var(--accent3)">Resposta agora é 200 OK com o DTO atualizado</strong> (era 204 No Content no cap 1!).</div>
+    </div>
+
+    <!-- Testando @Valid aninhado -->
+    <h4 style="margin:28px 0 12px;color:var(--accent2)">🧪 Testando @Valid no DTO aninhado</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Tente enviar com o <strong>endereço com campos vazios</strong> — para confirmar que o @Valid aninhado pegou:</p>
+
+    <div class="code-block" style="margin:8px 0">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">JSON com endereço incompleto</span><span class="lang-badge json">JSON</span></div>
+      </div>
+      <pre>{
+  <span class="json-key">"nome"</span>: <span class="json-val">"Teste"</span>,
+  <span class="json-key">"cnpj"</span>: <span class="json-val">"00.000.000/0001-00"</span>,
+  <span class="json-key">"email"</span>: <span class="json-val">"teste@email.com"</span>,
+  <span class="json-key">"telefone"</span>: <span class="json-val">"(11) 99999-0000"</span>,
+  <span class="json-key">"endereco"</span>: {
+    <span class="json-key">"cep"</span>: <span class="json-val">""</span>,            <span class="cm">// ← vazio!</span>
+    <span class="json-key">"logradouro"</span>: <span class="json-val">""</span>,     <span class="cm">// ← vazio!</span>
+    <span class="json-key">"numero"</span>: <span class="json-val">"123"</span>,
+    <span class="json-key">"bairro"</span>: <span class="json-val">"Centro"</span>,
+    <span class="json-key">"cidade"</span>: <span class="json-val">"São Paulo"</span>,
+    <span class="json-key">"uf"</span>: <span class="json-val">"SP"</span>
+  }
+}</pre>
+    </div>
+    <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px"><strong style="color:var(--accent2)">Resposta:</strong> 400 Bad Request com as mensagens "O CEP é obrigatório" e "O logradouro é obrigatório". 🎯</p>
+
+    <!-- Testando @Email -->
+    <h4 style="margin:24px 0 12px;color:var(--accent2)">🧪 Testando @Email</h4>
+    <div class="code-block" style="margin:8px 0">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">JSON com e-mail inválido</span><span class="lang-badge json">JSON</span></div>
+      </div>
+      <pre>{
+  <span class="cm">// ...</span>
+  <span class="json-key">"email"</span>: <span class="json-val">"isso-nao-e-email"</span>,    <span class="cm">// ← falta @ e domínio</span>
+  <span class="cm">// ...</span>
+}</pre>
+    </div>
+    <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px"><strong style="color:var(--accent2)">Resposta:</strong> 400 Bad Request com "E-mail inválido". ✅</p>
+
+    <!-- Testando CNPJ unique -->
+    <h4 style="margin:24px 0 12px;color:var(--accent2)">🧪 Testando <code>unique = true</code> do CNPJ</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Cadastre um Fornecedor, depois tente cadastrar <strong>outro com o mesmo CNPJ</strong>. O banco vai barrar antes mesmo do código rodar:</p>
+    <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px"><strong style="color:var(--accent2)">Resposta:</strong> 500 Internal Server Error com erro de constraint <code>uk_fornecedor_cnpj</code>. (Em projeto profissional, capturaríamos esse erro com um <code>@ExceptionHandler</code> e devolveríamos 409 Conflict — fica de exercício avançado!)</p>
+
+    <div class="tip" style="margin-top:24px">
+      <span class="tip-icon">🎉</span>
+      <div class="tip-content"><strong>Funcionou tudo?</strong> Você acabou de fazer um <strong>refactor real</strong> num CRUD existente — o tipo de tarefa mais comum no dia a dia profissional. Saber refatorar com confiança é diferencial gigante!</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- 4.12 — RESUMO FINAL                      -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" style="text-align:center;padding:60px 20px">
+  <div style="font-size:3.5rem;margin-bottom:16px;animation:bounce 2s ease-in-out infinite;display:inline-block">🔧</div>
+  <h2 style="font-size:2rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--accent5),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Refactor Concluído!</h2>
+  <p style="color:var(--text-dim);max-width:560px;margin:0 auto 30px;font-size:1.05rem">Você acabou de fazer o tipo de trabalho mais valorizado no mercado: <strong style="color:var(--text)">refatorar código existente</strong> elevando para o padrão profissional, sem quebrar funcionalidade. 💪</p>
+
+  <div class="card" style="text-align:left;max-width:640px;margin:0 auto">
+    <h3 style="margin-bottom:16px;color:var(--accent3)">📋 O que você consolidou neste refactor</h3>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.92rem">
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Refactor de package</strong> — programaai → sistemagestao via IntelliJ</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Migração de schema</strong> — DROP TABLE + ddl-auto recriando do zero</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Endereço flat → @OneToOne</strong> — eliminando duplicação com a entidade do cap 3</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Extract Mapper</strong> — auxiliares do Endereço viraram <code>EnderecoMapper</code> dedicado</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">DTOs aninhados no Fornecedor</strong> — @Valid no campo Endereco</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Service único → Interface + Impl</strong> — mesma quebra do Cliente</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">@Autowired campo → @RequiredArgsConstructor</strong></div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Optional vazando → orElseThrow + DTO de retorno</strong></div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Bean Validation</strong> — @NotBlank, @Email, @Valid, unique CNPJ</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Status HTTP corretos</strong> — PUT 204 → 200 com DTO atualizado</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">cascade + orphanRemoval</strong> — Endereço acompanha vida/morte do Fornecedor</div>
+    </div>
+
+    <div class="tip" style="margin-top:20px">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-content">
+        <strong>Próximo passo (Capítulo 5):</strong> Agora que o backend está <strong style="color:var(--text)">sólido e consistente</strong>, vamos plugar o <strong style="color:var(--accent7)">React</strong> nele! CORS, fetch, tipagem e a página de verdade consumindo a API.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
 <!-- ════════════════════════════════════════ -->
 <!-- PRÓXIMOS CAPÍTULOS                      -->
 <!-- ════════════════════════════════════════ -->
@@ -8227,13 +9518,6 @@ br.com.sistemagestao.api/
     </div>
 
     <div class="roadmap" style="text-align:left">
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent3)"></div>
-        <div class="roadmap-content">
-          <h4 style="color:var(--accent3)">🔧 Capítulo 4 — Refatorando Fornecedor para usar Endereço</h4>
-          <p>Vamos eliminar a duplicação! O Fornecedor (que hoje tem o endereço <em>flat</em> dentro da entidade) vai passar a usar a <strong>mesma</strong> entidade <code>Endereco</code> que criamos no cap 3. Refactor real, com migração de dados e remoção de código duplicado. O momento "ahá!" do curso. 💡</p>
-        </div>
-      </div>
       <div class="roadmap-item">
         <div class="roadmap-dot" style="background:var(--accent7)"></div>
         <div class="roadmap-content">
