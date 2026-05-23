@@ -1,0 +1,872 @@
+# Capitulo 6 - Integracao Front x Back
+# Fonte: cap-10-integracao-frontend.html
+
+🔗
+
+Capítulo 6
+
+Integração Front × Back
+
+Do mock json-server pro nosso backend Spring autenticado — antes e depois, lado a lado
+
+🎯
+
+Por que integrar agora?
+
+O front e o back finalmente se encontram
+
+Até aqui o front conversava com o
+json-server
+— um mock que aceita qualquer JSON e devolve igual. Bom pra aprender React sem depender de back. Mas agora temos um
+backend de verdade
+, com validação, autenticação JWT, relacionamentos.
+Hora de ligar os fios.
+
+Analogia: o motor e o painel
+
+Você construiu um
+motor
+(backend) e um
+painel
+(front) cada um na sua oficina. Funcionam isolados, mas o painel ainda está com fios soltos — botões que não acendem nada. Este capítulo é o
+chicote elétrico
+: cada botão do painel passa a comandar uma parte real do motor. 🔌
+
+🎁 O que entra nesta etapa
+
+CORS
+
+Liberar o front no backend
+—
+sem isso o browser bloqueia.
+
+api.js
+
+Instância axios central
+—
+interceptors injetam JWT + tratam 401.
+
+AuthContext
+
+Estado global do usuário
+—
+quem está logado, em qualquer tela.
+
+PrivateRoute
+
+Rotas protegidas
+—
+sem login? Vai pra
+/login
+.
+
+forms
+
+6 telas novas
+—
+Login, Register, Cadastrar/Editar Cliente e Produto.
+
+📌
+
+Estratégia didática deste capítulo:
+em cada seção, mostro o
+antes
+(com json-server) e o
+depois
+(com nosso backend), lado a lado. Você vai ver exatamente
+o que mudou
+e
+por quê
+.
+
+📸
+
+Snapshot inicial — o ponto de partida
+
+Antes de mexer, marca o estado atual com git
+
+Pra a gente conseguir comparar
+antes × depois
+com precisão, marcamos o front no estado atual com uma
+tag git
+:
+
+Terminal
+
+cd web
+git tag pre-integracao
+
+Agora qualquer arquivo pode ser comparado com
+git diff pre-integracao -- web/src/App.jsx
+. Ao final do capítulo, o resumo do delta é assim:
+
+git diff --stat
+
+web/src/App.jsx                       |  59 +++--
+web/src/components/Navbar.jsx         |  90 +++++---
+web/src/pages/CadastrarFornecedor.jsx | 369 +++++++++++++-----------------
+web/src/pages/EditarFornecedor.jsx    | 408 +++++++++++++++-------------------
+web/src/pages/Fornecedores.jsx        | 214 ++++++++----------
+web/src/pages/Inicial.jsx             |  48 +++-
+web/src/pages/Clientes.jsx            | 107 +++++++++
+web/src/pages/Produtos.jsx            | 104 +++++++++
+8 files changed, 791 insertions(+), 608 deletions(-)
+
+# + arquivos NOVOS (não aparecem no stat porque não estavam rastreados):
+src/services/api.js
+src/contexts/AuthContext.jsx
+src/components/PrivateRoute.jsx
+src/pages/Login.jsx
+src/pages/Register.jsx
+src/pages/CadastrarCliente.jsx
+src/pages/EditarCliente.jsx
+src/pages/CadastrarProduto.jsx
+src/pages/EditarProduto.jsx
+
+🧠
+
+Por que tag e não branch?
+Tag é
+imutável
+— aponta pra um commit específico pra sempre. Branch evolui. Pro "antes" do diff didático, queremos congelado.
+
+🚧
+
+CORS — derrubando o muro do navegador
+
+Sem isso, NADA funciona — e a mensagem de erro engana o iniciante
+
+🤔 Por que CORS existe?
+
+Quando o front roda em
+http://localhost:5173
+e tenta chamar a API em
+http://localhost:8080
+, são
+origens diferentes
+(portas diferentes). Por
+segurança
+, o browser bloqueia chamadas cross-origin a menos que o servidor diga:
+"essa origem aí pode falar comigo"
+. Isso é CORS (
+Cross-Origin Resource Sharing
+).
+
+Analogia: a lista do porteiro
+
+Imagine um prédio (o backend) com porteiro. Toda visita (browser) que chega de fora, o porteiro olha numa
+lista
+: "esse endereço pode entrar?". Se o endereço não está na lista, ele
+barra
+. Configurar CORS é entregar a lista ao porteiro: "
+localhost:5173
+tá liberado". 🛂
+
+📄 No
+SecurityConfig.java
+
+Java
+
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
+
+@Bean
+public CorsConfigurationSource corsConfigurationSource() {
+CorsConfiguration cfg = new CorsConfiguration();
+cfg.setAllowedOrigins(List.of("http://localhost:5173"));
+cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+cfg.setAllowedHeaders(List.of("*"));
+UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
+src.registerCorsConfiguration("/**", cfg);
+return src;
+}
+
+E no
+filterChain
+existente, adiciona
+uma linha
+:
+
+Java
+
+http
+.cors(c -> c.configurationSource(corsConfigurationSource()))   // ← NOVO
+.csrf(csrf -> csrf.disable())
+.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+// ... resto igual
+
+🚨
+
+A pegadinha que mata o aluno:
+sem CORS, o erro no console do browser é tipo
+"Access to fetch at ... has been blocked by CORS policy"
+. Aluno acha que é problema no fetch/axios e fica horas debugando o front.
+O problema é no back.
+Sempre que ver "CORS" no console, mexa no
+SecurityConfig
+, não no React.
+
+🛠️
+
+api.js
+— o coração da integração
+
+Uma instância axios centralizada com interceptors
+
+Antes, cada página chamava
+axios.get('http://localhost:3000/fornecedores')
+direto. Funcionava, mas tinha 2 problemas: (1) a URL base estava espalhada em N arquivos e (2) não tinha onde injetar o token JWT.
+
+A solução é criar
+uma instância axios única
+que todas as páginas usam, e plugar nela 2
+interceptors
+: um que adiciona o token em cada request, outro que detecta 401 e desloga.
+
+📄
+src/services/api.js
+(arquivo NOVO)
+
+JavaScript
+
+import axios from 'axios'
+
+const api = axios.create({
+baseURL: 'http://localhost:8080'
+})
+
+// Anexa o token JWT em cada request (se houver)
+api.interceptors.request.use((config) => {
+const token = localStorage.getItem('token')
+if (token) {
+config.headers.Authorization = `Bearer ${token}`
+}
+return config
+})
+
+// Trata 401 globalmente: limpa token e redireciona pro login
+api.interceptors.response.use(
+(response) => response,
+(error) => {
+if (error.response?.status === 401) {
+localStorage.removeItem('token')
+localStorage.removeItem('login')
+if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+window.location.href = '/login'
+}
+}
+return Promise.reject(error)
+}
+)
+
+export default api
+
+📝 Decompondo
+
+axios.create({ baseURL: ... })
+— agora você chama
+api.get('/clientes')
+sem repetir o domínio.
+
+interceptors.request
+— função que
+roda antes de cada request sair
+. Aqui adicionamos o header Authorization automaticamente.
+
+interceptors.response
+— função que
+roda quando a resposta chega
+. Aqui detectamos 401 e deslogamos.
+
+localStorage
+— guarda o token entre F5/abas. Survive refresh.
+
+O
+if
+antes do redirect evita loop infinito quando o próprio /login devolve 401 (senha errada).
+
+🔁 Antes × Depois nas chamadas
+
+❌ Antes — axios direto
+
+import axios from 'axios'
+
+axios.get('http://localhost:3000/fornecedores')
+.then(r => setFornecedores(r.data))
+
+✅ Depois — instância api
+
+import api from '../services/api'
+
+api.get('/fornecedores')
+.then(r => setFornecedores(r.data))
+
+Note:
+o token vai sozinho
+em todo request. As páginas não precisam saber que existe autenticação. Beleza arquitetural. ✨
+
+🧠
+
+AuthContext
+— estado global do usuário
+
+Quem está logado? Em qualquer componente, sem prop drilling
+
+🤔 O que é Context no React?
+
+É a forma de
+compartilhar estado
+entre componentes sem passar via props. Em vez de "passar de pai pra filho pra neto pra bisneto" (prop drilling), o Context fica
+acessível em qualquer lugar
+da árvore.
+
+📄
+src/contexts/AuthContext.jsx
+(arquivo NOVO)
+
+JSX
+
+import React, { createContext, useContext, useEffect, useState } from 'react'
+
+const AuthContext = createContext(null)
+
+export const AuthProvider = ({ children }) => {
+const [login, setLogin] = useState(null)
+
+useEffect(() => {
+const savedLogin = localStorage.getItem('login')
+if (savedLogin && localStorage.getItem('token')) {
+setLogin(savedLogin)
+}
+}, [])
+
+const signIn = (token, loginUsuario) => {
+localStorage.setItem('token', token)
+localStorage.setItem('login', loginUsuario)
+setLogin(loginUsuario)
+}
+
+const signOut = () => {
+localStorage.removeItem('token')
+localStorage.removeItem('login')
+setLogin(null)
+}
+
+const isAuthenticated = !!login
+
+return (
+<AuthContext.Provider value={{ login, isAuthenticated, signIn, signOut }}>
+{children}
+</AuthContext.Provider>
+)
+}
+
+export const useAuth = () => useContext(AuthContext)
+
+📝 Lendo o Context
+
+createContext(null)
+— cria o "container" que vai distribuir o estado.
+
+AuthProvider
+— componente que envolve a app no
+App.jsx
+. Tudo dentro dele consegue ler o estado.
+
+useEffect(() => {...}, [])
+— roda 1 vez quando a app carrega. Verifica se já tem token no localStorage. Isso é o que faz o
+F5 não deslogar
+.
+
+signIn
+/
+signOut
+— chamados pelas telas Login e Navbar respectivamente.
+
+useAuth()
+— hook customizado que qualquer componente usa pra pegar o estado:
+const { login, isAuthenticated, signOut } = useAuth()
+.
+
+💡
+
+Por que
+localStorage
+e não cookies?
+Em SPA stateless com JWT, o front controla o token explicitamente — ele anexa no header. Cookies seriam enviados pelo browser automaticamente, o que
+misturaria
+os mundos (acidentalmente acionaria CSRF que a gente desligou no backend). Manter no localStorage é mais explícito e mais simples.
+
+🔑
+
+Tela de Login
+
+Form → POST /auth/login → guarda token → redirect
+
+O fluxo é direto. Usuário preenche, submete, recebe token, guarda no Context, e segue pra
+/
+.
+
+📄
+src/pages/Login.jsx
+(arquivo NOVO — versão essencial)
+
+JSX
+
+import { useState } from 'react'
+import { Card, Form, Button, Alert } from 'react-bootstrap'
+import { useNavigate, Link } from 'react-router-dom'
+import api from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
+
+const Login = () => {
+const navigate = useNavigate()
+const { signIn } = useAuth()
+const [login, setLogin] = useState('')
+const [senha, setSenha] = useState('')
+const [erro, setErro] = useState('')
+
+const submeter = (e) => {
+e.preventDefault()
+setErro('')
+api.post('/auth/login', { login, senha })
+.then((response) => {
+signIn(response.data.token, response.data.login)
+navigate('/')
+})
+.catch((error) => {
+if (error.response?.status === 401) {
+setErro('Login ou senha inválidos')
+} else {
+setErro('Erro ao fazer login. Tente novamente.')
+}
+})
+}
+
+return (/* ... form com inputs e botão Entrar ... */)
+}
+
+🌀 Fluxo visual
+
+1. Usuário digita
+login
++
+senha
+→ clica
+Entrar
+
+2.
+api.post('/auth/login', {...})
+dispara
+
+3. Backend valida BCrypt → devolve
+{ token, login }
+
+4.
+signIn(token, login)
+guarda no localStorage + Context
+
+5.
+navigate('/')
+→ vai pra tela inicial
+
+6. Próximas requests já levam
+Bearer <token>
+via interceptor
+
+A tela de
+Register
+é praticamente idêntica — só muda o endpoint pra
+/auth/register
+e a mensagem de erro pra 409 (login duplicado).
+
+🛡️
+
+PrivateRoute
+— rotas protegidas
+
+Wrapper de uma linha que muda o jogo
+
+Em React Router 7, "rota protegida" é simplesmente um componente que
+verifica autenticação
+antes de renderizar o filho. Se não está logado, redireciona.
+
+📄
+src/components/PrivateRoute.jsx
+(arquivo NOVO)
+
+JSX
+
+import { Navigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+
+const PrivateRoute = ({ children }) => {
+const { isAuthenticated } = useAuth()
+
+if (!isAuthenticated) {
+return <Navigate to="/login" replace />
+}
+
+return children
+}
+
+export default PrivateRoute
+
+📄 Uso no
+App.jsx
+
+JSX
+
+<Routes>
+{/* Públicas */}
+<Route path="/login" element={<Login />} />
+<Route path="/register" element={<Register />} />
+
+{/* Protegidas — envolvidas em PrivateRoute */}
+<Route path="/" element={<PrivateRoute><Inicial /></PrivateRoute>} />
+<Route path="/fornecedores" element={<PrivateRoute><Fornecedores /></PrivateRoute>} />
+{/* ... resto igual ... */}
+</Routes>
+
+⚡
+
+Defesa em camadas:
+mesmo se alguém tentar acessar
+/clientes
+direto digitando na URL, o
+PrivateRoute
+redireciona. E se o cara conseguir burlar isso (impossível sem editar o JS), o
+backend
+ainda exige token. Front+back juntos = segurança real.
+
+🔧
+
+Adaptando os formulários de Fornecedor
+
+json-server aceitava qualquer coisa; o backend é exigente
+
+O backend tem
+nomes de campo específicos
+e exige o endereço como
+objeto aninhado
+. O front precisa enviar exatamente isso. Esse é o tipo de "ajuste de contrato" que sempre aparece em integração real.
+
+🔁 Payload de cadastro: antes × depois
+
+❌ Antes (json-server, flat)
+
+{
+"nome": "ACME Ltda",
+"cnpj": "12.345.678/0001-99",
+"email": "x@y.com",
+"telefone": "(83) 3000-1000",
+"cep": "58000-000",
+"logradouro": "Av X",
+"numero": "100",
+"bairro": "Centro",
+"cidade": "João Pessoa",
+"uf": "PB"
+}
+
+✅ Depois (backend, aninhado)
+
+{
+"nomeFantasia": "ACME Ltda",
+"cnpj": "12.345.678/0001-99",
+"email": "x@y.com",
+"telefonePrincipal": "(83) 3000-1000",
+"telefoneSecundario": null,
+"endereco": {
+"cep": "58000-000",
+"logradouro": "Av X",
+"numero": "100",
+"complemento": null,
+"bairro": "Centro",
+"cidade": "João Pessoa",
+"uf": "PB"
+}
+}
+
+📋 Mudanças no formulário
+
+1. Campo
+nome
+→
+nomeFantasia
+(label e state).
+
+2.
+telefone
+virou
+dois
+campos:
+telefonePrincipal
+(obrigatório) e
+telefoneSecundario
+(opcional).
+
+3. Adicionado campo
+complemento
+no endereço.
+
+4. Envio do objeto monta
+endereco: { ... }
+em vez dos campos flat.
+
+5. Em
+EditarFornecedor
+: CNPJ vira
+disabled readOnly
+, respeitando
+updatable=false
+da entidade.
+
+6. Substituído
+axios
+direto por
+api
+(instância centralizada).
+
+🚨
+
+Pegadinha do PUT:
+se você mandar
+endereco: { ... }
+
+sem o
+id
+do endereço atual
+, o backend ainda funciona — porque o
+EnderecoMapper.atualizar()
+
+muta
+a instância existente (preservando o id). Você não precisa carregar o id do endereço no front. Magia do cap 3. ✨
+
+📝
+
+Formulários novos — Cliente e Produto
+
+Aplicando os mesmos padrões do Fornecedor
+
+O formulário de
+Cliente
+segue o mesmo padrão do Fornecedor (com endereço aninhado), só muda os campos:
+nomeCompleto
+,
+cpf
+,
+dataNascimento
+(input
+type="date"
+),
+telefone
+.
+
+O de
+Produto
+traz um padrão novo importante:
+select de fornecedor
+e
+select de enum
+.
+
+📄 Carregando fornecedores pro select
+
+JSX
+
+const [fornecedores, setFornecedores] = useState([])
+
+useEffect(() => {
+api.get('/fornecedores')
+.then((response) => setFornecedores(response.data))
+}, [])
+
+// ... no JSX
+<Form.Select value={fornecedorId} onChange={(e) => setFornecedorId(e.target.value)} required>
+<option value="">Selecione...</option>
+{fornecedores.map((f) => (
+<option key={f.id} value={f.id}>{f.nomeFantasia}</option>
+))}
+</Form.Select>
+
+📄 Select de enum categoria
+
+JSX
+
+const CATEGORIAS = ['ELETRONICOS', 'ALIMENTOS', 'VESTUARIO',
+'MOVEIS', 'INFORMATICA', 'LIMPEZA', 'OUTROS']
+
+<Form.Select value={categoria} onChange={(e) => setCategoria(e.target.value)} required>
+<option value="">Selecione...</option>
+{CATEGORIAS.map((c) => <option key={c} value={c}>{c}</option>)}
+</Form.Select>
+
+A lista de categorias é
+hardcoded no front
+— espelho do enum Java. Quando o enum mudar no backend, você atualiza aqui também. Em projetos maiores, vale criar um endpoint
+GET /enums/categorias
+pra evitar essa duplicação.
+
+🎯
+
+Conversão de tipos no envio:
+inputs HTML retornam
+string
+. Mas
+preco
+é
+BigDecimal
+e
+quantidadeEstoque
+é
+Integer
+no back. Antes de mandar,
+parseFloat(preco)
+e
+parseInt(quantidadeEstoque, 10)
+. Idem pro
+fornecedorId
+. Esquecer disso causa erro 400 silencioso.
+
+🧹
+
+Removendo o json-server
+
+Apagando o modo offline — não precisamos mais
+
+Agora que tudo aponta pro backend real, o
+json-server
+pode sair de cena. Limpeza final:
+
+Terminal
+
+# Remover dependência
+npm uninstall json-server
+
+# Remover script do package.json
+# "server": "json-server --watch data/db.json"  ← apagar
+
+# Opcional: apagar data/db.json se quiser deixar o repo enxuto
+
+📋 Checklist final — sua app está integrada se:
+
+✅
+Subir backend (
+./mvnw spring-boot:run
+) + front (
+npm run dev
+) e abrir
+http://localhost:5173
+
+✅
+Você é redirecionado pra
+/login
+(sem token).
+
+✅
+Registra novo usuário em
+/register
+→ cai logado na
+/
+.
+
+✅
+Cria Fornecedor → aparece no Postgres (DBeaver) com endereço na tabela
+endereco
+.
+
+✅
+Cria Produto vinculado ao Fornecedor.
+
+✅
+Cria Cliente com data de nascimento, CPF válido.
+
+✅
+Edita um Fornecedor — CNPJ aparece
+disabled
+; salvar funciona.
+
+✅
+Clica em
+Sair
+→ volta pra login.
+
+✅
+F5 numa rota protegida
+não desloga
+.
+
+✅
+Limpando o localStorage manualmente (DevTools) e tentando criar algo → redireciona pra login.
+
+🎉
+
+Se passou em todos, parabéns: você tem uma
+fullstack app integrada e autenticada
+rodando local. Front React + Back Spring + Postgres + JWT. Padrão de mercado. 🚀
+
+🔗
+
+Front × Back: Plugados!
+
+Você fez o que normalmente é o capítulo
+mais difícil
+de um curso fullstack: amarrar as duas pontas. CORS, JWT, Context, rotas protegidas — tudo junto. 💪
+
+📋 O que entrou no projeto
+
+✅
+
+CORS no SecurityConfig
+
+✅
+
+api.js
+com baseURL + 2 interceptors
+
+✅
+
+AuthContext
++
+useAuth()
+hook
+
+✅
+
+PrivateRoute
+em todas as rotas protegidas
+
+✅
+
+Login + Register
+
+✅
+
+Cadastrar/Editar Cliente
+com endereço aninhado
+
+✅
+
+Cadastrar/Editar Produto
+com select de fornecedor e enum
+
+✅
+
+Navbar reativa
+a
+isAuthenticated
+
+✅
+
+json-server removido
+
+🚀
+
+Próximo capítulo (e último!):
+
+Deploy na AWS
+— Elastic Beanstalk + RDS. Atenção: esse capítulo funciona como
+mentoria 1×1 com o Prof. Kelson
+. Só inicie depois de mostrar este capítulo funcionando local. 🚨

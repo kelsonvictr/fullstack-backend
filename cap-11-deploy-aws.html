@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo 7 — Deploy AWS — Backend Java &amp; Spring Boot</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- MENU TOGGLE -->
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR NAV -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar-nav" id="sidebarNav">
+  <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+  <div class="sidebar-header">
+    <h3>📚 Sumário do Curso</h3>
+    <a class="sidebar-link" style="font-weight:700;margin-top:8px" href="index.html" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>🏠 Índice / Capa</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏠 Introdução</div>
+    <a class="sidebar-link" href="cap-01-intro.html#hero" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Visão Geral</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐘 Tour — PostgreSQL</div>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-pg" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que é Banco de Dados?</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-docker" onclick="toggleSidebar()"><span class="dot" style="background:#2496ED"></span>Docker + PostgreSQL</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-dbeaver" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>DBeaver — IDE do Banco</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-sql" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>SQL Básico (CRUD)</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-erros" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Erros Mais Comuns</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Fluxo Mental da Prática</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-treino" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Treino Guiado em Casa</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-checklist" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Checklist de Conclusão</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🍃 Projeto Spring</div>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#arquitetura" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Arquitetura em Camadas</a>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📦 Capítulo 1 — Fornecedor</div>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-demo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Demo Interativa</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏷️ Capítulo 2 — Produto</div>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-pom" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Dependência pom.xml</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Enum</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (Request/Response)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐶 Desafio — PetShop</div>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>O Desafio</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-bd" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Criar banco no DBeaver</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🗺️ Ordem de Construção</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>🐾 Enum EspeciePet</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>🦋 Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">👤 Capítulo 3 — Cliente</div>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model-endereco" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Model Endereco</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Model Cliente</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔧 Capítulo 4 — Refatorar Fornecedor</div>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que refatorar?</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-migracao" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🦫 Migração no banco</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-extrair-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Extrair EnderecoMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Refatorar Model</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>FornecedorMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔐 Capítulo 5 — Autenticação JWT</div>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Por que autenticação?</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-prep" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Dependências &amp; Config</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-usuario" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Entidade Usuario</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs de Auth</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtService</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-filter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtAuthFilter</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-security-config" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>SecurityConfig</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>AuthService &amp; Impl</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔗 Capítulo 6 — Integração Front × Back</div>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que integrar agora?</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-snapshot" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>📸 Snapshot inicial</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cors" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚧 CORS no backend</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-api-js" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>api.js + interceptors</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-auth-ctx" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>AuthContext</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-login" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Tela de Login</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-private-route" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>PrivateRoute</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-forn-adapter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Adapter Fornecedor</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-novos-forms" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Formulários novos</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 Removendo json-server</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">☁️ Capítulo 7 — Deploy AWS <span style="font-size:0.65rem;background:rgba(255,107,107,0.2);color:var(--accent2);padding:1px 6px;border-radius:4px;margin-left:4px">🚨 1×1</span></div>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#cap-deploy" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚨 Leia antes — 1×1 com Prof. Kelson</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-overview" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Visão geral</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-rds" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🐘 RDS PostgreSQL</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-properties" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>application.properties</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-jar" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Build do jar</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-eb-create" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Criar Beanstalk</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-sg-link" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🔗 Cross-link SG (EB↔RDS)</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-test" onclick="toggleSidebar()"><span class="dot" style="background:#49cc90"></span>Testar URL pública</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 CLEANUP (não pule!)</a>
+  </div>
+</nav>
+
+
+<div class="container">
+
+<div class="prof-banner" style="margin-top:60px">
+  <div class="prof-avatar">👨‍🏫</div>
+  <div class="prof-info">
+    <div class="prof-label">
+      Professor <span class="verified">✓</span>
+    </div>
+    <div class="prof-name">Kelson Almeida</div>
+    <div class="prof-role">
+      <span class="tag">🚀 Programa AI</span>
+      <span class="tag">☕ Backend Java/Spring</span>
+      <span class="tag">📍 João Pessoa, PB</span>
+    </div>
+    <div class="prof-links">
+      <a href="https://github.com/kelsonvictr" target="_blank" class="prof-link">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div class="programa-ai-badge">
+      <span class="ai-dot"></span>
+      Programa AI — Curso Presencial Programação Fullstack
+    </div>
+  </div>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              CAPÍTULO 7: DEPLOY NA AWS                       ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<!-- BANNER GIGANTE — MENTORIA 1×1 OBRIGATÓRIA -->
+<section style="margin-top:40px;margin-bottom:40px">
+  <div style="background:linear-gradient(135deg,rgba(255,107,107,0.15),rgba(255,159,67,0.15));border:2px solid rgba(255,107,107,0.4);border-radius:20px;padding:36px 32px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;right:0;font-size:8rem;opacity:0.08;line-height:1;transform:translate(20px,-20px)">🚨</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px">
+      <div style="font-size:2.5rem;animation:bounce 2s ease-in-out infinite">🚨</div>
+      <h2 style="margin:0;font-size:1.8rem;font-weight:900;color:var(--accent2)">Atenção — leia ANTES de começar</h2>
+    </div>
+    <p style="font-size:1.1rem;color:var(--text);margin-bottom:18px"><strong>Este capítulo funciona como mentoria 1×1 com o Prof. Kelson.</strong> Não tente sozinho.</p>
+    <p style="color:var(--text-dim);margin-bottom:20px;font-size:0.96rem">AWS cobra de verdade. Free tier ajuda, mas um erro de configuração (instância grande esquecida, RDS multi-AZ por acidente, snapshot que persiste) pode virar conta de R$ 300 no fim do mês. Por isso, o caminho aqui é em <strong style="color:var(--accent2)">dupla, com pareamento ao vivo</strong>.</p>
+
+    <h4 style="color:var(--accent2);margin:18px 0 12px">📋 Pré-requisitos NÃO-negociáveis</h4>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.94rem;margin-bottom:20px">
+      <div style="display:flex;gap:10px"><span style="color:var(--accent2);font-weight:800">1.</span> Concluiu os capítulos 1 a 6 e <strong style="color:var(--text)">mostrou o sistema rodando localmente</strong> (front + back + Postgres) pro Kelson.</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent2);font-weight:800">2.</span> Tem <strong style="color:var(--text)">conta AWS ativa com cartão de crédito validado</strong>. Sem cartão, free tier não é liberado.</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent2);font-weight:800">3.</span> Tem o <strong style="color:var(--text)">DBeaver instalado e funcionando</strong> — vamos usar pra validar a conexão com o RDS antes de subir o app.</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent2);font-weight:800">4.</span> Aceita <strong style="color:var(--text)">fazer cleanup completo</strong> ao final (deletar EB env + RDS + snapshots). Sem cleanup = cobrança contínua.</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent2);font-weight:800">5.</span> <strong style="color:var(--text)">Agendou sessão</strong> com o Prof. Kelson. Sem agendamento, NÃO inicie. Você vai travar e ficar sem suporte rápido.</div>
+    </div>
+
+    <div style="background:rgba(0,0,0,0.3);border-radius:14px;padding:18px 22px;border-left:4px solid var(--accent2)">
+      <p style="margin:0;color:var(--text);font-size:0.95rem"><strong>Por que tão restrito?</strong> Já tentamos turmas com esse capítulo solo — 30% trava em IAM/SG/VPC, 40% esquece de deletar e leva susto na fatura. Em 1×1 com pareamento, 100% sobe a app e 100% faz cleanup. É só isso.</p>
+    </div>
+  </div>
+</section>
+
+<div class="chapter-divider" id="cap-deploy">
+  <span class="chapter-icon">☁️</span>
+  <div class="chapter-number">Capítulo 7</div>
+  <h2 style="background:linear-gradient(135deg,var(--accent2),var(--accent5));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Deploy na AWS</h2>
+  <p class="chapter-subtitle">Elastic Beanstalk + RDS — sua API saindo do localhost pra uma URL pública</p>
+</div>
+
+<!-- 7.1 -->
+<section class="step-section" id="aws-overview">
+  <div class="step-header">
+    <div class="step-number sn-main">🗺️</div>
+    <div>
+      <div class="step-title">Visão geral — onde a gente quer chegar</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Uma EC2 servindo a API + um Postgres gerenciado, ambos na AWS</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin:8px 0 12px;color:var(--accent5)">📐 Arquitetura final</h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:24px;font-family:'JetBrains Mono',monospace;font-size:0.9rem;line-height:1.9;border:1px solid rgba(255,255,255,0.05)">
+      <div style="color:var(--accent4)">Aluno (browser / Insomnia)</div>
+      <div style="color:var(--text-dim);padding-left:24px">↓ HTTP</div>
+      <div style="color:var(--accent5)">Elastic Beanstalk Environment</div>
+      <div style="color:var(--text-dim);padding-left:24px">(EC2 t3.micro com Java Corretto 21 + Tomcat)</div>
+      <div style="color:var(--text-dim);padding-left:24px">↓ JDBC porta 5432</div>
+      <div style="color:var(--accent4)">Amazon RDS PostgreSQL</div>
+      <div style="color:var(--text-dim);padding-left:24px">(db.t3.micro, free tier, com banco <code>sistema_gestao</code>)</div>
+    </div>
+
+    <div class="analogy" style="margin-top:18px">
+      <div class="analogy-title">Analogia: mudando de aluguel pra casa própria</div>
+      <p style="color:var(--text-dim)">Localhost é um <strong>quarto na casa dos pais</strong> — não paga, mas só você acessa. AWS é a <strong style="color:var(--accent5)">primeira casa alugada</strong> — paga, mas tem endereço público que qualquer um (que você autorize) pode visitar. Beanstalk é o <strong>kit da imobiliária</strong>: eles entregam encanamento (Tomcat), instalação elétrica (segurança/SG), e você só leva os móveis (o jar). 🏠</p>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">🛤️ Roteiro de 7 passos</h4>
+    <div style="background:linear-gradient(135deg,rgba(255,159,67,0.06),rgba(255,107,107,0.06));border:1px solid rgba(255,159,67,0.15);border-radius:14px;padding:24px">
+      <div style="display:grid;gap:12px;color:var(--text-dim);font-size:0.92rem">
+        <div><strong style="color:var(--accent5)">1.</strong> Criar o RDS PostgreSQL via console.</div>
+        <div><strong style="color:var(--accent5)">2.</strong> Adaptar <code>application.properties</code> pra ler de variáveis de ambiente.</div>
+        <div><strong style="color:var(--accent5)">3.</strong> Build do jar com <code>./mvnw package</code>.</div>
+        <div><strong style="color:var(--accent5)">4.</strong> Criar Application + Environment no Beanstalk.</div>
+        <div><strong style="color:var(--accent5)">5.</strong> Cross-link EB ↔ RDS via Security Groups (a pegadinha mor).</div>
+        <div><strong style="color:var(--accent5)">6.</strong> Testar a URL pública.</div>
+        <div><strong style="color:var(--accent5)">7.</strong> <strong style="color:var(--accent2)">CLEANUP</strong> — deletar tudo pra parar de pagar.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 7.2 — RDS -->
+<section class="step-section" id="aws-rds">
+  <div class="step-header">
+    <div class="step-number sn-blue">🐘</div>
+    <div>
+      <div class="step-title">Passo 1 — Provisionar o RDS PostgreSQL</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">O Postgres da nuvem, separado do app (sobrevive a recriar o EB)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">Console AWS → <strong>RDS → Create database</strong>. Vai pelas opções:</p>
+
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:12px;color:var(--text-dim);font-size:0.92rem">
+        <div><strong>Engine:</strong> PostgreSQL (versão default OK)</div>
+        <div><strong>Templates:</strong> <code style="color:var(--accent3)">Free tier</code> ← <strong style="color:var(--accent2)">não esqueça</strong>, é o que segura o custo</div>
+        <div><strong>DB identifier:</strong> <code>sistema-gestao-db</code></div>
+        <div><strong>Master username:</strong> <code>postgres</code></div>
+        <div><strong>Master password:</strong> <em>anota num lugar seguro</em></div>
+        <div><strong>Instance:</strong> <code>db.t3.micro</code> (free tier)</div>
+        <div><strong>Storage:</strong> 20 GB gp2</div>
+        <div><strong>Connectivity → Public access:</strong> <code style="color:var(--accent3)">Yes</code> (só pro curso — facilita conectar do DBeaver)</div>
+        <div><strong>VPC security group:</strong> criar novo <code>rds-sg</code> → inbound 5432 from <code>0.0.0.0/0</code></div>
+        <div><strong>⚠️ Additional configuration → Initial database name:</strong> <code style="color:var(--accent2)">sistema_gestao</code> ← <strong>sem isso, o JPA não acha o database!</strong></div>
+      </div>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-top:14px">Create. Espera 3-5 min até status <strong style="color:#49cc90">Available</strong>. Copia o <strong>endpoint</strong> (algo como <code>sistema-gestao-db.xxx.us-east-1.rds.amazonaws.com</code>).</p>
+
+    <div class="tip" style="margin-top:14px;background:rgba(73,204,144,0.06);border-color:rgba(73,204,144,0.2)">
+      <span class="tip-icon">✅</span>
+      <div class="tip-content">
+        <strong>Validação obrigatória ANTES de seguir:</strong> abra o DBeaver, configure uma nova conexão Postgres apontando pro endpoint, user <code>postgres</code>, senha que você anotou, database <code>sistema_gestao</code>. <strong>Se não conectar do DBeaver, NÃO vai conectar do EB.</strong> Resolva esse problema antes de prosseguir.
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:14px;background:rgba(255,107,107,0.06);border-color:rgba(255,107,107,0.2)">
+      <span class="tip-icon">🚨</span>
+      <div class="tip-content">
+        <strong>Em produção real:</strong> Public Access = No, SG limitado ao SG do app, senha em Secrets Manager, backup automático configurado. Aqui no curso simplificamos — não copie esse setup pra projeto real sem antes endurecer.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 7.3 — properties -->
+<section class="step-section" id="aws-properties">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent4)">⚙️</div>
+    <div>
+      <div class="step-title">Passo 2 — Adaptar <code>application.properties</code></div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Senha do banco NÃO vai no código; vai como variável de ambiente</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">Trocar as credenciais hardcoded por placeholders <code>${...}</code> que o Spring resolve em runtime via env vars:</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge properties">application.properties</span></div>
+      <pre>spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+
+server.port=5000
+
+app.jwt.secret=${JWT_SECRET}
+app.jwt.expiration-ms=3600000</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px;background:rgba(255,107,107,0.06);border-color:rgba(255,107,107,0.2)">
+      <span class="tip-icon">🚨</span>
+      <div class="tip-content">
+        <strong>Pegadinha crítica — porta 5000:</strong> Beanstalk Java espera que sua app escute em <code>5000</code>, não <code>8080</code>. Esquecer essa linha faz o env retornar <strong style="color:var(--accent2)">502 Bad Gateway</strong> sem mensagem clara — você fica horas debugando à toa.
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">💻</span>
+      <div class="tip-content">
+        <strong>E pra rodar localmente continua funcionando?</strong> Sim — crie um <code>application-local.properties</code> com os valores fixos e suba a app com <code>--spring.profiles.active=local</code>, ou exporte as env vars no terminal: <code>export DB_URL=jdbc:postgresql://localhost:5432/teste-fullstack-05</code> etc. Ou ainda configure no Run Configuration da sua IDE.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 7.4 — Build -->
+<section class="step-section" id="aws-jar">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent6)">📦</div>
+    <div>
+      <div class="step-title">Passo 3 — Build do jar</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Compactar a app num único arquivo .jar</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge bash">Terminal</span></div>
+      <pre>cd api
+./mvnw clean package -DskipTests</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-top:12px">Resultado: <code>target/api-0.0.1-SNAPSHOT.jar</code>. <strong>É esse arquivo</strong> que vamos subir no Beanstalk.</p>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">📝</span>
+      <div class="tip-content">
+        <strong>Por que <code>-DskipTests</code>?</strong> Pula a execução de testes durante o build. No curso, o foco é ver o deploy funcionar — não temos pipeline CI ainda. Em produção real, testes <strong>nunca</strong> são pulados (rodam num CI/CD antes do deploy).
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 7.5 — EB -->
+<section class="step-section" id="aws-eb-create">
+  <div class="step-header">
+    <div class="step-number sn-purple">🚀</div>
+    <div>
+      <div class="step-title">Passo 4 — Criar Application + Environment no Beanstalk</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A AWS provisiona EC2, Tomcat, IP público — tudo via console</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">Console → <strong>Elastic Beanstalk → Create application</strong>. Passos:</p>
+
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:12px;color:var(--text-dim);font-size:0.92rem">
+        <div><strong>Application name:</strong> <code>sistema-gestao</code></div>
+        <div><strong>Platform:</strong> Java → <code style="color:var(--accent5)">Corretto 21</code> (precisa bater com o <code>java.version</code> do <code>pom.xml</code>)</div>
+        <div><strong>Application code:</strong> <em>Upload your code</em> → selecionar <code>api-0.0.1-SNAPSHOT.jar</code></div>
+        <div><strong>Presets:</strong> <code style="color:var(--accent3)">Single instance (free tier)</code> ← sem load balancer; segura o custo</div>
+        <div><strong>Service access:</strong> deixar AWS criar as roles (default)</div>
+        <div><strong>Networking:</strong> VPC default, EC2 em subnet pública, <strong>Public IP enabled</strong></div>
+        <div><strong>Instance type:</strong> <code>t3.micro</code></div>
+      </div>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">🔐 Configurar Environment properties</h4>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:12px">Antes de submit, na seção <em>Configure updates, monitoring, and logging</em>, adiciona:</p>
+
+    <table style="width:100%;border-collapse:collapse;font-size:0.9rem;background:var(--surface2);border-radius:12px;overflow:hidden">
+      <thead>
+        <tr style="background:rgba(255,255,255,0.05)"><th style="padding:10px;text-align:left;color:var(--accent5)">Name</th><th style="padding:10px;text-align:left;color:var(--accent5)">Value</th></tr>
+      </thead>
+      <tbody style="color:var(--text-dim)">
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono',monospace">DB_URL</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono',monospace;font-size:0.82rem">jdbc:postgresql://&lt;endpoint-rds&gt;:5432/sistema_gestao</td></tr>
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono',monospace">DB_USERNAME</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono',monospace">postgres</td></tr>
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono',monospace">DB_PASSWORD</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono',monospace">a senha do RDS</td></tr>
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono',monospace">JWT_SECRET</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono',monospace">uma string com ≥ 32 caracteres</td></tr>
+      </tbody>
+    </table>
+
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-top:14px">Submit. Demora ~5 min provisionando. Acompanhe em <em>Events</em>.</p>
+
+    <div class="tip" style="margin-top:14px;background:rgba(255,107,107,0.06);border-color:rgba(255,107,107,0.2)">
+      <span class="tip-icon">🚨</span>
+      <div class="tip-content">
+        <strong>App vai falhar na primeira subida</strong> — é esperado. O motivo está no próximo passo: o RDS ainda não permite conexão do EB. Não entre em pânico, siga.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 7.6 — SG -->
+<section class="step-section" id="aws-sg-link">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent2)">🔗</div>
+    <div>
+      <div class="step-title">Passo 5 — Liberar EB → RDS (a etapa que mais trava aluno)</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Security Groups precisam se enxergar</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🤔 Por que falhou?</div>
+      <p>O SG do RDS hoje permite <code>0.0.0.0/0</code> na porta 5432 (qualquer IP). Mas a EC2 do Beanstalk roda numa <strong>VPC AWS</strong>, e por algum motivo (NAT, IP interno) o "qualquer IP" não cobre conexões <em>vindas de outra EC2 dentro da própria AWS</em> de forma confiável. A forma <strong>correta</strong> e que sempre funciona é dizer: <strong style="color:var(--accent2)">"este SG aqui pode entrar"</strong>.</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent2)">📋 Como cross-linkar</h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:12px;color:var(--text-dim);font-size:0.92rem">
+        <div><strong>1.</strong> Console → <strong>EC2 → Security Groups</strong></div>
+        <div><strong>2.</strong> Encontra o SG da EC2 do Beanstalk — o nome é tipo <code>awseb-AWSEBSecurityGroup-XXXXXX</code></div>
+        <div><strong>3.</strong> Copia o ID dele (<code>sg-xxxxxxxxx</code>)</div>
+        <div><strong>4.</strong> Vai no SG <code>rds-sg</code> → aba <em>Inbound rules</em> → <em>Edit inbound rules</em> → <em>Add rule</em>:
+          <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem">
+            Type: <strong style="color:var(--accent4)">PostgreSQL</strong><br>
+            Port: <strong style="color:var(--accent4)">5432</strong><br>
+            Source: <strong style="color:var(--accent5)">Custom</strong> → cola o ID do SG do EB
+          </div>
+        </div>
+        <div><strong>5.</strong> Save rules.</div>
+        <div><strong>6.</strong> Volta no EB env → <em>Actions → Restart app server</em>.</div>
+        <div><strong>7.</strong> <em>Logs → Request logs → Last 100 lines</em> — deve ver Tomcat subindo + Hibernate criando tabelas.</div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🛂</span>
+      <div class="tip-content">
+        <strong>Analogia:</strong> é como uma portaria onde, em vez de "qualquer pessoa de fora", você diz "<strong>quem trabalha naquele prédio ali pode entrar</strong>". O SG identifica a "empresa" (não o IP), o que é mais robusto pra serviços que mudam de IP frequentemente.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 7.7 — Test -->
+<section class="step-section" id="aws-test">
+  <div class="step-header">
+    <div class="step-number sn-green">✅</div>
+    <div>
+      <div class="step-title">Passo 6 — Testar a URL pública</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Sua API na nuvem!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">No painel do EB, copia a URL — algo como <code>sistema-gestao-env.us-east-1.elasticbeanstalk.com</code>. Testa:</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge bash">Terminal</span></div>
+      <pre>EB=http://sistema-gestao-env.us-east-1.elasticbeanstalk.com
+
+# 1. Registrar usuário
+curl -X POST $EB/auth/register -H "Content-Type: application/json" \
+  -d '{"login":"maria","senha":"123456"}'
+# esperado: 201 + token
+
+# 2. Criar cliente com token
+TOKEN=&lt;cola o token aqui&gt;
+curl -X POST $EB/clientes \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ ...payload do cap 3... }'
+# esperado: 201</pre>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">🚨 Pegadinhas que vão acontecer</h4>
+
+    <table style="width:100%;border-collapse:collapse;font-size:0.88rem;background:var(--surface2);border-radius:12px;overflow:hidden">
+      <thead>
+        <tr style="background:rgba(255,255,255,0.05)">
+          <th style="padding:10px;text-align:left;color:var(--accent2)">Sintoma</th>
+          <th style="padding:10px;text-align:left;color:var(--accent2)">Causa</th>
+          <th style="padding:10px;text-align:left;color:#49cc90">Fix</th>
+        </tr>
+      </thead>
+      <tbody style="color:var(--text-dim)">
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">502 Bad Gateway</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">App escuta 8080, EB espera 5000</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)"><code>server.port=5000</code></td></tr>
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Health check vermelho</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">App ainda subindo</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Aguarda 2-3 min</td></tr>
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Connection refused no RDS</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">SG não liberou</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Passo 5 (cross-link SG)</td></tr>
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Java version mismatch</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">EB Corretto 17 vs pom 21</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Recriar env com Corretto 21</td></tr>
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Password authentication failed</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Senha errada no env var</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Conferir <code>DB_PASSWORD</code></td></tr>
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">database "sistema_gestao" does not exist</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Esqueceu Initial DB name no RDS</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)"><code>CREATE DATABASE sistema_gestao;</code> no DBeaver</td></tr>
+        <tr><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">401 sempre, mesmo logando</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">JWT_SECRET muda a cada deploy</td><td style="padding:8px 10px;border-top:1px solid rgba(255,255,255,0.05)">Fixar nas env vars</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip" style="margin-top:18px;background:rgba(73,204,144,0.06);border-color:rgba(73,204,144,0.2)">
+      <span class="tip-icon">📊</span>
+      <div class="tip-content">
+        <strong>Sanity final:</strong> conecta o DBeaver no RDS e roda <code>\dt</code>. Tem que aparecer: <code>usuario</code>, <code>cliente</code>, <code>endereco</code>, <code>fornecedor</code>, <code>produto</code>. Se aparecer, é sinal que o Hibernate subiu e criou o schema na nuvem. 🎉
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 7.8 — Cleanup -->
+<section class="step-section" id="aws-cleanup">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent2)">🧹</div>
+    <div>
+      <div class="step-title">Passo 7 — CLEANUP (não pule isso!)</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A diferença entre R$ 0 e R$ 300 no fim do mês</div>
+    </div>
+  </div>
+
+  <div class="card" style="border:2px solid rgba(255,107,107,0.3)">
+    <div style="background:rgba(255,107,107,0.08);padding:18px 22px;border-radius:14px;margin-bottom:18px">
+      <p style="margin:0;color:var(--text);font-size:1rem"><strong style="color:var(--accent2)">⚠️ Cobrança não para sozinha.</strong> Free tier cobre 750h/mês de EC2 t3.micro + 750h/mês de RDS db.t3.micro. Se você esquece ligado por 2 meses, paga as horas adicionais. Sempre desligue depois da aula.</p>
+    </div>
+
+    <h4 style="margin:8px 0 12px;color:var(--accent2)">📋 Checklist de cleanup completo</h4>
+
+    <div style="display:grid;gap:14px;color:var(--text-dim);font-size:0.93rem">
+      <div style="background:var(--surface2);border-radius:12px;padding:14px 18px;border-left:4px solid var(--accent2)">
+        <strong style="color:var(--text)">1. Deletar Environment do Beanstalk</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem">EB → seu env → <em>Actions → Terminate environment</em>. Demora ~3 min. Isso mata a EC2 + load balancer (se tivesse).</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:14px 18px;border-left:4px solid var(--accent2)">
+        <strong style="color:var(--text)">2. Deletar Application do Beanstalk</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem">EB → Applications → <em>Actions → Delete application</em>. Isso some com os artefatos S3 que o EB guarda.</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:14px 18px;border-left:4px solid var(--accent2)">
+        <strong style="color:var(--text)">3. Deletar o RDS</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem">RDS → <code>sistema-gestao-db</code> → <em>Actions → Delete</em>. Desmarca "Create final snapshot" e "Retain automated backups" — senão paga pelo storage do snapshot indefinidamente. Confirma digitando "delete me".</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:14px 18px;border-left:4px solid var(--accent2)">
+        <strong style="color:var(--text)">4. Deletar Security Groups órfãos</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem">EC2 → Security Groups → apaga <code>rds-sg</code> e o SG do EB (se ainda estiver lá). Não custa nada, mas suja o console.</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:14px 18px;border-left:4px solid var(--accent2)">
+        <strong style="color:var(--text)">5. Conferir o Billing Dashboard</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem">Billing → <em>Bills</em>. Deve aparecer R$ 0,00 (ou alguns centavos de cobrança fracionária). Se passou de R$ 5, alguma coisa ficou ligada — investigue.</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:14px 18px;border-left:4px solid #49cc90">
+        <strong style="color:var(--text)">6. (Recomendado) Configurar Budget Alert</strong>
+        <p style="margin:6px 0 0;font-size:0.88rem">Billing → Budgets → <em>Create budget</em> → fixed R$ 1/mês com alerta por e-mail. Se algo escapar no futuro, você recebe e-mail antes da fatura virar surpresa.</p>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:18px;background:rgba(73,204,144,0.06);border-color:rgba(73,204,144,0.2)">
+      <span class="tip-icon">✅</span>
+      <div class="tip-content">
+        Faz o cleanup <strong>no mesmo dia</strong> do deploy. Não deixa pra "amanhã". 90% das cobranças surpresa em aluno vêm do "deixei pra desligar depois".
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 7.9 — Recap -->
+<section class="step-section" style="text-align:center;padding:60px 20px">
+  <div style="font-size:3.5rem;margin-bottom:16px;animation:bounce 2s ease-in-out infinite;display:inline-block">☁️</div>
+  <h2 style="font-size:2rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--accent2),var(--accent5));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Na Nuvem!</h2>
+  <p style="color:var(--text-dim);max-width:560px;margin:0 auto 30px;font-size:1.05rem">Você fez seu primeiro deploy AWS de uma app fullstack. Não é trivial — passou por RDS, EC2, IAM (indireto), Security Groups, env vars. Skills reais de produção. 🚀</p>
+
+  <div class="card" style="text-align:left;max-width:640px;margin:0 auto">
+    <h3 style="margin-bottom:16px;color:var(--accent5)">🎓 O que você consolidou</h3>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.92rem">
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Diferença entre app e banco</strong> — RDS sobrevive ao recriar EB</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Variáveis de ambiente</strong> — credenciais NUNCA no código</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Security Groups</strong> — autorizar tráfego entre serviços</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Free tier vs custo real</strong> — cleanup é parte do trabalho</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Debug por logs</strong> — EB → Logs → Last 100</div>
+    </div>
+
+    <h3 style="margin:24px 0 10px;color:var(--accent6)">🚧 O que NÃO entrou (extensões pra depois)</h3>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.9rem">
+      <div style="display:flex;gap:10px"><span>•</span> <strong>HTTPS</strong> com ACM + ALB ou Cloudflare na frente</div>
+      <div style="display:flex;gap:10px"><span>•</span> <strong>Domínio próprio</strong> via Route 53 ou registrar.br + CNAME</div>
+      <div style="display:flex;gap:10px"><span>•</span> <strong>CI/CD</strong> — GitHub Actions com <code>eb deploy</code> automático</div>
+      <div style="display:flex;gap:10px"><span>•</span> <strong>CloudWatch Logs</strong> centralizados + alertas</div>
+      <div style="display:flex;gap:10px"><span>•</span> <strong>ECS Fargate</strong> ou <strong>Cloud Run</strong> — quando a app crescer</div>
+    </div>
+
+    <div class="tip" style="margin-top:20px;background:rgba(73,204,144,0.06);border-color:rgba(73,204,144,0.2)">
+      <span class="tip-icon">🎉</span>
+      <div class="tip-content">
+        <strong>Fim da jornada da Turma 05.</strong> Da primeira linha de SQL até deploy na AWS. Você saiu do zero a uma app fullstack autenticada, integrada e publicada. Agora é botar no portfólio e seguir construindo. 🚀
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  Feito com <span class="heart">💜</span> para os alunos da <a href="#">Programa AI</a> — Curso Presencial Programação Fullstack<br>
+  <span style="font-size:0.75rem;margin-top:8px;display:block">Backend com Java/Spring Boot — Prof. Kelson Almeida</span>
+</footer>
+
+
+</div><!-- /container -->
+
+<script src="assets/app.js"></script>
+</body>
+</html>

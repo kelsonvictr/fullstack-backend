@@ -1,15 +1,19 @@
 # Introducao - Visao Geral
-(id inicial: hero; ate: tour-pg)
+# Fonte: cap-01-intro.html
 
 ☕ 🍃 🐘
 
 Programa AI — Curso Presencial Programação Fullstack
 
-# Backend com
+Backend com
 Java & Spring Boot
 
 A API REST que vai dar vida ao seu frontend React! Do zero ao CRUD completo — passo a passo, sem pular nada. Primeiro Fornecedores, depois Produtos e Clientes.
 
-☕ Java 21 🍃 Spring Boot (versão mais recente) 🐘 PostgreSQL 📗 Swagger
+☕ Java 21
 
-╔══════════════════════════════════════════════════════════════╗ ║ TOUR: CONHECENDO O POSTGRESQL ║ ╚══════════════════════════════════════════════════════════════╝
+🍃 Spring Boot (versão mais recente)
+
+🐘 PostgreSQL
+
+📗 Swagger

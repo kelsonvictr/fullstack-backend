@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto Spring — Arquitetura e Setup — Backend Java &amp; Spring Boot</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- MENU TOGGLE -->
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR NAV -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar-nav" id="sidebarNav">
+  <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+  <div class="sidebar-header">
+    <h3>📚 Sumário do Curso</h3>
+    <a class="sidebar-link" style="font-weight:700;margin-top:8px" href="index.html" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>🏠 Índice / Capa</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏠 Introdução</div>
+    <a class="sidebar-link" href="cap-01-intro.html#hero" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Visão Geral</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐘 Tour — PostgreSQL</div>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-pg" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que é Banco de Dados?</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-docker" onclick="toggleSidebar()"><span class="dot" style="background:#2496ED"></span>Docker + PostgreSQL</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-dbeaver" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>DBeaver — IDE do Banco</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-sql" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>SQL Básico (CRUD)</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-erros" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Erros Mais Comuns</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Fluxo Mental da Prática</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-treino" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Treino Guiado em Casa</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-checklist" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Checklist de Conclusão</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🍃 Projeto Spring</div>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#arquitetura" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Arquitetura em Camadas</a>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📦 Capítulo 1 — Fornecedor</div>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-demo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Demo Interativa</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏷️ Capítulo 2 — Produto</div>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-pom" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Dependência pom.xml</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Enum</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (Request/Response)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐶 Desafio — PetShop</div>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>O Desafio</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-bd" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Criar banco no DBeaver</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🗺️ Ordem de Construção</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>🐾 Enum EspeciePet</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>🦋 Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">👤 Capítulo 3 — Cliente</div>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model-endereco" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Model Endereco</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Model Cliente</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔧 Capítulo 4 — Refatorar Fornecedor</div>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que refatorar?</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-migracao" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🦫 Migração no banco</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-extrair-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Extrair EnderecoMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Refatorar Model</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>FornecedorMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔐 Capítulo 5 — Autenticação JWT</div>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Por que autenticação?</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-prep" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Dependências &amp; Config</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-usuario" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Entidade Usuario</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs de Auth</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtService</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-filter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtAuthFilter</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-security-config" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>SecurityConfig</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>AuthService &amp; Impl</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔗 Capítulo 6 — Integração Front × Back</div>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que integrar agora?</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-snapshot" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>📸 Snapshot inicial</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cors" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚧 CORS no backend</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-api-js" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>api.js + interceptors</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-auth-ctx" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>AuthContext</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-login" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Tela de Login</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-private-route" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>PrivateRoute</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-forn-adapter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Adapter Fornecedor</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-novos-forms" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Formulários novos</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 Removendo json-server</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">☁️ Capítulo 7 — Deploy AWS <span style="font-size:0.65rem;background:rgba(255,107,107,0.2);color:var(--accent2);padding:1px 6px;border-radius:4px;margin-left:4px">🚨 1×1</span></div>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#cap-deploy" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚨 Leia antes — 1×1 com Prof. Kelson</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-overview" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Visão geral</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-rds" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🐘 RDS PostgreSQL</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-properties" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>application.properties</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-jar" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Build do jar</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-eb-create" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Criar Beanstalk</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-sg-link" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🔗 Cross-link SG (EB↔RDS)</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-test" onclick="toggleSidebar()"><span class="dot" style="background:#49cc90"></span>Testar URL pública</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 CLEANUP (não pule!)</a>
+  </div>
+</nav>
+
+
+<div class="container">
+
+<div class="prof-banner" style="margin-top:60px">
+  <div class="prof-avatar">👨‍🏫</div>
+  <div class="prof-info">
+    <div class="prof-label">
+      Professor <span class="verified">✓</span>
+    </div>
+    <div class="prof-name">Kelson Almeida</div>
+    <div class="prof-role">
+      <span class="tag">🚀 Programa AI</span>
+      <span class="tag">☕ Backend Java/Spring</span>
+      <span class="tag">📍 João Pessoa, PB</span>
+    </div>
+    <div class="prof-links">
+      <a href="https://github.com/kelsonvictr" target="_blank" class="prof-link">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div class="programa-ai-badge">
+      <span class="ai-dot"></span>
+      Programa AI — Curso Presencial Programação Fullstack
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════ -->
+<!-- INTRO: O QUE VAMOS CONSTRUIR -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="overview">
+  <div class="step-header">
+    <div class="step-number sn-main">🎯</div>
+    <div>
+      <div class="step-title">O que vamos construir?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">O backend que o seu frontend React precisa!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="font-size:1.02rem;margin-bottom:20px">Lembra do <strong style="color:var(--accent5)">JSON Server</strong> que usamos no frontend como banco de dados simulado? Agora vamos substituí-lo por uma <strong style="color:var(--spring)">API REST real</strong> feita com Java e Spring Boot!</p>
+
+    <div class="keyword-map stagger" id="overviewMap">
+      <div class="keyword-chip"><span class="emoji">📦</span><span class="kw-name">Fornecedor</span><span class="kw-desc">CRUD completo (refactor + endereço no cap 4)</span></div>
+      <div class="keyword-chip"><span class="emoji">🏷️</span><span class="kw-name">Produto</span><span class="kw-desc">Com vínculo ao fornecedor</span></div>
+      <div class="keyword-chip"><span class="emoji">👤</span><span class="kw-name">Cliente</span><span class="kw-desc">Dados + endereço</span></div>
+      <div class="keyword-chip"><span class="emoji">🔗</span><span class="kw-name">Relacionamentos</span><span class="kw-desc">Produto ↔ Fornecedor</span></div>
+    </div>
+
+    <div class="analogy" style="margin-top:20px">
+      <div class="analogy-title">Analogia: De garçom para cozinheiro</div>
+      <p style="color:var(--text-dim)">No frontend você era o <strong style="color:var(--text)">cliente do restaurante</strong> fazendo pedidos. Agora vamos montar a <strong style="color:var(--spring)">cozinha inteira</strong>: o Controller é o garçom que anota seu pedido, o Service é o cozinheiro que prepara, o Repository é a despensa onde os ingredientes ficam guardados, e o Model é a receita que diz o que tem em cada prato.</p>
+    </div>
+
+    <!-- ROADMAP VISUAL -->
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">🗺️ Nosso Roadmap Progressivo:</h4>
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-dot active" style="background:var(--accent5)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent5)">📦 Fase 1 — Fornecedor <span style="font-size:0.7rem;background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 8px;border-radius:4px;margin-left:6px">CONCLUÍDO ✅</span></h4>
+          <p>CRUD simples. Sem DTOs, sem ServiceImpl. Foco em entender o fluxo Model → Repository → Service → Controller.</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot active" style="background:var(--accent4)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent4)">🏷️ Fase 2 — Produto <span style="font-size:0.7rem;background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 8px;border-radius:4px;margin-left:6px">CONCLUÍDO ✅</span></h4>
+          <p>Introduz DTOs, Mappers, ServiceImpl, @ManyToOne. Evolução natural das boas práticas.</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot active" style="background:var(--petshop)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--petshop)">🐶 Desafio PetShop <span style="font-size:0.7rem;background:rgba(255,159,67,0.15);color:var(--petshop);padding:2px 8px;border-radius:4px;margin-left:6px">PRÁTICA</span></h4>
+          <p>Antes do Cliente, exercite TUDO do Produto num novo domínio: API de PetShop com Tutor + Pet (@ManyToOne). <strong>Sem nada novo</strong> — só fixação para virar muscle memory!</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot active" style="background:var(--accent6)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent6)">👤 Fase 3 — Cliente <span style="font-size:0.7rem;background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 8px;border-radius:4px;margin-left:6px">AGORA</span></h4>
+          <p>Consolida o padrão profissional + relacionamento <strong>@OneToOne</strong> com a entidade Endereço (cascade, orphanRemoval, DTO aninhado, @CPF, @Email, @Past).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- INTRO: ARQUITETURA EM CAMADAS -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="arquitetura">
+  <div class="step-header">
+    <div class="step-number sn-blue">🏗️</div>
+    <div>
+      <div class="step-title">Arquitetura em Camadas</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Cada camada tem uma responsabilidade clara</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🤔 Por que dividir em camadas?</div>
+      <p>Imagine uma pizzaria: o atendente anota o pedido, o pizzaiolo prepara a massa, e o estoquista organiza os ingredientes. Cada um faz <strong style="color:var(--text)">uma coisa só</strong> e faz bem feito. No código é igual — <strong style="color:var(--accent5)">separação de responsabilidades</strong> torna tudo organizado.</p>
+    </div>
+
+    <div class="layer-stack stagger" id="layerStack">
+      <div class="layer-item layer-client">🌐 Cliente (React / Swagger / Insomnia)<div class="layer-sub">Envia requisições HTTP</div></div>
+      <div class="layer-arrow">↕️ JSON</div>
+      <div class="layer-item layer-controller">🎮 Controller<div class="layer-sub">Recebe requests, devolve responses — @RestController</div></div>
+      <div class="layer-syringe-connector syringe-anim">
+        <svg class="layer-syringe-icon" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <line class="syringe-body" x1="30" y1="4" x2="30" y2="10"/><line class="syringe-body" x1="25" y1="4" x2="35" y2="4"/>
+          <line class="syringe-body" x1="30" y1="10" x2="30" y2="18"/>
+          <rect class="syringe-body" x="23" y="18" width="14" height="20" rx="2"/>
+          <rect class="syringe-liquid" x="24" y="27" width="12" height="10" rx="1"/>
+          <rect class="syringe-body" x="27" y="38" width="6" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+          <line class="syringe-needle" x1="30" y1="42" x2="30" y2="56"/>
+        </svg>
+        <span class="layer-autowired">@Autowired</span>
+        <span class="layer-inject-text">↕️ injeta Service no Controller</span>
+      </div>
+      <div class="layer-item layer-service">⚙️ Service<div class="layer-sub">Regras de negócio — @Service</div></div>
+      <div class="layer-syringe-connector syringe-anim" style="animation-delay:1.5s">
+        <svg class="layer-syringe-icon" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <line class="syringe-body" x1="30" y1="4" x2="30" y2="10"/><line class="syringe-body" x1="25" y1="4" x2="35" y2="4"/>
+          <line class="syringe-body" x1="30" y1="10" x2="30" y2="18"/>
+          <rect class="syringe-body" x="23" y="18" width="14" height="20" rx="2"/>
+          <rect class="syringe-liquid" x="24" y="27" width="12" height="10" rx="1"/>
+          <rect class="syringe-body" x="27" y="38" width="6" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+          <line class="syringe-needle" x1="30" y1="42" x2="30" y2="56"/>
+        </svg>
+        <span class="layer-autowired">@Autowired</span>
+        <span class="layer-inject-text">↕️ injeta Repository no Service</span>
+      </div>
+      <div class="layer-item layer-repo">🗄️ Repository<div class="layer-sub">Acesso ao banco de dados — extends JpaRepository</div></div>
+      <div class="layer-arrow">↕️ Entidades (Models)</div>
+      <div class="layer-item layer-model">📐 Model<div class="layer-sub">Modela as entidades — @Entity / @Table / @Column</div></div>
+      <div class="layer-arrow">↕️ SQL (automático via Hibernate)</div>
+      <div class="layer-item layer-db">🐘 PostgreSQL<div class="layer-sub">Banco de dados — onde os dados ficam salvos de verdade</div></div>
+    </div>
+
+    <div class="tip" style="margin-top:20px;border-left-color:var(--accent6)">
+      <span class="tip-icon">📐</span>
+      <div class="tip-content">
+        <strong>O que é o Model?</strong> É a classe Java que <strong style="color:var(--accent6)">representa uma tabela do banco de dados</strong>. Cada atributo da classe vira uma coluna. A classe <code>Fornecedor</code> com os atributos <code>nome</code>, <code>cnpj</code>, <code>email</code> gera automaticamente uma tabela <code>fornecedor</code> com essas colunas. Isso é <strong>ORM (Object-Relational Mapping)</strong> — o Hibernate traduz seus objetos Java em estrutura de banco!
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:12px">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">O Spring Boot gera o SQL automaticamente! Você trabalha com <strong>objetos Java</strong> e o Hibernate traduz tudo para SQL. Nunca mais <code>INSERT INTO</code> na mão!</div>
+    </div>
+  </div>
+
+  <!-- SYRINGE INJECTION DIAGRAM -->
+  <div class="card">
+    <h3 style="margin-bottom:6px;color:var(--spring)">💉 Injeção de Dependência — @Autowired</h3>
+    <p style="color:var(--text-dim);margin-bottom:8px;font-size:0.9rem">O Spring <strong>"injeta"</strong> automaticamente as dependências entre as camadas. É como uma seringa que conecta tudo pra você!</p>
+
+    <div class="concept" style="margin-bottom:20px">
+      <div class="concept-title">🤔 O que é @Autowired?</div>
+      <p>Quando o Controller precisa usar o Service, você não faz <code>new Service()</code> manualmente. O <strong style="color:var(--spring)">Spring injeta automaticamente</strong> a dependência — como uma seringa que entrega o componente certo no lugar certo. Isso é o padrão de <strong>Inversão de Controle (IoC)</strong>.</p>
+    </div>
+
+    <div class="injection-diagram">
+      <!-- Repository Box -->
+      <div class="inj-row">
+        <div class="inj-box box-repo">
+          🗄️ FornecedorRepository
+          <span class="inj-annotation">@Repository</span>
+        </div>
+      </div>
+
+      <!-- Syringe: Repository → Service -->
+      <div class="inj-syringe-area">
+        <div class="syringe-wrapper syringe-anim">
+          <svg class="syringe-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <line class="syringe-body" x1="30" y1="2" x2="30" y2="8"/>
+            <line class="syringe-body" x1="24" y1="2" x2="36" y2="2"/>
+            <line class="syringe-body" x1="30" y1="8" x2="30" y2="18"/>
+            <rect class="syringe-body" x="22" y="18" width="16" height="24" rx="2"/>
+            <rect class="syringe-liquid" x="23" y="28" width="14" height="13" rx="1"/>
+            <line class="syringe-body" x1="22" y1="24" x2="25" y2="24" style="stroke-width:1;opacity:0.5"/>
+            <line class="syringe-body" x1="22" y1="30" x2="25" y2="30" style="stroke-width:1;opacity:0.5"/>
+            <line class="syringe-body" x1="22" y1="36" x2="25" y2="36" style="stroke-width:1;opacity:0.5"/>
+            <rect class="syringe-body" x="26" y="42" width="8" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+            <line class="syringe-needle" x1="30" y1="46" x2="30" y2="58"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:3px">
+            <span class="autowired-tag">@Autowired</span>
+            <span class="inject-label">injeta Repository no Service</span>
+          </div>
+        </div>
+        <div class="liquid-drops"></div>
+        <div class="liquid-drops"></div>
+        <div class="liquid-drops"></div>
+      </div>
+
+      <!-- Service Box -->
+      <div class="inj-row">
+        <div class="inj-box box-service">
+          ⚙️ FornecedorService
+          <span class="inj-annotation">@Service</span>
+        </div>
+      </div>
+
+      <!-- Syringe: Service → Controller -->
+      <div class="inj-syringe-area">
+        <div class="syringe-wrapper syringe-anim" style="animation-delay:1.5s">
+          <svg class="syringe-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <line class="syringe-body" x1="30" y1="2" x2="30" y2="8"/>
+            <line class="syringe-body" x1="24" y1="2" x2="36" y2="2"/>
+            <line class="syringe-body" x1="30" y1="8" x2="30" y2="18"/>
+            <rect class="syringe-body" x="22" y="18" width="16" height="24" rx="2"/>
+            <rect class="syringe-liquid" x="23" y="28" width="14" height="13" rx="1"/>
+            <line class="syringe-body" x1="22" y1="24" x2="25" y2="24" style="stroke-width:1;opacity:0.5"/>
+            <line class="syringe-body" x1="22" y1="30" x2="25" y2="30" style="stroke-width:1;opacity:0.5"/>
+            <line class="syringe-body" x1="22" y1="36" x2="25" y2="36" style="stroke-width:1;opacity:0.5"/>
+            <rect class="syringe-body" x="26" y="42" width="8" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+            <line class="syringe-needle" x1="30" y1="46" x2="30" y2="58"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:3px">
+            <span class="autowired-tag">@Autowired</span>
+            <span class="inject-label">injeta Service no Controller</span>
+          </div>
+        </div>
+        <div class="liquid-drops" style="animation-delay:1.9s"></div>
+        <div class="liquid-drops" style="animation-delay:2.1s"></div>
+        <div class="liquid-drops" style="animation-delay:2.3s"></div>
+      </div>
+
+      <!-- Controller Box -->
+      <div class="inj-row">
+        <div class="inj-box box-controller">
+          🎮 FornecedorController
+          <span class="inj-annotation">@RestController</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:20px;border-left-color:var(--spring)">
+      <span class="tip-icon">💉</span>
+      <div class="tip-content">
+        <strong>Na prática:</strong> Quando você declara <code style="color:var(--spring)">@Autowired FornecedorService fornecedorService;</code> dentro do Controller, o Spring automaticamente cria e injeta uma instância do Service. Você <strong>nunca</strong> precisa fazer <code>new FornecedorService()</code> — o Spring cuida disso!
+      </div>
+    </div>
+  </div>
+
+  <!-- ANIMATED FLOW -->
+  <div class="card">
+    <h3 style="margin-bottom:16px;color:var(--accent4)">🔄 Fluxo de uma Requisição</h3>
+    <p style="color:var(--text-dim);margin-bottom:20px;font-size:0.9rem">Clique para ver o caminho que um <strong>POST /fornecedores</strong> faz:</p>
+
+    <button class="btn-demo btn-spring" onclick="runFlowDemo()" id="flowBtn">▶️ Animar Fluxo</button>
+
+    <div class="flow-container" id="flowDiagram">
+      <div class="flow-box fb-client" id="flow-0" style="opacity:0.3">
+        <div class="label">Cliente (React)</div>
+        📮 POST /fornecedores { "nome": "ABC" }
+      </div>
+      <div class="flow-arrow"><span class="flow-label" id="flow-label-0" style="opacity:0">JSON → HTTP Request</span></div>
+      <div class="flow-box fb-controller" id="flow-1" style="opacity:0.3">
+        <div class="label">Controller</div>
+        🎮 FornecedorController.criar()
+      </div>
+      <div class="flow-inject-arrow" id="flow-inject-1">
+        <div class="flow-inject-inner syringe-anim">
+          <svg class="mini-syringe" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <line class="syringe-body" x1="30" y1="4" x2="30" y2="10"/>
+            <line class="syringe-body" x1="25" y1="4" x2="35" y2="4"/>
+            <line class="syringe-body" x1="30" y1="10" x2="30" y2="18"/>
+            <rect class="syringe-body" x="23" y="18" width="14" height="20" rx="2"/>
+            <rect class="syringe-liquid" x="24" y="27" width="12" height="10" rx="1"/>
+            <rect class="syringe-body" x="27" y="38" width="6" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+            <line class="syringe-needle" x1="30" y1="42" x2="30" y2="56"/>
+          </svg>
+          <div class="flow-inject-label-area">
+            <span class="flow-autowired-tag">@Autowired</span>
+            <span class="flow-inject-desc">💉 injeta Service</span>
+          </div>
+        </div>
+        <span class="flow-label" id="flow-label-1" style="opacity:0">chama o service</span>
+      </div>
+      <div class="flow-box fb-service" id="flow-2" style="opacity:0.3">
+        <div class="label">Service</div>
+        ⚙️ FornecedorService.criar()
+      </div>
+      <div class="flow-inject-arrow" id="flow-inject-2">
+        <div class="flow-inject-inner syringe-anim" style="animation-delay:1.5s">
+          <svg class="mini-syringe" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <line class="syringe-body" x1="30" y1="4" x2="30" y2="10"/>
+            <line class="syringe-body" x1="25" y1="4" x2="35" y2="4"/>
+            <line class="syringe-body" x1="30" y1="10" x2="30" y2="18"/>
+            <rect class="syringe-body" x="23" y="18" width="14" height="20" rx="2"/>
+            <rect class="syringe-liquid" x="24" y="27" width="12" height="10" rx="1"/>
+            <rect class="syringe-body" x="27" y="38" width="6" height="4" rx="1" style="fill:rgba(109,179,63,0.2)"/>
+            <line class="syringe-needle" x1="30" y1="42" x2="30" y2="56"/>
+          </svg>
+          <div class="flow-inject-label-area">
+            <span class="flow-autowired-tag">@Autowired</span>
+            <span class="flow-inject-desc">💉 injeta Repository</span>
+          </div>
+        </div>
+        <span class="flow-label" id="flow-label-2" style="opacity:0">chama o repository</span>
+      </div>
+      <div class="flow-box fb-repo" id="flow-3" style="opacity:0.3">
+        <div class="label">Repository</div>
+        🗄️ fornecedorRepository.save()
+      </div>
+      <div class="flow-arrow"><span class="flow-label" id="flow-label-3" style="opacity:0">INSERT INTO fornecedor...</span></div>
+      <div class="flow-box fb-db" id="flow-4" style="opacity:0.3">
+        <div class="label">Banco de Dados</div>
+        🐘 Salvo na tabela "fornecedor"!
+      </div>
+      <div class="flow-arrow flow-arrow-up"><span class="flow-label right" id="flow-label-4" style="opacity:0">201 Created ✅</span></div>
+      <div class="flow-box fb-response" id="flow-5" style="opacity:0.3">
+        <div class="label">Resposta</div>
+        ✅ HTTP 201 — Fornecedor criado!
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SETUP DO PROJETO -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="setup">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--spring)">🍃</div>
+    <div>
+      <div class="step-title">Setup do Projeto</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Spring Initializr + Configuração</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🚀 Spring Initializr</div>
+      <p>Acesse <strong style="color:var(--spring)"><a href="https://start.spring.io" target="_blank" style="color:var(--spring)">start.spring.io</a></strong> e gere o projeto com essas opções:</p>
+    </div>
+
+    <div class="tip" style="margin-bottom:16px;border-left-color:var(--spring)">
+      <div class="tip-icon">🍃</div>
+      <div class="tip-content">
+        <strong>Sobre a versão do Spring Boot:</strong> Sempre utilize a <strong style="color:var(--spring)">versão mais recente disponível</strong> no Spring Initializr — ela já vem selecionada por padrão.
+      </div>
+    </div>
+
+    <div class="annotation-grid" style="margin:20px 0">
+      <div class="annotation-card"><div class="anno-name">📦 Project</div><div class="anno-desc">Maven</div></div>
+      <div class="annotation-card"><div class="anno-name">☕ Language</div><div class="anno-desc">Java 21</div></div>
+      <div class="annotation-card"><div class="anno-name">🍃 Spring Boot</div><div class="anno-desc" style="font-size:0.8rem;line-height:1.4">Mais recente disponível</div></div>
+      <div class="annotation-card"><div class="anno-name">📂 Group</div><div class="anno-desc">br.com.sistemagestao</div></div>
+      <div class="annotation-card"><div class="anno-name">📄 Artifact</div><div class="anno-desc">api</div></div>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent3)">📚 Dependências:</h4>
+    <div class="annotation-grid">
+      <div class="annotation-card"><div class="anno-name" style="color:var(--spring)">Spring Web</div><div class="anno-desc">Para criar endpoints REST</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">Spring Data JPA</div><div class="anno-desc">Para acessar o banco de dados</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">PostgreSQL Driver</div><div class="anno-desc">Driver de conexão com PostgreSQL</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent2)">Lombok</div><div class="anno-desc">Gera getters, setters, construtores</div></div>
+    </div>
+  </div>
+
+  <!-- application.properties -->
+  <div class="card">
+    <h3 style="margin-bottom:12px;color:var(--accent3)">⚙️ application.properties</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Este arquivo configura a conexão com o banco de dados:</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">src/main/resources/application.properties</span><span class="lang-badge properties">properties</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13</div>
+      <pre>
+<span class="cm"># Nome da aplicação</span>
+<span class="an">spring.application.name</span>=<span class="st">Programa AI - API</span>
+
+<span class="cm"># Conexão com o Banco de Dados PostgreSQL</span>
+<span class="an">spring.datasource.url</span>=<span class="st">jdbc:postgresql://localhost:5432/bd_sistema_gestao</span>
+<span class="an">spring.datasource.username</span>=<span class="st">postgres</span>
+<span class="an">spring.datasource.password</span>=<span class="st">123</span>
+<span class="an">spring.datasource.driver-class-name</span>=<span class="st">org.postgresql.Driver</span>
+
+<span class="cm"># Hibernate: cria/atualiza tabelas automaticamente!</span>
+<span class="an">spring.jpa.database-platform</span>=<span class="st">org.hibernate.dialect.PostgreSQLDialect</span>
+<span class="an">spring.jpa.hibernate.ddl-auto</span>=<span class="st">update</span>
+<span class="an">spring.jpa.show-sql</span>=<span class="st">true</span></pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 O que cada linha faz?</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="display:grid;gap:10px;margin-top:8px;font-size:0.88rem">
+          <div><code style="color:var(--accent5)">spring.datasource.url</code> — <span style="color:var(--text-dim)">Endereço do banco: protocolo + host + porta + nome do banco</span></div>
+          <div><code style="color:var(--accent5)">spring.datasource.username/password</code> — <span style="color:var(--text-dim)">Credenciais do PostgreSQL</span></div>
+          <div><code style="color:var(--accent5)">ddl-auto=update</code> — <span style="color:var(--text-dim)">O Hibernate CRIA e ATUALIZA as tabelas automaticamente baseado nas classes @Entity 🪄</span></div>
+          <div><code style="color:var(--accent5)">show-sql=true</code> — <span style="color:var(--text-dim)">Mostra no console o SQL que o Hibernate gera (ótimo para aprender!)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Importante:</strong> Crie o banco <code>bd_sistema_gestao</code> no PostgreSQL <strong>antes</strong> de rodar o projeto! O Hibernate cria as tabelas, mas não o banco.</div>
+    </div>
+  </div>
+
+  <!-- Estrutura de Pacotes -->
+  <div class="card">
+    <h3 style="margin-bottom:12px;color:var(--accent6)">📂 Estrutura de Pacotes</h3>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px">Organize assim dentro de <code>br.com.sistemagestao.api</code>:</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="filename">Estrutura do projeto</span>
+      </div>
+      <pre>
+br.com.sistemagestao.api/
+├── 📄 ApiApplication.java       <span class="cm">← Classe principal (já vem pronta!)</span>
+├── 📁 <span class="an">model/</span>                   <span class="cm">← Entidades JPA (tabelas)</span>
+│   ├── Fornecedor.java
+│   ├── Produto.java            <span class="cm">← fase 2</span>
+│   ├── Endereco.java           <span class="cm">← fase 3</span>
+│   └── Cliente.java            <span class="cm">← fase 3</span>
+├── 📁 <span class="fn">repository/</span>              <span class="cm">← Acesso ao banco</span>
+│   ├── FornecedorRepository.java
+│   ├── ProdutoRepository.java  <span class="cm">← fase 2</span>
+│   └── ClienteRepository.java  <span class="cm">← fase 3</span>
+├── 📁 <span class="tp">service/</span>                 <span class="cm">← Regras de negócio</span>
+│   ├── FornecedorService.java
+│   ├── ProdutoService.java     <span class="cm">← fase 2 (interface)</span>
+│   └── ClienteService.java     <span class="cm">← fase 3</span>
+├── 📁 <span class="kw">controller/</span>              <span class="cm">← Endpoints REST</span>
+│   ├── FornecedorController.java
+│   ├── ProdutoController.java  <span class="cm">← fase 2</span>
+│   └── ClienteController.java  <span class="cm">← fase 3</span>
+├── 📁 <span class="st">dtos/</span>                    <span class="cm">← fase 2 em diante</span>
+└── 📁 config/                   <span class="cm">← Configurações (CORS, etc.)</span></pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">📌</span>
+      <div class="tip-content">Sempre crie os pacotes <strong>dentro</strong> do pacote principal <code>br.com.sistemagestao.api</code>. Se criar fora, o Spring não vai encontrar as classes!</div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<footer>
+  Feito com <span class="heart">💜</span> para os alunos da <a href="#">Programa AI</a> — Curso Presencial Programação Fullstack<br>
+  <span style="font-size:0.75rem;margin-top:8px;display:block">Backend com Java/Spring Boot — Prof. Kelson Almeida</span>
+</footer>
+
+
+</div><!-- /container -->
+
+<script src="assets/app.js"></script>
+</body>
+</html>

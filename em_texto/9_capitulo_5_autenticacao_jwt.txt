@@ -1,0 +1,1024 @@
+# Capitulo 5 - Autenticacao JWT
+# Fonte: cap-09-autenticacao.html
+
+🔐
+
+Capítulo 5
+
+Autenticação com JWT
+
+Spring Security minimalista — protegendo a API com login e token, sem boilerplate
+
+🎯
+
+Por que autenticação?
+
+Até agora nossa API era uma porta aberta
+
+Pare e pense: hoje qualquer pessoa que conhece a URL
+http://localhost:8080/clientes
+pode listar, criar, alterar ou deletar
+qualquer
+cliente da nossa base. Sem login, sem identificação, sem nada. Bom pra aprender CRUD — péssimo pra usar de verdade.
+
+Analogia: A casa sem porta
+
+Você construiu sua casa, levantou as paredes, instalou a cozinha, organizou os quartos — e esqueceu de colocar a
+porta de entrada
+. Qualquer um passa, entra, mexe. Autenticação é a
+porta + a chave
+: ninguém entra sem a chave certa. 🗝️
+
+🎯 O que vamos construir
+
+1
+
+Cadastro
+—
+POST /auth/register
+→ o usuário se cadastra e já recebe um token.
+
+2
+
+Login
+—
+POST /auth/login
+→ confere senha, devolve token.
+
+3
+
+Acesso protegido
+—
+toda outra rota só funciona com header
+Authorization: Bearer <token>
+.
+
+4
+
+Sem token / inválido / expirado
+—
+→
+401 Unauthorized
+. A porta tranca.
+
+📦 O que é JWT?
+
+JWT é a sigla para
+JSON Web Token
+— um pedacinho de texto
+assinado pelo servidor
+que carrega informações (no nosso caso, só o
+login
+do usuário) e tem
+prazo de validade
+. O cliente guarda esse token e envia em cada request. O servidor confere a assinatura e descobre quem está chamando —
+sem precisar guardar sessão nenhuma
+. É o padrão de mercado pra APIs REST com front separado (React, mobile, etc.).
+
+🧠
+
+"Mas e o Spring Security? Não é aquele monstro de classes?"
+Sim e não. O Security tem MUITAS classes porque resolve MUITOS casos (formulário, OAuth, LDAP, sessão, CSRF, CORS, roles, method security…). Mas se você só quer
+JWT stateless
+, dá pra usar
+só 3 classes
+no pacote
+security/
+. É o que vamos fazer.
+
+📦
+
+Antes de codar — dependências e configuração
+
+3 dependências novas + 2 linhas de properties
+
+🐘
+
+Migração do banco:
+nada quebra! As tabelas
+cliente
+,
+fornecedor
+,
+produto
+continuam funcionando. Vamos só
+acrescentar
+uma tabela
+usuario
+. O
+ddl-auto=update
+faz isso sozinho na primeira subida — sem precisar dropar nada.
+
+📦 Dependências em
+pom.xml
+
+Acrescente dentro de
+<dependencies>
+:
+
+XML
+
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+<dependency>
+<groupId>io.jsonwebtoken</groupId>
+<artifactId>jjwt-api</artifactId>
+<version>0.12.6</version>
+</dependency>
+<dependency>
+<groupId>io.jsonwebtoken</groupId>
+<artifactId>jjwt-impl</artifactId>
+<version>0.12.6</version>
+<scope>runtime</scope>
+</dependency>
+<dependency>
+<groupId>io.jsonwebtoken</groupId>
+<artifactId>jjwt-jackson</artifactId>
+<version>0.12.6</version>
+<scope>runtime</scope>
+</dependency>
+
+A primeira ativa o
+Spring Security
+. As outras três são a
+jjwt
+, biblioteca que gera e valida tokens — divididas em
+api/impl/jackson
+por convenção da própria lib.
+
+⚙️ Em
+application.properties
+
+application.properties
+
+# JWT
+app.jwt.secret=troque-este-segredo-min-32-bytes-para-prod-1234567890
+app.jwt.expiration-ms=3600000
+
+O
+secret
+é a "chave secreta" que assina os tokens — em produção viraria variável de ambiente. O
+expiration-ms
+é a validade em milissegundos (
+3600000
+= 1 hora).
+
+⚠️
+
+MUITO importante:
+o secret precisa ter no mínimo
+32 caracteres (256 bits)
+. É exigência do algoritmo HMAC-SHA usado pra assinar. Se você usar um secret pequeno, a aplicação
+não sobe
+.
+
+🧑
+
+Entidade
+Usuario
+— quem pode entrar
+
+Só 3 campos: id, login, senha (hash BCrypt)
+
+🤔 Por que
+Usuario
+é separado de
+Cliente
+?
+
+Boa pergunta!
+Cliente
+é dado de
+domínio
+— quem compra na sua loja.
+Usuario
+é
+credencial
+— quem opera o sistema. São coisas diferentes. Em projetos reais o gerente, o vendedor e o estoquista são
+Usuario
+, mas só o comprador é
+Cliente
+. Mantemos as duas entidades
+separadas
+.
+
+📄
+model/Usuario.java
+
+Java
+
+package br.com.sistemagestao.api.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name = "usuario")
+@Entity
+public class Usuario {
+
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
+
+@Column(name = "login", nullable = false, unique = true)
+private String login;
+
+@Column(name = "senha", nullable = false)
+private String senha;
+}
+
+🚨
+
+A senha
+nunca, NUNCA
+é salva em texto puro. O que vai nessa coluna é o
+hash BCrypt
+da senha — algo como
+$2a$10$abcdef…
+. Mesmo o admin do banco não consegue ler a senha do usuário. Se vazar o banco, as senhas continuam protegidas.
+Isso é o mínimo absoluto de segurança.
+
+📄
+repository/UsuarioRepository.java
+
+Java
+
+package br.com.sistemagestao.api.repository;
+
+import br.com.sistemagestao.api.model.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+
+Optional<Usuario> findByLogin(String login);
+}
+
+✨
+
+Mágica do Spring Data JPA:
+você só
+declara
+o método com esse nome (
+findByLogin
+) e o Spring gera a SQL
+SELECT * FROM usuario WHERE login = ?
+sozinho. Sem
+@Query
+, sem implementação. Bonito demais.
+
+📦
+
+DTOs de autenticação
+
+3 records minúsculos — o que entra e o que sai de
+/auth
+
+Mesmo padrão dos capítulos anteriores:
+imutáveis
+, com
+Bean Validation
+, sem expor a entidade. Nada de novo aqui.
+
+📄
+dto/auth/RegisterRequestDTO.java
+
+Java
+
+package br.com.sistemagestao.api.dto.auth;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record RegisterRequestDTO(
+
+@NotBlank(message = "O login é obrigatório")
+String login,
+
+@NotBlank(message = "A senha é obrigatória")
+@Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
+String senha
+) {
+}
+
+📄
+dto/auth/LoginRequestDTO.java
+
+Java
+
+package br.com.sistemagestao.api.dto.auth;
+
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequestDTO(
+
+@NotBlank(message = "O login é obrigatório")
+String login,
+
+@NotBlank(message = "A senha é obrigatória")
+String senha
+) {
+}
+
+📄
+dto/auth/LoginResponseDTO.java
+
+Java
+
+package br.com.sistemagestao.api.dto.auth;
+
+public record LoginResponseDTO(
+String token,
+String login
+) {
+}
+
+O
+token
+aqui é o
+JWT
+que o cliente vai guardar e enviar nos próximos requests.
+
+🔧
+
+JwtService
+— gera e valida tokens
+
+A primeira das 3 classes do pacote
+security/
+
+📄
+security/JwtService.java
+
+Java
+
+package br.com.sistemagestao.api.security;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+
+@Service
+public class JwtService {
+
+private final SecretKey chave;
+private final long expiracaoMs;
+
+public JwtService(@Value("${app.jwt.secret}") String segredo,
+@Value("${app.jwt.expiration-ms}") long expiracaoMs) {
+this.chave = Keys.hmacShaKeyFor(segredo.getBytes());
+this.expiracaoMs = expiracaoMs;
+}
+
+public String gerarToken(String login) {
+Date agora = new Date();
+Date expira = new Date(agora.getTime() + expiracaoMs);
+
+return Jwts.builder()
+.subject(login)
+.issuedAt(agora)
+.expiration(expira)
+.signWith(chave)
+.compact();
+}
+
+public String extrairLogin(String token) {
+return Jwts.parser()
+.verifyWith(chave)
+.build()
+.parseSignedClaims(token)
+.getPayload()
+.getSubject();
+}
+}
+
+📝 Lendo linha a linha
+
+@Value("${app.jwt.secret}")
+— puxa o segredo do
+application.properties
+direto no construtor.
+
+Keys.hmacShaKeyFor(...)
+— transforma a string num
+SecretKey
+que a jjwt entende.
+
+gerarToken
+— monta o JWT com
+3 partes
+:
+subject
+(o login),
+issuedAt
+(quando foi emitido),
+expiration
+(quando vence). Depois assina com a chave e devolve a string.
+
+extrairLogin
+— caminho inverso: verifica a assinatura, lê o
+subject
+. Se o token for adulterado ou expirado, a jjwt joga
+exceção
+— a gente trata isso no filtro.
+
+🔍
+
+JwtAuthFilter
+— intercepta cada request
+
+Lê o header, valida o token, autentica
+
+Analogia: O segurança da portaria
+
+Antes de qualquer request chegar no
+controller
+(o "andar da empresa"), ele passa pela
+portaria
+. O segurança olha o
+crachá
+(header Authorization), confere se é válido, e libera ou barra. O
+JwtAuthFilter
+é esse segurança. 🛂
+
+📄
+security/JwtAuthFilter.java
+
+Java
+
+package br.com.sistemagestao.api.security;
+
+import br.com.sistemagestao.api.repository.UsuarioRepository;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+private final JwtService jwtService;
+private final UsuarioRepository usuarioRepository;
+
+@Override
+protected void doFilterInternal(HttpServletRequest request,
+HttpServletResponse response,
+FilterChain filterChain) throws ServletException, IOException {
+
+String header = request.getHeader("Authorization");
+
+if (header != null && header.startsWith("Bearer ")) {
+String token = header.substring(7);
+
+try {
+String login = jwtService.extrairLogin(token);
+
+usuarioRepository.findByLogin(login).ifPresent(usuario -> {
+UsernamePasswordAuthenticationToken auth =
+new UsernamePasswordAuthenticationToken(login, null, List.of());
+SecurityContextHolder.getContext().setAuthentication(auth);
+});
+} catch (Exception ignored) {
+// token inválido/expirado → segue sem autenticar; Security responde 401
+}
+}
+
+filterChain.doFilter(request, response);
+}
+}
+
+📝 Lendo o filtro
+
+OncePerRequestFilter
+garante que o filtro roda
+uma vez por request
+(mesmo se houver forwards internos).
+
+Lê o header
+Authorization
+. Se não começar com
+"Bearer "
+,
+ignora
+— pode ser rota pública.
+
+header.substring(7)
+— corta exatamente os 7 caracteres
+"Bearer "
+(com espaço!) pra ficar só com o token.
+
+Se a validação der certo, busca o usuário no banco e popula o
+SecurityContextHolder
+— é assim que o Spring sabe "esse request está autenticado".
+
+UsernamePasswordAuthenticationToken(login, null, List.of())
+— passamos
+null
+na senha (já validamos via JWT) e lista vazia de roles (não usamos roles nesta fase).
+
+Se qualquer coisa der errado (token adulterado, expirado, formato inválido), o
+catch
+engole — o
+SecurityContext
+continua vazio, e o Security responde
+401
+mais adiante.
+
+🧠
+
+"Mas por que buscar o usuário no banco se o token já tem o login?"
+Boa! Porque um usuário pode ser
+deletado
+depois do token ter sido emitido. Se ele saiu do sistema, o token não deveria mais funcionar. Buscar no banco garante isso.
+
+🛡️
+
+SecurityConfig
+— o cérebro da segurança
+
+Define rotas públicas e onde plugar o filtro
+
+📄
+security/SecurityConfig.java
+
+Java
+
+package br.com.sistemagestao.api.security;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+private final JwtAuthFilter jwtAuthFilter;
+
+@Bean
+public PasswordEncoder passwordEncoder() {
+return new BCryptPasswordEncoder();
+}
+
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+http
+.csrf(csrf -> csrf.disable())
+.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+.authorizeHttpRequests(auth -> auth
+.requestMatchers("/auth/**", "/error").permitAll()
+.anyRequest().authenticated()
+)
+.exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+return http.build();
+}
+}
+
+📝 Lendo o
+SecurityConfig
+
+PasswordEncoder
+é o bean que vai gerar o hash BCrypt — usado no
+AuthServiceImpl
+.
+
+csrf().disable()
+— CSRF protege apps de browser com sessão; numa API REST stateless é desnecessário e atrapalha.
+
+sessionCreationPolicy(STATELESS)
+— não cria nenhum cookie de sessão. Todo request precisa se identificar pelo JWT.
+
+requestMatchers("/auth/**", "/error").permitAll()
+—
+/auth/register
+e
+/auth/login
+são públicos.
+/error
+precisa estar aqui porque o Spring forwarda exceções pra essa URL pra renderizar o JSON do erro.
+
+anyRequest().authenticated()
+— qualquer outra URL exige autenticação.
+
+HttpStatusEntryPoint(UNAUTHORIZED)
+— sem isso, requests sem token recebem
+403
+em vez de
+401
+(default do Security). Trocamos pro código correto.
+
+addFilterBefore(jwtAuthFilter, ...)
+— pluga nosso filtro
+antes
+do filtro padrão de login com formulário (que nem usamos, mas é o lugar canônico na cadeia).
+
+🚨
+
+As duas pegadinhas do iniciante:
+
+1.
+Esquecer de liberar
+/error
+: você lança
+ResponseStatusException(CONFLICT)
+no service, esperando ver o JSON do 409. Mas vê 401/403 com body
+vazio
+. Motivo: o forward interno pra
+/error
+está sendo bloqueado pelo Security.
+Adicionar
+/error
+no
+permitAll
+resolve.
+
+2.
+Esquecer o
+HttpStatusEntryPoint(UNAUTHORIZED)
+: você tenta acessar
+/clientes
+sem token, esperando 401, mas recebe 403. É o default histórico do Security — 401 é mais correto pra "sem credencial".
+
+⚙️
+
+AuthService
+&
+AuthServiceImpl
+
+Mesmo padrão Produto/Cliente: interface + Impl
+
+📄
+service/AuthService.java
+
+Java
+
+package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.auth.LoginRequestDTO;
+import br.com.sistemagestao.api.dto.auth.LoginResponseDTO;
+import br.com.sistemagestao.api.dto.auth.RegisterRequestDTO;
+
+public interface AuthService {
+
+LoginResponseDTO registrar(RegisterRequestDTO dto);
+
+LoginResponseDTO login(LoginRequestDTO dto);
+}
+
+📄
+service/AuthServiceImpl.java
+
+Java
+
+package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.auth.LoginRequestDTO;
+import br.com.sistemagestao.api.dto.auth.LoginResponseDTO;
+import br.com.sistemagestao.api.dto.auth.RegisterRequestDTO;
+import br.com.sistemagestao.api.model.Usuario;
+import br.com.sistemagestao.api.repository.UsuarioRepository;
+import br.com.sistemagestao.api.security.JwtService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+@Service
+@RequiredArgsConstructor
+public class AuthServiceImpl implements AuthService {
+
+private final UsuarioRepository usuarioRepository;
+private final PasswordEncoder passwordEncoder;
+private final JwtService jwtService;
+
+@Override
+public LoginResponseDTO registrar(RegisterRequestDTO dto) {
+
+if (usuarioRepository.findByLogin(dto.login()).isPresent()) {
+throw new ResponseStatusException(HttpStatus.CONFLICT, "Login já cadastrado");
+}
+
+Usuario usuario = new Usuario();
+usuario.setLogin(dto.login());
+usuario.setSenha(passwordEncoder.encode(dto.senha()));
+usuarioRepository.save(usuario);
+
+String token = jwtService.gerarToken(usuario.getLogin());
+return new LoginResponseDTO(token, usuario.getLogin());
+}
+
+@Override
+public LoginResponseDTO login(LoginRequestDTO dto) {
+
+Usuario usuario = usuarioRepository.findByLogin(dto.login())
+.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas"));
+
+if (!passwordEncoder.matches(dto.senha(), usuario.getSenha())) {
+throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");
+}
+
+String token = jwtService.gerarToken(usuario.getLogin());
+return new LoginResponseDTO(token, usuario.getLogin());
+}
+}
+
+📝 Detalhes importantes
+
+passwordEncoder.encode(dto.senha())
+— gera o hash BCrypt. Cada vez gera um hash
+diferente
+pra mesma senha (por causa do salt) — mas todos validam corretamente.
+
+passwordEncoder.matches(senhaPura, hashGuardado)
+— confere se a senha pura corresponde ao hash.
+Nunca
+faça
+senhaPura.equals(hash)
+— não funciona.
+
+No
+login
+com senha errada, retornamos a
+mesma
+mensagem
+"Credenciais inválidas"
+que retornaríamos com login inexistente.
+Nunca
+distinga "usuário não existe" de "senha errada" — isso ajudaria atacantes a descobrir quais logins são válidos.
+
+🎯
+
+AuthController
+
+Dois endpoints:
+/auth/register
+e
+/auth/login
+
+Java
+
+package br.com.sistemagestao.api.controller;
+
+import br.com.sistemagestao.api.dto.auth.LoginRequestDTO;
+import br.com.sistemagestao.api.dto.auth.LoginResponseDTO;
+import br.com.sistemagestao.api.dto.auth.RegisterRequestDTO;
+import br.com.sistemagestao.api.service.AuthService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+private final AuthService authService;
+
+@PostMapping("/register")
+@ResponseStatus(HttpStatus.CREATED)
+public LoginResponseDTO registrar(@Valid @RequestBody RegisterRequestDTO dto) {
+return authService.registrar(dto);
+}
+
+@PostMapping("/login")
+@ResponseStatus(HttpStatus.OK)
+public LoginResponseDTO login(@Valid @RequestBody LoginRequestDTO dto) {
+return authService.login(dto);
+}
+}
+
+Nada de surpreendente —
+mesmo padrão
+dos outros controllers que você já fez. A diferença é só que esses dois endpoints estão
+liberados
+no
+SecurityConfig
+.
+
+🦋
+
+Testando no Insomnia
+
+Roteiro completo — 8 cenários do golden path às pegadinhas
+
+Sobe a aplicação primeiro. Na primeira subida, o Hibernate cria a tabela
+usuario
+sozinho (confere no DBeaver se quiser).
+
+Terminal
+
+cd api
+./mvnw spring-boot:run
+
+🧪 Roteiro de 8 testes
+
+1 — Acesso sem token (esperado: 401)
+
+POST http://localhost:8080/clientes
+com body
+{}
+e
+sem
+header de Authorization. Esperado:
+401 Unauthorized
+. A porta está trancada. 🔒
+
+2 — Registrar usuário (esperado: 201)
+
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+"login": "maria",
+"senha": "123456"
+}
+
+Esperado:
+201 Created
+. O body devolve
+{"token":"eyJ...","login":"maria"}
+.
+Copia esse token
+— vamos usar nos próximos.
+
+3 — Registrar o mesmo login de novo (esperado: 409)
+
+Mesmo request do passo 2. Esperado:
+409 Conflict
+—
+"Login já cadastrado"
+.
+
+4 — Login com senha errada (esperado: 401)
+
+POST http://localhost:8080/auth/login
+Body: { "login": "maria", "senha": "errada" }
+
+Esperado:
+401 Unauthorized
+—
+"Credenciais inválidas"
+.
+
+5 — Login correto (esperado: 200)
+
+POST http://localhost:8080/auth/login
+Body: { "login": "maria", "senha": "123456" }
+
+Esperado:
+200 OK
+com novo token (cada login gera um token novo — é normal).
+
+6 — Criar cliente COM token (esperado: 201)
+
+POST http://localhost:8080/clientes
+Authorization: Bearer eyJ...   ← cola o token aqui
+Content-Type: application/json
+Body: { ...JSON do cap 3... }
+
+Esperado:
+201 Created
+. A porta agora
+abre
+. 🔓
+
+7 — Token adulterado (esperado: 401)
+
+Pega o token, troca a última letra por outra qualquer, manda no header. Esperado:
+401
+(a assinatura não bate).
+
+8 — Senha curta no register (esperado: 400)
+
+POST /auth/register
+Body: { "login": "joao", "senha": "123" }
+
+Esperado:
+400 Bad Request
+— a anotação
+@Size(min=6)
+pegou.
+
+✅
+
+Se todos os 8 testes passarem, sua autenticação está
+funcionando
+. Parabéns — sua API agora é uma casa
+com porta
+. 🗝️
+
+🔐
+
+Autenticação no Bolso!
+
+Sua API REST agora tem o padrão de mercado:
+JWT stateless
+. Daqui pra frente é evolução — não revolução. 💪
+
+📋 O que você consolidou neste capítulo
+
+✅
+
+Stateless
+— servidor sem sessão, toda info viaja no token
+
+✅
+
+JWT
+— token assinado, com expiração
+
+✅
+
+BCrypt
+— senha nunca em texto puro
+
+✅
+
+Filtro HTTP
+— interceptando cada request antes do controller
+
+✅
+
+SecurityContextHolder
+— onde "quem está logado" mora durante o request
+
+✅
+
+Spring Security minimalista
+— só 3 classes no
+security/
+
+🚧 O que ficou de fora (pra próximos voos)
+
+•
+
+Roles / autorização fina
+— quando precisar separar admin/usuário, adiciona coluna
+role
+no Usuario e
+.hasRole("ADMIN")
+no config.
+
+•
+
+Refresh token
+— em apps reais existe um token de longa duração que renova o de acesso.
+
+•
+
+Recuperação de senha
+— fluxo de "esqueci minha senha" com e-mail.
+
+•
+
+OAuth (login com Google/GitHub)
+— Spring Security suporta, mas é outro mundo.
+
+•
+
+CORS
+— quando o front React em outra porta consumir essa API, vai precisar de configuração CORS (próximo capítulo).
+
+🚀
+
+Próximo passo:
+integrar o front
+React
+com esse back autenticado — tela de login, salvar o token, interceptor pra mandar no header automaticamente, e tratar 401 deslogando o usuário.

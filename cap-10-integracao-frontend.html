@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo 6 — Integração Front × Back — Backend Java &amp; Spring Boot</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- MENU TOGGLE -->
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR NAV -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar-nav" id="sidebarNav">
+  <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+  <div class="sidebar-header">
+    <h3>📚 Sumário do Curso</h3>
+    <a class="sidebar-link" style="font-weight:700;margin-top:8px" href="index.html" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>🏠 Índice / Capa</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏠 Introdução</div>
+    <a class="sidebar-link" href="cap-01-intro.html#hero" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Visão Geral</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐘 Tour — PostgreSQL</div>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-pg" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que é Banco de Dados?</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-docker" onclick="toggleSidebar()"><span class="dot" style="background:#2496ED"></span>Docker + PostgreSQL</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-dbeaver" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>DBeaver — IDE do Banco</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-sql" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>SQL Básico (CRUD)</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-erros" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Erros Mais Comuns</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Fluxo Mental da Prática</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-treino" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Treino Guiado em Casa</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-checklist" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Checklist de Conclusão</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🍃 Projeto Spring</div>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#arquitetura" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Arquitetura em Camadas</a>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📦 Capítulo 1 — Fornecedor</div>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-demo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Demo Interativa</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏷️ Capítulo 2 — Produto</div>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-pom" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Dependência pom.xml</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Enum</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (Request/Response)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐶 Desafio — PetShop</div>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>O Desafio</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-bd" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Criar banco no DBeaver</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🗺️ Ordem de Construção</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>🐾 Enum EspeciePet</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>🦋 Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">👤 Capítulo 3 — Cliente</div>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model-endereco" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Model Endereco</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Model Cliente</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔧 Capítulo 4 — Refatorar Fornecedor</div>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que refatorar?</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-migracao" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🦫 Migração no banco</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-extrair-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Extrair EnderecoMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Refatorar Model</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>FornecedorMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔐 Capítulo 5 — Autenticação JWT</div>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Por que autenticação?</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-prep" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Dependências &amp; Config</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-usuario" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Entidade Usuario</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs de Auth</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtService</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-filter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtAuthFilter</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-security-config" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>SecurityConfig</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>AuthService &amp; Impl</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔗 Capítulo 6 — Integração Front × Back</div>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que integrar agora?</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-snapshot" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>📸 Snapshot inicial</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cors" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚧 CORS no backend</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-api-js" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>api.js + interceptors</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-auth-ctx" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>AuthContext</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-login" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Tela de Login</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-private-route" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>PrivateRoute</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-forn-adapter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Adapter Fornecedor</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-novos-forms" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Formulários novos</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 Removendo json-server</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">☁️ Capítulo 7 — Deploy AWS <span style="font-size:0.65rem;background:rgba(255,107,107,0.2);color:var(--accent2);padding:1px 6px;border-radius:4px;margin-left:4px">🚨 1×1</span></div>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#cap-deploy" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚨 Leia antes — 1×1 com Prof. Kelson</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-overview" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Visão geral</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-rds" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🐘 RDS PostgreSQL</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-properties" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>application.properties</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-jar" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Build do jar</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-eb-create" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Criar Beanstalk</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-sg-link" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🔗 Cross-link SG (EB↔RDS)</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-test" onclick="toggleSidebar()"><span class="dot" style="background:#49cc90"></span>Testar URL pública</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 CLEANUP (não pule!)</a>
+  </div>
+</nav>
+
+
+<div class="container">
+
+<div class="prof-banner" style="margin-top:60px">
+  <div class="prof-avatar">👨‍🏫</div>
+  <div class="prof-info">
+    <div class="prof-label">
+      Professor <span class="verified">✓</span>
+    </div>
+    <div class="prof-name">Kelson Almeida</div>
+    <div class="prof-role">
+      <span class="tag">🚀 Programa AI</span>
+      <span class="tag">☕ Backend Java/Spring</span>
+      <span class="tag">📍 João Pessoa, PB</span>
+    </div>
+    <div class="prof-links">
+      <a href="https://github.com/kelsonvictr" target="_blank" class="prof-link">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div class="programa-ai-badge">
+      <span class="ai-dot"></span>
+      Programa AI — Curso Presencial Programação Fullstack
+    </div>
+  </div>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║         CAPÍTULO 6: INTEGRAÇÃO COMPLETA COM O BACKEND        ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="chapter-divider" id="cap-integracao">
+  <span class="chapter-icon">🔗</span>
+  <div class="chapter-number">Capítulo 6</div>
+  <h2 style="background:linear-gradient(135deg,var(--accent3),var(--accent4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Integração Front × Back</h2>
+  <p class="chapter-subtitle">Do mock json-server pro nosso backend Spring autenticado — antes e depois, lado a lado</p>
+</div>
+
+<!-- 6.1 -->
+<section class="step-section" id="integ-intro">
+  <div class="step-header">
+    <div class="step-number sn-main">🎯</div>
+    <div>
+      <div class="step-title">Por que integrar agora?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">O front e o back finalmente se encontram</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="font-size:1.02rem;margin-bottom:20px">Até aqui o front conversava com o <strong style="color:var(--accent4)">json-server</strong> — um mock que aceita qualquer JSON e devolve igual. Bom pra aprender React sem depender de back. Mas agora temos um <strong style="color:var(--accent5)">backend de verdade</strong>, com validação, autenticação JWT, relacionamentos. <strong style="color:var(--text)">Hora de ligar os fios.</strong></p>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: o motor e o painel</div>
+      <p style="color:var(--text-dim)">Você construiu um <strong style="color:var(--text)">motor</strong> (backend) e um <strong style="color:var(--accent4)">painel</strong> (front) cada um na sua oficina. Funcionam isolados, mas o painel ainda está com fios soltos — botões que não acendem nada. Este capítulo é o <strong style="color:var(--accent3)">chicote elétrico</strong>: cada botão do painel passa a comandar uma parte real do motor. 🔌</p>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">🎁 O que entra nesta etapa</h4>
+    <div style="background:linear-gradient(135deg,rgba(73,204,144,0.06),rgba(69,183,209,0.06));border:1px solid rgba(73,204,144,0.15);border-radius:16px;padding:24px;margin:16px 0">
+      <div style="display:grid;gap:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">CORS</span>
+          <div><strong style="color:var(--text)">Liberar o front no backend</strong> — <span style="color:var(--text-dim)">sem isso o browser bloqueia.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(69,183,209,0.15);color:var(--accent4);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">api.js</span>
+          <div><strong style="color:var(--text)">Instância axios central</strong> — <span style="color:var(--text-dim)">interceptors injetam JWT + tratam 401.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(167,139,250,0.15);color:var(--accent6);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">AuthContext</span>
+          <div><strong style="color:var(--text)">Estado global do usuário</strong> — <span style="color:var(--text-dim)">quem está logado, em qualquer tela.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(108,99,255,0.15);color:var(--accent);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">PrivateRoute</span>
+          <div><strong style="color:var(--text)">Rotas protegidas</strong> — <span style="color:var(--text-dim)">sem login? Vai pra <code>/login</code>.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(255,159,67,0.15);color:var(--accent5);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">forms</span>
+          <div><strong style="color:var(--text)">6 telas novas</strong> — <span style="color:var(--text-dim)">Login, Register, Cadastrar/Editar Cliente e Produto.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">📌</span>
+      <div class="tip-content">
+        <strong>Estratégia did&aacute;tica deste capítulo:</strong> em cada seção, mostro o <strong>antes</strong> (com json-server) e o <strong>depois</strong> (com nosso backend), lado a lado. Você vai ver exatamente <em>o que mudou</em> e <em>por quê</em>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.2 — Snapshot -->
+<section class="step-section" id="integ-snapshot">
+  <div class="step-header">
+    <div class="step-number sn-blue">📸</div>
+    <div>
+      <div class="step-title">Snapshot inicial — o ponto de partida</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Antes de mexer, marca o estado atual com git</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">Pra a gente conseguir comparar <strong style="color:var(--text)">antes × depois</strong> com precisão, marcamos o front no estado atual com uma <strong style="color:var(--accent3)">tag git</strong>:</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge bash">Terminal</span></div>
+      <pre>cd web
+git tag pre-integracao</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-top:12px">Agora qualquer arquivo pode ser comparado com <code>git diff pre-integracao -- web/src/App.jsx</code>. Ao final do capítulo, o resumo do delta é assim:</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge bash">git diff --stat</span></div>
+      <pre>web/src/App.jsx                       |  59 +++--
+web/src/components/Navbar.jsx         |  90 +++++---
+web/src/pages/CadastrarFornecedor.jsx | 369 +++++++++++++-----------------
+web/src/pages/EditarFornecedor.jsx    | 408 +++++++++++++++-------------------
+web/src/pages/Fornecedores.jsx        | 214 ++++++++----------
+web/src/pages/Inicial.jsx             |  48 +++-
+web/src/pages/Clientes.jsx            | 107 +++++++++
+web/src/pages/Produtos.jsx            | 104 +++++++++
+8 files changed, 791 insertions(+), 608 deletions(-)
+
+# + arquivos NOVOS (não aparecem no stat porque não estavam rastreados):
+src/services/api.js
+src/contexts/AuthContext.jsx
+src/components/PrivateRoute.jsx
+src/pages/Login.jsx
+src/pages/Register.jsx
+src/pages/CadastrarCliente.jsx
+src/pages/EditarCliente.jsx
+src/pages/CadastrarProduto.jsx
+src/pages/EditarProduto.jsx</pre>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">🧠</span>
+      <div class="tip-content">
+        <strong>Por que tag e não branch?</strong> Tag é <strong>imutável</strong> — aponta pra um commit específico pra sempre. Branch evolui. Pro "antes" do diff didático, queremos congelado.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.3 — CORS -->
+<section class="step-section" id="integ-cors">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent2)">🚧</div>
+    <div>
+      <div class="step-title">CORS — derrubando o muro do navegador</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Sem isso, NADA funciona — e a mensagem de erro engana o iniciante</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🤔 Por que CORS existe?</div>
+      <p>Quando o front roda em <code>http://localhost:5173</code> e tenta chamar a API em <code>http://localhost:8080</code>, são <strong>origens diferentes</strong> (portas diferentes). Por <strong style="color:var(--accent5)">segurança</strong>, o browser bloqueia chamadas cross-origin a menos que o servidor diga: <strong style="color:#49cc90">"essa origem aí pode falar comigo"</strong>. Isso é CORS (<em>Cross-Origin Resource Sharing</em>).</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: a lista do porteiro</div>
+      <p style="color:var(--text-dim)">Imagine um prédio (o backend) com porteiro. Toda visita (browser) que chega de fora, o porteiro olha numa <strong style="color:var(--accent3)">lista</strong>: "esse endereço pode entrar?". Se o endereço não está na lista, ele <strong style="color:var(--accent2)">barra</strong>. Configurar CORS é entregar a lista ao porteiro: "<strong>localhost:5173</strong> tá liberado". 🛂</p>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent2)">📄 No <code>SecurityConfig.java</code></h4>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge java">Java</span></div>
+      <pre>import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
+
+@Bean
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration cfg = new CorsConfiguration();
+    cfg.setAllowedOrigins(List.of("http://localhost:5173"));
+    cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    cfg.setAllowedHeaders(List.of("*"));
+    UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
+    src.registerCorsConfiguration("/**", cfg);
+    return src;
+}</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-top:12px">E no <code>filterChain</code> existente, adiciona <strong>uma linha</strong>:</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge java">Java</span></div>
+      <pre>http
+    .cors(c -&gt; c.configurationSource(corsConfigurationSource()))   // ← NOVO
+    .csrf(csrf -&gt; csrf.disable())
+    .sessionManagement(s -&gt; s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    // ... resto igual</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px;background:rgba(255,107,107,0.06);border-color:rgba(255,107,107,0.2)">
+      <span class="tip-icon">🚨</span>
+      <div class="tip-content">
+        <strong>A pegadinha que mata o aluno:</strong> sem CORS, o erro no console do browser é tipo <code>"Access to fetch at ... has been blocked by CORS policy"</code>. Aluno acha que é problema no fetch/axios e fica horas debugando o front. <strong style="color:var(--text)">O problema é no back.</strong> Sempre que ver "CORS" no console, mexa no <code>SecurityConfig</code>, não no React.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.4 — api.js -->
+<section class="step-section" id="integ-api-js">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent4)">🛠️</div>
+    <div>
+      <div class="step-title"><code>api.js</code> — o coração da integração</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Uma instância axios centralizada com interceptors</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">Antes, cada página chamava <code>axios.get('http://localhost:3000/fornecedores')</code> direto. Funcionava, mas tinha 2 problemas: (1) a URL base estava espalhada em N arquivos e (2) não tinha onde injetar o token JWT.</p>
+
+    <p style="color:var(--text-dim);margin-bottom:14px">A solução é criar <strong style="color:var(--accent4)">uma instância axios única</strong> que todas as páginas usam, e plugar nela 2 <strong>interceptors</strong>: um que adiciona o token em cada request, outro que detecta 401 e desloga.</p>
+
+    <h4 style="margin:8px 0 10px;color:var(--accent4)">📄 <code>src/services/api.js</code> (arquivo NOVO)</h4>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge js">JavaScript</span></div>
+      <pre>import axios from 'axios'
+
+const api = axios.create({
+  baseURL: 'http://localhost:8080'
+})
+
+// Anexa o token JWT em cada request (se houver)
+api.interceptors.request.use((config) =&gt; {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+// Trata 401 globalmente: limpa token e redireciona pro login
+api.interceptors.response.use(
+  (response) =&gt; response,
+  (error) =&gt; {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('login')
+      if (window.location.pathname !== '/login' &amp;&amp; window.location.pathname !== '/register') {
+        window.location.href = '/login'
+      }
+    }
+    return Promise.reject(error)
+  }
+)
+
+export default api</pre>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">📝 Decompondo</h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:14px;color:var(--text-dim);font-size:0.92rem">
+        <div><code style="color:var(--accent4)">axios.create({ baseURL: ... })</code> — agora você chama <code>api.get('/clientes')</code> sem repetir o domínio.</div>
+        <div><code style="color:var(--accent4)">interceptors.request</code> — função que <strong>roda antes de cada request sair</strong>. Aqui adicionamos o header Authorization automaticamente.</div>
+        <div><code style="color:var(--accent4)">interceptors.response</code> — função que <strong>roda quando a resposta chega</strong>. Aqui detectamos 401 e deslogamos.</div>
+        <div><code style="color:var(--accent4)">localStorage</code> — guarda o token entre F5/abas. Survive refresh.</div>
+        <div>O <code>if</code> antes do redirect evita loop infinito quando o próprio /login devolve 401 (senha errada).</div>
+      </div>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent4)">🔁 Antes × Depois nas chamadas</h4>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0">
+      <div>
+        <div style="background:rgba(255,107,107,0.1);color:var(--accent2);padding:6px 12px;border-radius:8px 8px 0 0;font-size:0.85rem;font-weight:700">❌ Antes — axios direto</div>
+        <div class="code-block" style="margin:0;border-radius:0 0 12px 12px">
+          <pre style="margin:0">import axios from 'axios'
+
+axios.get('http://localhost:3000/fornecedores')
+  .then(r =&gt; setFornecedores(r.data))</pre>
+        </div>
+      </div>
+      <div>
+        <div style="background:rgba(73,204,144,0.1);color:#49cc90;padding:6px 12px;border-radius:8px 8px 0 0;font-size:0.85rem;font-weight:700">✅ Depois — instância api</div>
+        <div class="code-block" style="margin:0;border-radius:0 0 12px 12px">
+          <pre style="margin:0">import api from '../services/api'
+
+api.get('/fornecedores')
+  .then(r =&gt; setFornecedores(r.data))</pre>
+        </div>
+      </div>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.88rem;margin-top:12px">Note: <strong>o token vai sozinho</strong> em todo request. As páginas não precisam saber que existe autenticação. Beleza arquitetural. ✨</p>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.5 — AuthContext -->
+<section class="step-section" id="integ-auth-ctx">
+  <div class="step-header">
+    <div class="step-number sn-purple">🧠</div>
+    <div>
+      <div class="step-title"><code>AuthContext</code> — estado global do usuário</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Quem está logado? Em qualquer componente, sem prop drilling</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🤔 O que é Context no React?</div>
+      <p>É a forma de <strong style="color:var(--text)">compartilhar estado</strong> entre componentes sem passar via props. Em vez de "passar de pai pra filho pra neto pra bisneto" (prop drilling), o Context fica <strong>acessível em qualquer lugar</strong> da árvore.</p>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent6)">📄 <code>src/contexts/AuthContext.jsx</code> (arquivo NOVO)</h4>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge jsx">JSX</span></div>
+      <pre>import React, { createContext, useContext, useEffect, useState } from 'react'
+
+const AuthContext = createContext(null)
+
+export const AuthProvider = ({ children }) =&gt; {
+  const [login, setLogin] = useState(null)
+
+  useEffect(() =&gt; {
+    const savedLogin = localStorage.getItem('login')
+    if (savedLogin &amp;&amp; localStorage.getItem('token')) {
+      setLogin(savedLogin)
+    }
+  }, [])
+
+  const signIn = (token, loginUsuario) =&gt; {
+    localStorage.setItem('token', token)
+    localStorage.setItem('login', loginUsuario)
+    setLogin(loginUsuario)
+  }
+
+  const signOut = () =&gt; {
+    localStorage.removeItem('token')
+    localStorage.removeItem('login')
+    setLogin(null)
+  }
+
+  const isAuthenticated = !!login
+
+  return (
+    &lt;AuthContext.Provider value={{ login, isAuthenticated, signIn, signOut }}&gt;
+      {children}
+    &lt;/AuthContext.Provider&gt;
+  )
+}
+
+export const useAuth = () =&gt; useContext(AuthContext)</pre>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent6)">📝 Lendo o Context</h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:14px;color:var(--text-dim);font-size:0.92rem">
+        <div><code style="color:var(--accent6)">createContext(null)</code> — cria o "container" que vai distribuir o estado.</div>
+        <div><code style="color:var(--accent6)">AuthProvider</code> — componente que envolve a app no <code>App.jsx</code>. Tudo dentro dele consegue ler o estado.</div>
+        <div><code style="color:var(--accent6)">useEffect(() =&gt; {...}, [])</code> — roda 1 vez quando a app carrega. Verifica se já tem token no localStorage. Isso é o que faz o <strong>F5 não deslogar</strong>.</div>
+        <div><code style="color:var(--accent6)">signIn</code> / <code style="color:var(--accent6)">signOut</code> — chamados pelas telas Login e Navbar respectivamente.</div>
+        <div><code style="color:var(--accent6)">useAuth()</code> — hook customizado que qualquer componente usa pra pegar o estado: <code>const { login, isAuthenticated, signOut } = useAuth()</code>.</div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">
+        <strong>Por que <code>localStorage</code> e não cookies?</strong> Em SPA stateless com JWT, o front controla o token explicitamente — ele anexa no header. Cookies seriam enviados pelo browser automaticamente, o que <strong>misturaria</strong> os mundos (acidentalmente acionaria CSRF que a gente desligou no backend). Manter no localStorage é mais explícito e mais simples.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.6 — Login -->
+<section class="step-section" id="integ-login">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent7)">🔑</div>
+    <div>
+      <div class="step-title">Tela de Login</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Form → POST /auth/login → guarda token → redirect</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">O fluxo é direto. Usuário preenche, submete, recebe token, guarda no Context, e segue pra <code>/</code>.</p>
+
+    <h4 style="margin:8px 0 10px;color:var(--accent7)">📄 <code>src/pages/Login.jsx</code> (arquivo NOVO — versão essencial)</h4>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge jsx">JSX</span></div>
+      <pre>import { useState } from 'react'
+import { Card, Form, Button, Alert } from 'react-bootstrap'
+import { useNavigate, Link } from 'react-router-dom'
+import api from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
+
+const Login = () =&gt; {
+  const navigate = useNavigate()
+  const { signIn } = useAuth()
+  const [login, setLogin] = useState('')
+  const [senha, setSenha] = useState('')
+  const [erro, setErro] = useState('')
+
+  const submeter = (e) =&gt; {
+    e.preventDefault()
+    setErro('')
+    api.post('/auth/login', { login, senha })
+      .then((response) =&gt; {
+        signIn(response.data.token, response.data.login)
+        navigate('/')
+      })
+      .catch((error) =&gt; {
+        if (error.response?.status === 401) {
+          setErro('Login ou senha inválidos')
+        } else {
+          setErro('Erro ao fazer login. Tente novamente.')
+        }
+      })
+  }
+
+  return (/* ... form com inputs e botão Entrar ... */)
+}</pre>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent7)">🌀 Fluxo visual</h4>
+    <div style="background:linear-gradient(135deg,rgba(244,114,182,0.06),rgba(167,139,250,0.06));border:1px solid rgba(244,114,182,0.15);border-radius:14px;padding:24px;font-family:'JetBrains Mono',monospace;font-size:0.88rem;line-height:2">
+      <div>1. Usuário digita <strong style="color:var(--accent7)">login</strong> + <strong style="color:var(--accent7)">senha</strong> → clica <em>Entrar</em></div>
+      <div>2. <code>api.post('/auth/login', {...})</code> dispara</div>
+      <div>3. Backend valida BCrypt → devolve <code>{ token, login }</code></div>
+      <div>4. <code>signIn(token, login)</code> guarda no localStorage + Context</div>
+      <div>5. <code>navigate('/')</code> → vai pra tela inicial</div>
+      <div>6. Próximas requests já levam <code>Bearer &lt;token&gt;</code> via interceptor</div>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-top:14px">A tela de <strong>Register</strong> é praticamente idêntica — só muda o endpoint pra <code>/auth/register</code> e a mensagem de erro pra 409 (login duplicado).</p>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.7 — PrivateRoute -->
+<section class="step-section" id="integ-private-route">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent)">🛡️</div>
+    <div>
+      <div class="step-title"><code>PrivateRoute</code> — rotas protegidas</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Wrapper de uma linha que muda o jogo</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">Em React Router 7, "rota protegida" é simplesmente um componente que <strong style="color:var(--accent)">verifica autenticação</strong> antes de renderizar o filho. Se não está logado, redireciona.</p>
+
+    <h4 style="margin:8px 0 10px;color:var(--accent)">📄 <code>src/components/PrivateRoute.jsx</code> (arquivo NOVO)</h4>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge jsx">JSX</span></div>
+      <pre>import { Navigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+
+const PrivateRoute = ({ children }) =&gt; {
+  const { isAuthenticated } = useAuth()
+
+  if (!isAuthenticated) {
+    return &lt;Navigate to="/login" replace /&gt;
+  }
+
+  return children
+}
+
+export default PrivateRoute</pre>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent)">📄 Uso no <code>App.jsx</code></h4>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge jsx">JSX</span></div>
+      <pre>&lt;Routes&gt;
+  {/* Públicas */}
+  &lt;Route path="/login" element={&lt;Login /&gt;} /&gt;
+  &lt;Route path="/register" element={&lt;Register /&gt;} /&gt;
+
+  {/* Protegidas — envolvidas em PrivateRoute */}
+  &lt;Route path="/" element={&lt;PrivateRoute&gt;&lt;Inicial /&gt;&lt;/PrivateRoute&gt;} /&gt;
+  &lt;Route path="/fornecedores" element={&lt;PrivateRoute&gt;&lt;Fornecedores /&gt;&lt;/PrivateRoute&gt;} /&gt;
+  {/* ... resto igual ... */}
+&lt;/Routes&gt;</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">⚡</span>
+      <div class="tip-content">
+        <strong>Defesa em camadas:</strong> mesmo se alguém tentar acessar <code>/clientes</code> direto digitando na URL, o <code>PrivateRoute</code> redireciona. E se o cara conseguir burlar isso (impossível sem editar o JS), o <strong>backend</strong> ainda exige token. Front+back juntos = segurança real.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.8 — Adapter Fornecedor -->
+<section class="step-section" id="integ-forn-adapter">
+  <div class="step-header">
+    <div class="step-number sn-orange">🔧</div>
+    <div>
+      <div class="step-title">Adaptando os formulários de Fornecedor</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">json-server aceitava qualquer coisa; o backend é exigente</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">O backend tem <strong style="color:var(--accent4)">nomes de campo específicos</strong> e exige o endereço como <strong>objeto aninhado</strong>. O front precisa enviar exatamente isso. Esse é o tipo de "ajuste de contrato" que sempre aparece em integração real.</p>
+
+    <h4 style="margin:8px 0 12px;color:var(--accent5)">🔁 Payload de cadastro: antes × depois</h4>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0">
+      <div>
+        <div style="background:rgba(255,107,107,0.1);color:var(--accent2);padding:6px 12px;border-radius:8px 8px 0 0;font-size:0.85rem;font-weight:700">❌ Antes (json-server, flat)</div>
+        <div class="code-block" style="margin:0;border-radius:0 0 12px 12px">
+          <pre style="margin:0">{
+  "nome": "ACME Ltda",
+  "cnpj": "12.345.678/0001-99",
+  "email": "x@y.com",
+  "telefone": "(83) 3000-1000",
+  "cep": "58000-000",
+  "logradouro": "Av X",
+  "numero": "100",
+  "bairro": "Centro",
+  "cidade": "João Pessoa",
+  "uf": "PB"
+}</pre>
+        </div>
+      </div>
+      <div>
+        <div style="background:rgba(73,204,144,0.1);color:#49cc90;padding:6px 12px;border-radius:8px 8px 0 0;font-size:0.85rem;font-weight:700">✅ Depois (backend, aninhado)</div>
+        <div class="code-block" style="margin:0;border-radius:0 0 12px 12px">
+          <pre style="margin:0">{
+  "nomeFantasia": "ACME Ltda",
+  "cnpj": "12.345.678/0001-99",
+  "email": "x@y.com",
+  "telefonePrincipal": "(83) 3000-1000",
+  "telefoneSecundario": null,
+  "endereco": {
+    "cep": "58000-000",
+    "logradouro": "Av X",
+    "numero": "100",
+    "complemento": null,
+    "bairro": "Centro",
+    "cidade": "João Pessoa",
+    "uf": "PB"
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">📋 Mudanças no formulário</h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:12px;color:var(--text-dim);font-size:0.92rem">
+        <div>1. Campo <code>nome</code> → <code style="color:var(--accent5)">nomeFantasia</code> (label e state).</div>
+        <div>2. <code>telefone</code> virou <strong>dois</strong> campos: <code style="color:var(--accent5)">telefonePrincipal</code> (obrigatório) e <code style="color:var(--accent5)">telefoneSecundario</code> (opcional).</div>
+        <div>3. Adicionado campo <code style="color:var(--accent5)">complemento</code> no endereço.</div>
+        <div>4. Envio do objeto monta <code>endereco: { ... }</code> em vez dos campos flat.</div>
+        <div>5. Em <strong>EditarFornecedor</strong>: CNPJ vira <code>disabled readOnly</code>, respeitando <code>updatable=false</code> da entidade.</div>
+        <div>6. Substituído <code>axios</code> direto por <code>api</code> (instância centralizada).</div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px;background:rgba(255,107,107,0.06);border-color:rgba(255,107,107,0.2)">
+      <span class="tip-icon">🚨</span>
+      <div class="tip-content">
+        <strong>Pegadinha do PUT:</strong> se você mandar <code>endereco: { ... }</code> <em>sem o <code>id</code> do endereço atual</em>, o backend ainda funciona — porque o <code>EnderecoMapper.atualizar()</code> <strong>muta</strong> a instância existente (preservando o id). Você não precisa carregar o id do endereço no front. Magia do cap 3. ✨
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.9 — Formulários novos -->
+<section class="step-section" id="integ-novos-forms">
+  <div class="step-header">
+    <div class="step-number sn-green">📝</div>
+    <div>
+      <div class="step-title">Formulários novos — Cliente e Produto</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Aplicando os mesmos padrões do Fornecedor</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">O formulário de <strong>Cliente</strong> segue o mesmo padrão do Fornecedor (com endereço aninhado), só muda os campos: <code>nomeCompleto</code>, <code>cpf</code>, <code>dataNascimento</code> (input <code>type="date"</code>), <code>telefone</code>.</p>
+
+    <p style="color:var(--text-dim);margin-bottom:14px">O de <strong>Produto</strong> traz um padrão novo importante: <strong style="color:var(--accent3)">select de fornecedor</strong> e <strong style="color:var(--accent3)">select de enum</strong>.</p>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent3)">📄 Carregando fornecedores pro select</h4>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge jsx">JSX</span></div>
+      <pre>const [fornecedores, setFornecedores] = useState([])
+
+useEffect(() =&gt; {
+  api.get('/fornecedores')
+    .then((response) =&gt; setFornecedores(response.data))
+}, [])
+
+// ... no JSX
+&lt;Form.Select value={fornecedorId} onChange={(e) =&gt; setFornecedorId(e.target.value)} required&gt;
+  &lt;option value=""&gt;Selecione...&lt;/option&gt;
+  {fornecedores.map((f) =&gt; (
+    &lt;option key={f.id} value={f.id}&gt;{f.nomeFantasia}&lt;/option&gt;
+  ))}
+&lt;/Form.Select&gt;</pre>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent3)">📄 Select de enum categoria</h4>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge jsx">JSX</span></div>
+      <pre>const CATEGORIAS = ['ELETRONICOS', 'ALIMENTOS', 'VESTUARIO',
+                    'MOVEIS', 'INFORMATICA', 'LIMPEZA', 'OUTROS']
+
+&lt;Form.Select value={categoria} onChange={(e) =&gt; setCategoria(e.target.value)} required&gt;
+  &lt;option value=""&gt;Selecione...&lt;/option&gt;
+  {CATEGORIAS.map((c) =&gt; &lt;option key={c} value={c}&gt;{c}&lt;/option&gt;)}
+&lt;/Form.Select&gt;</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-top:12px">A lista de categorias é <strong>hardcoded no front</strong> — espelho do enum Java. Quando o enum mudar no backend, você atualiza aqui também. Em projetos maiores, vale criar um endpoint <code>GET /enums/categorias</code> pra evitar essa duplicação.</p>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content">
+        <strong>Conversão de tipos no envio:</strong> inputs HTML retornam <strong>string</strong>. Mas <code>preco</code> é <code>BigDecimal</code> e <code>quantidadeEstoque</code> é <code>Integer</code> no back. Antes de mandar, <code>parseFloat(preco)</code> e <code>parseInt(quantidadeEstoque, 10)</code>. Idem pro <code>fornecedorId</code>. Esquecer disso causa erro 400 silencioso.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.10 — Cleanup -->
+<section class="step-section" id="integ-cleanup">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent2)">🧹</div>
+    <div>
+      <div class="step-title">Removendo o json-server</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Apagando o modo offline — não precisamos mais</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">Agora que tudo aponta pro backend real, o <code>json-server</code> pode sair de cena. Limpeza final:</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span class="lang-badge bash">Terminal</span></div>
+      <pre># Remover dependência
+npm uninstall json-server
+
+# Remover script do package.json
+# "server": "json-server --watch data/db.json"  ← apagar
+
+# Opcional: apagar data/db.json se quiser deixar o repo enxuto</pre>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent3)">📋 Checklist final — sua app está integrada se:</h4>
+    <div class="card" style="background:rgba(73,204,144,0.05);border-color:rgba(73,204,144,0.2)">
+      <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.92rem">
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> Subir backend (<code>./mvnw spring-boot:run</code>) + front (<code>npm run dev</code>) e abrir <code>http://localhost:5173</code></div>
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> Você é redirecionado pra <code>/login</code> (sem token).</div>
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> Registra novo usuário em <code>/register</code> → cai logado na <code>/</code>.</div>
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> Cria Fornecedor → aparece no Postgres (DBeaver) com endereço na tabela <code>endereco</code>.</div>
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> Cria Produto vinculado ao Fornecedor.</div>
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> Cria Cliente com data de nascimento, CPF válido.</div>
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> Edita um Fornecedor — CNPJ aparece <strong>disabled</strong>; salvar funciona.</div>
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> Clica em <em>Sair</em> → volta pra login.</div>
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> F5 numa rota protegida <strong>não desloga</strong>.</div>
+        <div style="display:flex;gap:10px"><span style="color:#49cc90">✅</span> Limpando o localStorage manualmente (DevTools) e tentando criar algo → redireciona pra login.</div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:20px">
+      <span class="tip-icon">🎉</span>
+      <div class="tip-content">
+        Se passou em todos, parabéns: você tem uma <strong>fullstack app integrada e autenticada</strong> rodando local. Front React + Back Spring + Postgres + JWT. Padrão de mercado. 🚀
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 6.11 — Recap -->
+<section class="step-section" style="text-align:center;padding:60px 20px">
+  <div style="font-size:3.5rem;margin-bottom:16px;animation:bounce 2s ease-in-out infinite;display:inline-block">🔗</div>
+  <h2 style="font-size:2rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--accent3),var(--accent4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Front × Back: Plugados!</h2>
+  <p style="color:var(--text-dim);max-width:560px;margin:0 auto 30px;font-size:1.05rem">Você fez o que normalmente é o capítulo <strong style="color:var(--text)">mais difícil</strong> de um curso fullstack: amarrar as duas pontas. CORS, JWT, Context, rotas protegidas — tudo junto. 💪</p>
+
+  <div class="card" style="text-align:left;max-width:640px;margin:0 auto">
+    <h3 style="margin-bottom:16px;color:var(--accent3)">📋 O que entrou no projeto</h3>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.92rem">
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">CORS no SecurityConfig</strong></div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">api.js</strong> com baseURL + 2 interceptors</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">AuthContext</strong> + <code>useAuth()</code> hook</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">PrivateRoute</strong> em todas as rotas protegidas</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Login + Register</strong></div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Cadastrar/Editar Cliente</strong> com endereço aninhado</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Cadastrar/Editar Produto</strong> com select de fornecedor e enum</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Navbar reativa</strong> a <code>isAuthenticated</code></div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">json-server removido</strong></div>
+    </div>
+
+    <div class="tip" style="margin-top:20px">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-content">
+        <strong>Próximo capítulo (e último!):</strong> <strong style="color:var(--accent7)">Deploy na AWS</strong> — Elastic Beanstalk + RDS. Atenção: esse capítulo funciona como <strong style="color:var(--accent2)">mentoria 1×1 com o Prof. Kelson</strong>. Só inicie depois de mostrar este capítulo funcionando local. 🚨
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  Feito com <span class="heart">💜</span> para os alunos da <a href="#">Programa AI</a> — Curso Presencial Programação Fullstack<br>
+  <span style="font-size:0.75rem;margin-top:8px;display:block">Backend com Java/Spring Boot — Prof. Kelson Almeida</span>
+</footer>
+
+
+</div><!-- /container -->
+
+<script src="assets/app.js"></script>
+</body>
+</html>

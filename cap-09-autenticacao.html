@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo 5 — Autenticação com JWT — Backend Java &amp; Spring Boot</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- MENU TOGGLE -->
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR NAV -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar-nav" id="sidebarNav">
+  <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+  <div class="sidebar-header">
+    <h3>📚 Sumário do Curso</h3>
+    <a class="sidebar-link" style="font-weight:700;margin-top:8px" href="index.html" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>🏠 Índice / Capa</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏠 Introdução</div>
+    <a class="sidebar-link" href="cap-01-intro.html#hero" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Visão Geral</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐘 Tour — PostgreSQL</div>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-pg" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que é Banco de Dados?</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-docker" onclick="toggleSidebar()"><span class="dot" style="background:#2496ED"></span>Docker + PostgreSQL</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-dbeaver" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>DBeaver — IDE do Banco</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-sql" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>SQL Básico (CRUD)</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-erros" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Erros Mais Comuns</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Fluxo Mental da Prática</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-treino" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Treino Guiado em Casa</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-checklist" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Checklist de Conclusão</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🍃 Projeto Spring</div>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#arquitetura" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Arquitetura em Camadas</a>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📦 Capítulo 1 — Fornecedor</div>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-demo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Demo Interativa</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏷️ Capítulo 2 — Produto</div>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-pom" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Dependência pom.xml</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Enum</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (Request/Response)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐶 Desafio — PetShop</div>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>O Desafio</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-bd" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Criar banco no DBeaver</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🗺️ Ordem de Construção</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>🐾 Enum EspeciePet</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>🦋 Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">👤 Capítulo 3 — Cliente</div>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model-endereco" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Model Endereco</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Model Cliente</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔧 Capítulo 4 — Refatorar Fornecedor</div>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que refatorar?</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-migracao" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🦫 Migração no banco</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-extrair-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Extrair EnderecoMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Refatorar Model</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>FornecedorMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔐 Capítulo 5 — Autenticação JWT</div>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Por que autenticação?</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-prep" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Dependências &amp; Config</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-usuario" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Entidade Usuario</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs de Auth</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtService</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-filter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtAuthFilter</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-security-config" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>SecurityConfig</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>AuthService &amp; Impl</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔗 Capítulo 6 — Integração Front × Back</div>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que integrar agora?</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-snapshot" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>📸 Snapshot inicial</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cors" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚧 CORS no backend</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-api-js" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>api.js + interceptors</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-auth-ctx" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>AuthContext</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-login" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Tela de Login</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-private-route" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>PrivateRoute</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-forn-adapter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Adapter Fornecedor</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-novos-forms" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Formulários novos</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 Removendo json-server</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">☁️ Capítulo 7 — Deploy AWS <span style="font-size:0.65rem;background:rgba(255,107,107,0.2);color:var(--accent2);padding:1px 6px;border-radius:4px;margin-left:4px">🚨 1×1</span></div>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#cap-deploy" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚨 Leia antes — 1×1 com Prof. Kelson</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-overview" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Visão geral</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-rds" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🐘 RDS PostgreSQL</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-properties" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>application.properties</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-jar" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Build do jar</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-eb-create" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Criar Beanstalk</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-sg-link" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🔗 Cross-link SG (EB↔RDS)</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-test" onclick="toggleSidebar()"><span class="dot" style="background:#49cc90"></span>Testar URL pública</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 CLEANUP (não pule!)</a>
+  </div>
+</nav>
+
+
+<div class="container">
+
+<div class="prof-banner" style="margin-top:60px">
+  <div class="prof-avatar">👨‍🏫</div>
+  <div class="prof-info">
+    <div class="prof-label">
+      Professor <span class="verified">✓</span>
+    </div>
+    <div class="prof-name">Kelson Almeida</div>
+    <div class="prof-role">
+      <span class="tag">🚀 Programa AI</span>
+      <span class="tag">☕ Backend Java/Spring</span>
+      <span class="tag">📍 João Pessoa, PB</span>
+    </div>
+    <div class="prof-links">
+      <a href="https://github.com/kelsonvictr" target="_blank" class="prof-link">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div class="programa-ai-badge">
+      <span class="ai-dot"></span>
+      Programa AI — Curso Presencial Programação Fullstack
+    </div>
+  </div>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              CAPÍTULO 5: AUTENTICAÇÃO COM JWT                ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="chapter-divider" id="cap-auth">
+  <span class="chapter-icon">🔐</span>
+  <div class="chapter-number">Capítulo 5</div>
+  <h2 style="background:linear-gradient(135deg,var(--accent7),var(--accent6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Autenticação com JWT</h2>
+  <p class="chapter-subtitle">Spring Security minimalista — protegendo a API com login e token, sem boilerplate</p>
+</div>
+
+<!-- 5.1 — POR QUE PRECISAMOS DISSO? -->
+<section class="step-section" id="auth-intro">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent7)">🎯</div>
+    <div>
+      <div class="step-title">Por que autenticação?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Até agora nossa API era uma porta aberta</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="font-size:1.02rem;margin-bottom:20px">Pare e pense: hoje qualquer pessoa que conhece a URL <code style="color:var(--accent7)">http://localhost:8080/clientes</code> pode listar, criar, alterar ou deletar <strong style="color:var(--accent2)">qualquer</strong> cliente da nossa base. Sem login, sem identificação, sem nada. Bom pra aprender CRUD — péssimo pra usar de verdade.</p>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: A casa sem porta</div>
+      <p style="color:var(--text-dim)">Você construiu sua casa, levantou as paredes, instalou a cozinha, organizou os quartos — e esqueceu de colocar a <strong style="color:var(--text)">porta de entrada</strong>. Qualquer um passa, entra, mexe. Autenticação é a <strong style="color:var(--accent7)">porta + a chave</strong>: ninguém entra sem a chave certa. 🗝️</p>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent7)">🎯 O que vamos construir</h4>
+    <div style="background:linear-gradient(135deg,rgba(244,114,182,0.06),rgba(167,139,250,0.06));border:1px solid rgba(244,114,182,0.15);border-radius:16px;padding:24px;margin:16px 0">
+      <div style="display:grid;gap:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(244,114,182,0.15);color:var(--accent7);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">1</span>
+          <div><strong style="color:var(--text)">Cadastro</strong> — <span style="color:var(--text-dim)"><code>POST /auth/register</code> → o usuário se cadastra e já recebe um token.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(244,114,182,0.15);color:var(--accent7);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">2</span>
+          <div><strong style="color:var(--text)">Login</strong> — <span style="color:var(--text-dim)"><code>POST /auth/login</code> → confere senha, devolve token.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(244,114,182,0.15);color:var(--accent7);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">3</span>
+          <div><strong style="color:var(--text)">Acesso protegido</strong> — <span style="color:var(--text-dim)">toda outra rota só funciona com header <code>Authorization: Bearer &lt;token&gt;</code>.</span></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="background:rgba(255,107,107,0.15);color:var(--accent2);padding:4px 12px;border-radius:8px;font-weight:800;font-size:0.78rem;flex-shrink:0;font-family:'JetBrains Mono',monospace">4</span>
+          <div><strong style="color:var(--text)">Sem token / inválido / expirado</strong> — <span style="color:var(--text-dim)">→ <code>401 Unauthorized</code>. A porta tranca.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-title">📦 O que é JWT?</div>
+      <p>JWT é a sigla para <strong style="color:var(--text)">JSON Web Token</strong> — um pedacinho de texto <strong>assinado pelo servidor</strong> que carrega informações (no nosso caso, só o <code>login</code> do usuário) e tem <strong>prazo de validade</strong>. O cliente guarda esse token e envia em cada request. O servidor confere a assinatura e descobre quem está chamando — <strong style="color:var(--accent7)">sem precisar guardar sessão nenhuma</strong>. É o padrão de mercado pra APIs REST com front separado (React, mobile, etc.).</p>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🧠</span>
+      <div class="tip-content">
+        <strong>"Mas e o Spring Security? Não é aquele monstro de classes?"</strong> Sim e não. O Security tem MUITAS classes porque resolve MUITOS casos (formulário, OAuth, LDAP, sessão, CSRF, CORS, roles, method security…). Mas se você só quer <strong>JWT stateless</strong>, dá pra usar <strong style="color:var(--text)">só 3 classes</strong> no pacote <code>security/</code>. É o que vamos fazer.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.2 — PREPARAÇÃO -->
+<section class="step-section" id="auth-prep">
+  <div class="step-header">
+    <div class="step-number sn-blue">📦</div>
+    <div>
+      <div class="step-title">Antes de codar — dependências e configuração</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">3 dependências novas + 2 linhas de properties</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="tip" style="margin-bottom:18px">
+      <span class="tip-icon">🐘</span>
+      <div class="tip-content">
+        <strong>Migração do banco:</strong> nada quebra! As tabelas <code>cliente</code>, <code>fornecedor</code>, <code>produto</code> continuam funcionando. Vamos só <strong>acrescentar</strong> uma tabela <code>usuario</code>. O <code>ddl-auto=update</code> faz isso sozinho na primeira subida — sem precisar dropar nada.
+      </div>
+    </div>
+
+    <h4 style="margin:8px 0 12px;color:var(--accent4)">📦 Dependências em <code>pom.xml</code></h4>
+    <p style="color:var(--text-dim);font-size:0.92rem;margin-bottom:12px">Acrescente dentro de <code>&lt;dependencies&gt;</code>:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge xml">XML</span>
+      </div>
+      <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+    &lt;artifactId&gt;jjwt-api&lt;/artifactId&gt;
+    &lt;version&gt;0.12.6&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+    &lt;artifactId&gt;jjwt-impl&lt;/artifactId&gt;
+    &lt;version&gt;0.12.6&lt;/version&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+    &lt;artifactId&gt;jjwt-jackson&lt;/artifactId&gt;
+    &lt;version&gt;0.12.6&lt;/version&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.88rem;margin-top:10px">A primeira ativa o <strong style="color:var(--accent5)">Spring Security</strong>. As outras três são a <strong style="color:var(--accent7)">jjwt</strong>, biblioteca que gera e valida tokens — divididas em <em>api/impl/jackson</em> por convenção da própria lib.</p>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">⚙️ Em <code>application.properties</code></h4>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge properties">application.properties</span>
+      </div>
+      <pre># JWT
+app.jwt.secret=troque-este-segredo-min-32-bytes-para-prod-1234567890
+app.jwt.expiration-ms=3600000</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.88rem;margin-top:10px">O <code>secret</code> é a "chave secreta" que assina os tokens — em produção viraria variável de ambiente. O <code>expiration-ms</code> é a validade em milissegundos (<code>3600000</code> = 1 hora).</p>
+
+    <div class="tip" style="margin-top:14px;background:rgba(255,107,107,0.06);border-color:rgba(255,107,107,0.2)">
+      <span class="tip-icon">⚠️</span>
+      <div class="tip-content">
+        <strong>MUITO importante:</strong> o secret precisa ter no mínimo <strong style="color:var(--accent2)">32 caracteres (256 bits)</strong>. É exigência do algoritmo HMAC-SHA usado pra assinar. Se você usar um secret pequeno, a aplicação <strong>não sobe</strong>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.3 — ENTIDADE USUARIO -->
+<section class="step-section" id="auth-usuario">
+  <div class="step-header">
+    <div class="step-number sn-orange">🧑</div>
+    <div>
+      <div class="step-title">Entidade <code>Usuario</code> — quem pode entrar</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Só 3 campos: id, login, senha (hash BCrypt)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🤔 Por que <code>Usuario</code> é separado de <code>Cliente</code>?</div>
+      <p>Boa pergunta! <strong style="color:var(--accent6)">Cliente</strong> é dado de <strong>domínio</strong> — quem compra na sua loja. <strong style="color:var(--accent7)">Usuario</strong> é <strong>credencial</strong> — quem opera o sistema. São coisas diferentes. Em projetos reais o gerente, o vendedor e o estoquista são <code>Usuario</code>, mas só o comprador é <code>Cliente</code>. Mantemos as duas entidades <strong>separadas</strong>.</p>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent2)">📄 <code>model/Usuario.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name = "usuario")
+@Entity
+public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "login", nullable = false, unique = true)
+    private String login;
+
+    @Column(name = "senha", nullable = false)
+    private String senha;
+}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px;background:rgba(255,107,107,0.06);border-color:rgba(255,107,107,0.2)">
+      <span class="tip-icon">🚨</span>
+      <div class="tip-content">
+        A senha <strong>nunca, NUNCA</strong> é salva em texto puro. O que vai nessa coluna é o <strong style="color:var(--accent7)">hash BCrypt</strong> da senha — algo como <code>$2a$10$abcdef…</code>. Mesmo o admin do banco não consegue ler a senha do usuário. Se vazar o banco, as senhas continuam protegidas. <strong>Isso é o mínimo absoluto de segurança.</strong>
+      </div>
+    </div>
+
+    <h4 style="margin:24px 0 10px;color:var(--accent3)">📄 <code>repository/UsuarioRepository.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.repository;
+
+import br.com.sistemagestao.api.model.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface UsuarioRepository extends JpaRepository&lt;Usuario, Long&gt; {
+
+    Optional&lt;Usuario&gt; findByLogin(String login);
+}</pre>
+    </div>
+
+    <div class="tip" style="margin-top:14px">
+      <span class="tip-icon">✨</span>
+      <div class="tip-content">
+        <strong>Mágica do Spring Data JPA:</strong> você só <strong>declara</strong> o método com esse nome (<code>findByLogin</code>) e o Spring gera a SQL <code>SELECT * FROM usuario WHERE login = ?</code> sozinho. Sem <code>@Query</code>, sem implementação. Bonito demais.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.4 — DTOs -->
+<section class="step-section" id="auth-dtos">
+  <div class="step-header">
+    <div class="step-number sn-blue">📦</div>
+    <div>
+      <div class="step-title">DTOs de autenticação</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">3 records minúsculos — o que entra e o que sai de <code>/auth</code></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">Mesmo padrão dos capítulos anteriores: <strong style="color:var(--accent4)">imutáveis</strong>, com <strong style="color:var(--accent3)">Bean Validation</strong>, sem expor a entidade. Nada de novo aqui.</p>
+
+    <h4 style="margin:8px 0 10px;color:var(--accent4)">📄 <code>dto/auth/RegisterRequestDTO.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.dto.auth;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record RegisterRequestDTO(
+
+        @NotBlank(message = "O login é obrigatório")
+        String login,
+
+        @NotBlank(message = "A senha é obrigatória")
+        @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
+        String senha
+) {
+}</pre>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent4)">📄 <code>dto/auth/LoginRequestDTO.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.dto.auth;
+
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequestDTO(
+
+        @NotBlank(message = "O login é obrigatório")
+        String login,
+
+        @NotBlank(message = "A senha é obrigatória")
+        String senha
+) {
+}</pre>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent4)">📄 <code>dto/auth/LoginResponseDTO.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.dto.auth;
+
+public record LoginResponseDTO(
+        String token,
+        String login
+) {
+}</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.88rem;margin-top:10px">O <code>token</code> aqui é o <strong style="color:var(--accent7)">JWT</strong> que o cliente vai guardar e enviar nos próximos requests.</p>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.5 — JwtService -->
+<section class="step-section" id="auth-jwt-service">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent6)">🔧</div>
+    <div>
+      <div class="step-title"><code>JwtService</code> — gera e valida tokens</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A primeira das 3 classes do pacote <code>security/</code></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin:8px 0 10px;color:var(--accent6)">📄 <code>security/JwtService.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.security;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+
+@Service
+public class JwtService {
+
+    private final SecretKey chave;
+    private final long expiracaoMs;
+
+    public JwtService(@Value("${app.jwt.secret}") String segredo,
+                      @Value("${app.jwt.expiration-ms}") long expiracaoMs) {
+        this.chave = Keys.hmacShaKeyFor(segredo.getBytes());
+        this.expiracaoMs = expiracaoMs;
+    }
+
+    public String gerarToken(String login) {
+        Date agora = new Date();
+        Date expira = new Date(agora.getTime() + expiracaoMs);
+
+        return Jwts.builder()
+                .subject(login)
+                .issuedAt(agora)
+                .expiration(expira)
+                .signWith(chave)
+                .compact();
+    }
+
+    public String extrairLogin(String token) {
+        return Jwts.parser()
+                .verifyWith(chave)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+}</pre>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent6)">📝 Lendo linha a linha</h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:14px;color:var(--text-dim);font-size:0.92rem">
+        <div><code style="color:var(--accent6)">@Value("${app.jwt.secret}")</code> — puxa o segredo do <code>application.properties</code> direto no construtor.</div>
+        <div><code style="color:var(--accent6)">Keys.hmacShaKeyFor(...)</code> — transforma a string num <code>SecretKey</code> que a jjwt entende.</div>
+        <div><code style="color:var(--accent6)">gerarToken</code> — monta o JWT com <strong>3 partes</strong>: <code>subject</code> (o login), <code>issuedAt</code> (quando foi emitido), <code>expiration</code> (quando vence). Depois assina com a chave e devolve a string.</div>
+        <div><code style="color:var(--accent6)">extrairLogin</code> — caminho inverso: verifica a assinatura, lê o <code>subject</code>. Se o token for adulterado ou expirado, a jjwt joga <strong>exceção</strong> — a gente trata isso no filtro.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.6 — JwtAuthFilter -->
+<section class="step-section" id="auth-jwt-filter">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent6)">🔍</div>
+    <div>
+      <div class="step-title"><code>JwtAuthFilter</code> — intercepta cada request</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Lê o header, valida o token, autentica</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O segurança da portaria</div>
+      <p style="color:var(--text-dim)">Antes de qualquer request chegar no <strong style="color:var(--text)">controller</strong> (o "andar da empresa"), ele passa pela <strong style="color:var(--accent6)">portaria</strong>. O segurança olha o <strong>crachá</strong> (header Authorization), confere se é válido, e libera ou barra. O <code>JwtAuthFilter</code> é esse segurança. 🛂</p>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent6)">📄 <code>security/JwtAuthFilter.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.security;
+
+import br.com.sistemagestao.api.repository.UsuarioRepository;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+    private final UsuarioRepository usuarioRepository;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+
+        String header = request.getHeader("Authorization");
+
+        if (header != null &amp;&amp; header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+
+            try {
+                String login = jwtService.extrairLogin(token);
+
+                usuarioRepository.findByLogin(login).ifPresent(usuario -&gt; {
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(login, null, List.of());
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                });
+            } catch (Exception ignored) {
+                // token inválido/expirado → segue sem autenticar; Security responde 401
+            }
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}</pre>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent6)">📝 Lendo o filtro</h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:14px;color:var(--text-dim);font-size:0.92rem">
+        <div><code style="color:var(--accent6)">OncePerRequestFilter</code> garante que o filtro roda <strong>uma vez por request</strong> (mesmo se houver forwards internos).</div>
+        <div>Lê o header <code>Authorization</code>. Se não começar com <code>"Bearer "</code>, <strong>ignora</strong> — pode ser rota pública.</div>
+        <div><code>header.substring(7)</code> — corta exatamente os 7 caracteres <code>"Bearer "</code> (com espaço!) pra ficar só com o token.</div>
+        <div>Se a validação der certo, busca o usuário no banco e popula o <strong style="color:var(--accent6)">SecurityContextHolder</strong> — é assim que o Spring sabe "esse request está autenticado".</div>
+        <div><code>UsernamePasswordAuthenticationToken(login, null, List.of())</code> — passamos <code>null</code> na senha (já validamos via JWT) e lista vazia de roles (não usamos roles nesta fase).</div>
+        <div>Se qualquer coisa der errado (token adulterado, expirado, formato inválido), o <code>catch</code> engole — o <code>SecurityContext</code> continua vazio, e o Security responde <strong>401</strong> mais adiante.</div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🧠</span>
+      <div class="tip-content">
+        <strong>"Mas por que buscar o usuário no banco se o token já tem o login?"</strong> Boa! Porque um usuário pode ser <strong style="color:var(--accent2)">deletado</strong> depois do token ter sido emitido. Se ele saiu do sistema, o token não deveria mais funcionar. Buscar no banco garante isso.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.7 — SecurityConfig -->
+<section class="step-section" id="auth-security-config">
+  <div class="step-header">
+    <div class="step-number sn-purple">🛡️</div>
+    <div>
+      <div class="step-title"><code>SecurityConfig</code> — o cérebro da segurança</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Define rotas públicas e onde plugar o filtro</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin:8px 0 10px;color:var(--accent5)">📄 <code>security/SecurityConfig.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.security;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final JwtAuthFilter jwtAuthFilter;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -&gt; csrf.disable())
+                .sessionManagement(s -&gt; s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -&gt; auth
+                        .requestMatchers("/auth/**", "/error").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(e -&gt; e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}</pre>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">📝 Lendo o <code>SecurityConfig</code></h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:14px;color:var(--text-dim);font-size:0.92rem">
+        <div><code style="color:var(--accent5)">PasswordEncoder</code> é o bean que vai gerar o hash BCrypt — usado no <code>AuthServiceImpl</code>.</div>
+        <div><code style="color:var(--accent5)">csrf().disable()</code> — CSRF protege apps de browser com sessão; numa API REST stateless é desnecessário e atrapalha.</div>
+        <div><code style="color:var(--accent5)">sessionCreationPolicy(STATELESS)</code> — não cria nenhum cookie de sessão. Todo request precisa se identificar pelo JWT.</div>
+        <div><code style="color:var(--accent5)">requestMatchers("/auth/**", "/error").permitAll()</code> — <code>/auth/register</code> e <code>/auth/login</code> são públicos. <code>/error</code> precisa estar aqui porque o Spring forwarda exceções pra essa URL pra renderizar o JSON do erro.</div>
+        <div><code style="color:var(--accent5)">anyRequest().authenticated()</code> — qualquer outra URL exige autenticação.</div>
+        <div><code style="color:var(--accent5)">HttpStatusEntryPoint(UNAUTHORIZED)</code> — sem isso, requests sem token recebem <strong>403</strong> em vez de <strong>401</strong> (default do Security). Trocamos pro código correto.</div>
+        <div><code style="color:var(--accent5)">addFilterBefore(jwtAuthFilter, ...)</code> — pluga nosso filtro <strong>antes</strong> do filtro padrão de login com formulário (que nem usamos, mas é o lugar canônico na cadeia).</div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px;background:rgba(255,107,107,0.06);border-color:rgba(255,107,107,0.2)">
+      <span class="tip-icon">🚨</span>
+      <div class="tip-content">
+        <strong>As duas pegadinhas do iniciante:</strong><br><br>
+        <strong style="color:var(--accent2)">1.</strong> Esquecer de liberar <code>/error</code>: você lança <code>ResponseStatusException(CONFLICT)</code> no service, esperando ver o JSON do 409. Mas vê 401/403 com body <strong>vazio</strong>. Motivo: o forward interno pra <code>/error</code> está sendo bloqueado pelo Security. <strong>Adicionar <code>/error</code> no <code>permitAll</code> resolve.</strong><br><br>
+        <strong style="color:var(--accent2)">2.</strong> Esquecer o <code>HttpStatusEntryPoint(UNAUTHORIZED)</code>: você tenta acessar <code>/clientes</code> sem token, esperando 401, mas recebe 403. É o default histórico do Security — 401 é mais correto pra "sem credencial".
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.8 — AuthService -->
+<section class="step-section" id="auth-service">
+  <div class="step-header">
+    <div class="step-number sn-green">⚙️</div>
+    <div>
+      <div class="step-title"><code>AuthService</code> &amp; <code>AuthServiceImpl</code></div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Mesmo padrão Produto/Cliente: interface + Impl</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin:8px 0 10px;color:var(--accent5)">📄 <code>service/AuthService.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.auth.LoginRequestDTO;
+import br.com.sistemagestao.api.dto.auth.LoginResponseDTO;
+import br.com.sistemagestao.api.dto.auth.RegisterRequestDTO;
+
+public interface AuthService {
+
+    LoginResponseDTO registrar(RegisterRequestDTO dto);
+
+    LoginResponseDTO login(LoginRequestDTO dto);
+}</pre>
+    </div>
+
+    <h4 style="margin:20px 0 10px;color:var(--accent5)">📄 <code>service/AuthServiceImpl.java</code></h4>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.service;
+
+import br.com.sistemagestao.api.dto.auth.LoginRequestDTO;
+import br.com.sistemagestao.api.dto.auth.LoginResponseDTO;
+import br.com.sistemagestao.api.dto.auth.RegisterRequestDTO;
+import br.com.sistemagestao.api.model.Usuario;
+import br.com.sistemagestao.api.repository.UsuarioRepository;
+import br.com.sistemagestao.api.security.JwtService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+@Service
+@RequiredArgsConstructor
+public class AuthServiceImpl implements AuthService {
+
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+
+    @Override
+    public LoginResponseDTO registrar(RegisterRequestDTO dto) {
+
+        if (usuarioRepository.findByLogin(dto.login()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Login já cadastrado");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setLogin(dto.login());
+        usuario.setSenha(passwordEncoder.encode(dto.senha()));
+        usuarioRepository.save(usuario);
+
+        String token = jwtService.gerarToken(usuario.getLogin());
+        return new LoginResponseDTO(token, usuario.getLogin());
+    }
+
+    @Override
+    public LoginResponseDTO login(LoginRequestDTO dto) {
+
+        Usuario usuario = usuarioRepository.findByLogin(dto.login())
+                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas"));
+
+        if (!passwordEncoder.matches(dto.senha(), usuario.getSenha())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");
+        }
+
+        String token = jwtService.gerarToken(usuario.getLogin());
+        return new LoginResponseDTO(token, usuario.getLogin());
+    }
+}</pre>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">📝 Detalhes importantes</h4>
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;border:1px solid rgba(255,255,255,0.05)">
+      <div style="display:grid;gap:14px;color:var(--text-dim);font-size:0.92rem">
+        <div><code style="color:var(--accent5)">passwordEncoder.encode(dto.senha())</code> — gera o hash BCrypt. Cada vez gera um hash <strong>diferente</strong> pra mesma senha (por causa do salt) — mas todos validam corretamente.</div>
+        <div><code style="color:var(--accent5)">passwordEncoder.matches(senhaPura, hashGuardado)</code> — confere se a senha pura corresponde ao hash. <strong style="color:var(--accent2)">Nunca</strong> faça <code>senhaPura.equals(hash)</code> — não funciona.</div>
+        <div>No <code>login</code> com senha errada, retornamos a <strong>mesma</strong> mensagem <code>"Credenciais inválidas"</code> que retornaríamos com login inexistente. <strong style="color:var(--accent2)">Nunca</strong> distinga "usuário não existe" de "senha errada" — isso ajudaria atacantes a descobrir quais logins são válidos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.9 — Controller -->
+<section class="step-section" id="auth-controller">
+  <div class="step-header">
+    <div class="step-number sn-main">🎯</div>
+    <div>
+      <div class="step-title"><code>AuthController</code></div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Dois endpoints: <code>/auth/register</code> e <code>/auth/login</code></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge java">Java</span>
+      </div>
+      <pre>package br.com.sistemagestao.api.controller;
+
+import br.com.sistemagestao.api.dto.auth.LoginRequestDTO;
+import br.com.sistemagestao.api.dto.auth.LoginResponseDTO;
+import br.com.sistemagestao.api.dto.auth.RegisterRequestDTO;
+import br.com.sistemagestao.api.service.AuthService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthService authService;
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public LoginResponseDTO registrar(@Valid @RequestBody RegisterRequestDTO dto) {
+        return authService.registrar(dto);
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public LoginResponseDTO login(@Valid @RequestBody LoginRequestDTO dto) {
+        return authService.login(dto);
+    }
+}</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.88rem;margin-top:12px">Nada de surpreendente — <strong>mesmo padrão</strong> dos outros controllers que você já fez. A diferença é só que esses dois endpoints estão <strong>liberados</strong> no <code>SecurityConfig</code>.</p>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.10 — Testando -->
+<section class="step-section" id="auth-insomnia">
+  <div class="step-header">
+    <div class="step-number" style="background:#7B68EE">🦋</div>
+    <div>
+      <div class="step-title">Testando no Insomnia</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Roteiro completo — 8 cenários do golden path às pegadinhas</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);margin-bottom:14px">Sobe a aplicação primeiro. Na primeira subida, o Hibernate cria a tabela <code>usuario</code> sozinho (confere no DBeaver se quiser).</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span class="lang-badge bash">Terminal</span>
+      </div>
+      <pre>cd api
+./mvnw spring-boot:run</pre>
+    </div>
+
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">🧪 Roteiro de 8 testes</h4>
+
+    <div style="display:grid;gap:12px">
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;border-left:4px solid var(--accent2)">
+        <strong>1 — Acesso sem token (esperado: 401)</strong>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:4px"><code>POST http://localhost:8080/clientes</code> com body <code>{}</code> e <strong>sem</strong> header de Authorization. Esperado: <strong style="color:var(--accent2)">401 Unauthorized</strong>. A porta está trancada. 🔒</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;border-left:4px solid var(--accent3)">
+        <strong>2 — Registrar usuário (esperado: 201)</strong>
+        <pre style="background:rgba(0,0,0,0.3);padding:12px;border-radius:8px;font-size:0.82rem;margin-top:8px">POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "login": "maria",
+  "senha": "123456"
+}</pre>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:8px">Esperado: <strong style="color:var(--accent3)">201 Created</strong>. O body devolve <code>{"token":"eyJ...","login":"maria"}</code>. <strong>Copia esse token</strong> — vamos usar nos próximos.</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;border-left:4px solid var(--accent2)">
+        <strong>3 — Registrar o mesmo login de novo (esperado: 409)</strong>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:4px">Mesmo request do passo 2. Esperado: <strong style="color:var(--accent2)">409 Conflict</strong> — <code>"Login já cadastrado"</code>.</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;border-left:4px solid var(--accent2)">
+        <strong>4 — Login com senha errada (esperado: 401)</strong>
+        <pre style="background:rgba(0,0,0,0.3);padding:12px;border-radius:8px;font-size:0.82rem;margin-top:8px">POST http://localhost:8080/auth/login
+Body: { "login": "maria", "senha": "errada" }</pre>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:8px">Esperado: <strong style="color:var(--accent2)">401 Unauthorized</strong> — <code>"Credenciais inválidas"</code>.</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;border-left:4px solid var(--accent3)">
+        <strong>5 — Login correto (esperado: 200)</strong>
+        <pre style="background:rgba(0,0,0,0.3);padding:12px;border-radius:8px;font-size:0.82rem;margin-top:8px">POST http://localhost:8080/auth/login
+Body: { "login": "maria", "senha": "123456" }</pre>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:8px">Esperado: <strong style="color:var(--accent3)">200 OK</strong> com novo token (cada login gera um token novo — é normal).</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;border-left:4px solid var(--accent3)">
+        <strong>6 — Criar cliente COM token (esperado: 201)</strong>
+        <pre style="background:rgba(0,0,0,0.3);padding:12px;border-radius:8px;font-size:0.82rem;margin-top:8px">POST http://localhost:8080/clientes
+Authorization: Bearer eyJ...   ← cola o token aqui
+Content-Type: application/json
+Body: { ...JSON do cap 3... }</pre>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:8px">Esperado: <strong style="color:var(--accent3)">201 Created</strong>. A porta agora <strong>abre</strong>. 🔓</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;border-left:4px solid var(--accent2)">
+        <strong>7 — Token adulterado (esperado: 401)</strong>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:4px">Pega o token, troca a última letra por outra qualquer, manda no header. Esperado: <strong style="color:var(--accent2)">401</strong> (a assinatura não bate).</p>
+      </div>
+
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;border-left:4px solid var(--accent2)">
+        <strong>8 — Senha curta no register (esperado: 400)</strong>
+        <pre style="background:rgba(0,0,0,0.3);padding:12px;border-radius:8px;font-size:0.82rem;margin-top:8px">POST /auth/register
+Body: { "login": "joao", "senha": "123" }</pre>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-top:8px">Esperado: <strong style="color:var(--accent2)">400 Bad Request</strong> — a anotação <code>@Size(min=6)</code> pegou.</p>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:20px;background:rgba(73,204,144,0.06);border-color:rgba(73,204,144,0.2)">
+      <span class="tip-icon">✅</span>
+      <div class="tip-content">
+        Se todos os 8 testes passarem, sua autenticação está <strong style="color:#49cc90">funcionando</strong>. Parabéns — sua API agora é uma casa <strong>com porta</strong>. 🗝️
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- 5.11 — Recap -->
+<section class="step-section" style="text-align:center;padding:60px 20px">
+  <div style="font-size:3.5rem;margin-bottom:16px;animation:bounce 2s ease-in-out infinite;display:inline-block">🔐</div>
+  <h2 style="font-size:2rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--accent7),var(--accent6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Autenticação no Bolso!</h2>
+  <p style="color:var(--text-dim);max-width:560px;margin:0 auto 30px;font-size:1.05rem">Sua API REST agora tem o padrão de mercado: <strong style="color:var(--text)">JWT stateless</strong>. Daqui pra frente é evolução — não revolução. 💪</p>
+
+  <div class="card" style="text-align:left;max-width:640px;margin:0 auto">
+    <h3 style="margin-bottom:16px;color:var(--accent7)">📋 O que você consolidou neste capítulo</h3>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.92rem">
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Stateless</strong> — servidor sem sessão, toda info viaja no token</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">JWT</strong> — token assinado, com expiração</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">BCrypt</strong> — senha nunca em texto puro</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Filtro HTTP</strong> — interceptando cada request antes do controller</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">SecurityContextHolder</strong> — onde "quem está logado" mora durante o request</div>
+      <div style="display:flex;gap:10px"><span style="color:var(--accent3)">✅</span> <strong style="color:var(--text)">Spring Security minimalista</strong> — só 3 classes no <code>security/</code></div>
+    </div>
+
+    <h3 style="margin:24px 0 10px;color:var(--accent6)">🚧 O que ficou de fora (pra próximos voos)</h3>
+    <div style="display:grid;gap:10px;color:var(--text-dim);font-size:0.9rem">
+      <div style="display:flex;gap:10px"><span>•</span> <strong>Roles / autorização fina</strong> — quando precisar separar admin/usuário, adiciona coluna <code>role</code> no Usuario e <code>.hasRole("ADMIN")</code> no config.</div>
+      <div style="display:flex;gap:10px"><span>•</span> <strong>Refresh token</strong> — em apps reais existe um token de longa duração que renova o de acesso.</div>
+      <div style="display:flex;gap:10px"><span>•</span> <strong>Recuperação de senha</strong> — fluxo de "esqueci minha senha" com e-mail.</div>
+      <div style="display:flex;gap:10px"><span>•</span> <strong>OAuth (login com Google/GitHub)</strong> — Spring Security suporta, mas é outro mundo.</div>
+      <div style="display:flex;gap:10px"><span>•</span> <strong>CORS</strong> — quando o front React em outra porta consumir essa API, vai precisar de configuração CORS (próximo capítulo).</div>
+    </div>
+
+    <div class="tip" style="margin-top:20px">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-content">
+        <strong>Próximo passo:</strong> integrar o front <strong style="color:var(--accent7)">React</strong> com esse back autenticado — tela de login, salvar o token, interceptor pra mandar no header automaticamente, e tratar 401 deslogando o usuário.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  Feito com <span class="heart">💜</span> para os alunos da <a href="#">Programa AI</a> — Curso Presencial Programação Fullstack<br>
+  <span style="font-size:0.75rem;margin-top:8px;display:block">Backend com Java/Spring Boot — Prof. Kelson Almeida</span>
+</footer>
+
+
+</div><!-- /container -->
+
+<script src="assets/app.js"></script>
+</body>
+</html>

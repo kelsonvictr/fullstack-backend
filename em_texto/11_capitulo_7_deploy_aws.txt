@@ -1,0 +1,626 @@
+# Capitulo 7 - Deploy AWS
+# Fonte: cap-11-deploy-aws.html
+
+🚨
+
+🚨
+
+Atenção — leia ANTES de começar
+
+Este capítulo funciona como mentoria 1×1 com o Prof. Kelson.
+Não tente sozinho.
+
+AWS cobra de verdade. Free tier ajuda, mas um erro de configuração (instância grande esquecida, RDS multi-AZ por acidente, snapshot que persiste) pode virar conta de R$ 300 no fim do mês. Por isso, o caminho aqui é em
+dupla, com pareamento ao vivo
+.
+
+📋 Pré-requisitos NÃO-negociáveis
+
+1.
+Concluiu os capítulos 1 a 6 e
+mostrou o sistema rodando localmente
+(front + back + Postgres) pro Kelson.
+
+2.
+Tem
+conta AWS ativa com cartão de crédito validado
+. Sem cartão, free tier não é liberado.
+
+3.
+Tem o
+DBeaver instalado e funcionando
+— vamos usar pra validar a conexão com o RDS antes de subir o app.
+
+4.
+Aceita
+fazer cleanup completo
+ao final (deletar EB env + RDS + snapshots). Sem cleanup = cobrança contínua.
+
+5.
+
+Agendou sessão
+com o Prof. Kelson. Sem agendamento, NÃO inicie. Você vai travar e ficar sem suporte rápido.
+
+Por que tão restrito?
+Já tentamos turmas com esse capítulo solo — 30% trava em IAM/SG/VPC, 40% esquece de deletar e leva susto na fatura. Em 1×1 com pareamento, 100% sobe a app e 100% faz cleanup. É só isso.
+
+☁️
+
+Capítulo 7
+
+Deploy na AWS
+
+Elastic Beanstalk + RDS — sua API saindo do localhost pra uma URL pública
+
+🗺️
+
+Visão geral — onde a gente quer chegar
+
+Uma EC2 servindo a API + um Postgres gerenciado, ambos na AWS
+
+📐 Arquitetura final
+
+Aluno (browser / Insomnia)
+
+↓ HTTP
+
+Elastic Beanstalk Environment
+
+(EC2 t3.micro com Java Corretto 21 + Tomcat)
+
+↓ JDBC porta 5432
+
+Amazon RDS PostgreSQL
+
+(db.t3.micro, free tier, com banco
+sistema_gestao
+)
+
+Analogia: mudando de aluguel pra casa própria
+
+Localhost é um
+quarto na casa dos pais
+— não paga, mas só você acessa. AWS é a
+primeira casa alugada
+— paga, mas tem endereço público que qualquer um (que você autorize) pode visitar. Beanstalk é o
+kit da imobiliária
+: eles entregam encanamento (Tomcat), instalação elétrica (segurança/SG), e você só leva os móveis (o jar). 🏠
+
+🛤️ Roteiro de 7 passos
+
+1.
+Criar o RDS PostgreSQL via console.
+
+2.
+Adaptar
+application.properties
+pra ler de variáveis de ambiente.
+
+3.
+Build do jar com
+./mvnw package
+.
+
+4.
+Criar Application + Environment no Beanstalk.
+
+5.
+Cross-link EB ↔ RDS via Security Groups (a pegadinha mor).
+
+6.
+Testar a URL pública.
+
+7.
+
+CLEANUP
+— deletar tudo pra parar de pagar.
+
+🐘
+
+Passo 1 — Provisionar o RDS PostgreSQL
+
+O Postgres da nuvem, separado do app (sobrevive a recriar o EB)
+
+Console AWS →
+RDS → Create database
+. Vai pelas opções:
+
+Engine:
+PostgreSQL (versão default OK)
+
+Templates:
+
+Free tier
+←
+não esqueça
+, é o que segura o custo
+
+DB identifier:
+
+sistema-gestao-db
+
+Master username:
+
+postgres
+
+Master password:
+
+anota num lugar seguro
+
+Instance:
+
+db.t3.micro
+(free tier)
+
+Storage:
+20 GB gp2
+
+Connectivity → Public access:
+
+Yes
+(só pro curso — facilita conectar do DBeaver)
+
+VPC security group:
+criar novo
+rds-sg
+→ inbound 5432 from
+0.0.0.0/0
+
+⚠️ Additional configuration → Initial database name:
+
+sistema_gestao
+←
+sem isso, o JPA não acha o database!
+
+Create. Espera 3-5 min até status
+Available
+. Copia o
+endpoint
+(algo como
+sistema-gestao-db.xxx.us-east-1.rds.amazonaws.com
+).
+
+✅
+
+Validação obrigatória ANTES de seguir:
+abra o DBeaver, configure uma nova conexão Postgres apontando pro endpoint, user
+postgres
+, senha que você anotou, database
+sistema_gestao
+.
+Se não conectar do DBeaver, NÃO vai conectar do EB.
+Resolva esse problema antes de prosseguir.
+
+🚨
+
+Em produção real:
+Public Access = No, SG limitado ao SG do app, senha em Secrets Manager, backup automático configurado. Aqui no curso simplificamos — não copie esse setup pra projeto real sem antes endurecer.
+
+⚙️
+
+Passo 2 — Adaptar
+application.properties
+
+Senha do banco NÃO vai no código; vai como variável de ambiente
+
+Trocar as credenciais hardcoded por placeholders
+${...}
+que o Spring resolve em runtime via env vars:
+
+application.properties
+
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+
+server.port=5000
+
+app.jwt.secret=${JWT_SECRET}
+app.jwt.expiration-ms=3600000
+
+🚨
+
+Pegadinha crítica — porta 5000:
+Beanstalk Java espera que sua app escute em
+5000
+, não
+8080
+. Esquecer essa linha faz o env retornar
+502 Bad Gateway
+sem mensagem clara — você fica horas debugando à toa.
+
+💻
+
+E pra rodar localmente continua funcionando?
+Sim — crie um
+application-local.properties
+com os valores fixos e suba a app com
+--spring.profiles.active=local
+, ou exporte as env vars no terminal:
+export DB_URL=jdbc:postgresql://localhost:5432/teste-fullstack-05
+etc. Ou ainda configure no Run Configuration da sua IDE.
+
+📦
+
+Passo 3 — Build do jar
+
+Compactar a app num único arquivo .jar
+
+Terminal
+
+cd api
+./mvnw clean package -DskipTests
+
+Resultado:
+target/api-0.0.1-SNAPSHOT.jar
+.
+É esse arquivo
+que vamos subir no Beanstalk.
+
+📝
+
+Por que
+-DskipTests
+?
+Pula a execução de testes durante o build. No curso, o foco é ver o deploy funcionar — não temos pipeline CI ainda. Em produção real, testes
+nunca
+são pulados (rodam num CI/CD antes do deploy).
+
+🚀
+
+Passo 4 — Criar Application + Environment no Beanstalk
+
+A AWS provisiona EC2, Tomcat, IP público — tudo via console
+
+Console →
+Elastic Beanstalk → Create application
+. Passos:
+
+Application name:
+
+sistema-gestao
+
+Platform:
+Java →
+Corretto 21
+(precisa bater com o
+java.version
+do
+pom.xml
+)
+
+Application code:
+
+Upload your code
+→ selecionar
+api-0.0.1-SNAPSHOT.jar
+
+Presets:
+
+Single instance (free tier)
+← sem load balancer; segura o custo
+
+Service access:
+deixar AWS criar as roles (default)
+
+Networking:
+VPC default, EC2 em subnet pública,
+Public IP enabled
+
+Instance type:
+
+t3.micro
+
+🔐 Configurar Environment properties
+
+Antes de submit, na seção
+Configure updates, monitoring, and logging
+, adiciona:
+
+Name
+Value
+
+DB_URL
+jdbc:postgresql://<endpoint-rds>:5432/sistema_gestao
+
+DB_USERNAME
+postgres
+
+DB_PASSWORD
+a senha do RDS
+
+JWT_SECRET
+uma string com ≥ 32 caracteres
+
+Submit. Demora ~5 min provisionando. Acompanhe em
+Events
+.
+
+🚨
+
+App vai falhar na primeira subida
+— é esperado. O motivo está no próximo passo: o RDS ainda não permite conexão do EB. Não entre em pânico, siga.
+
+🔗
+
+Passo 5 — Liberar EB → RDS (a etapa que mais trava aluno)
+
+Security Groups precisam se enxergar
+
+🤔 Por que falhou?
+
+O SG do RDS hoje permite
+0.0.0.0/0
+na porta 5432 (qualquer IP). Mas a EC2 do Beanstalk roda numa
+VPC AWS
+, e por algum motivo (NAT, IP interno) o "qualquer IP" não cobre conexões
+vindas de outra EC2 dentro da própria AWS
+de forma confiável. A forma
+correta
+e que sempre funciona é dizer:
+"este SG aqui pode entrar"
+.
+
+📋 Como cross-linkar
+
+1.
+Console →
+EC2 → Security Groups
+
+2.
+Encontra o SG da EC2 do Beanstalk — o nome é tipo
+awseb-AWSEBSecurityGroup-XXXXXX
+
+3.
+Copia o ID dele (
+sg-xxxxxxxxx
+)
+
+4.
+Vai no SG
+rds-sg
+→ aba
+Inbound rules
+→
+Edit inbound rules
+→
+Add rule
+:
+
+Type:
+PostgreSQL
+
+Port:
+5432
+
+Source:
+Custom
+→ cola o ID do SG do EB
+
+5.
+Save rules.
+
+6.
+Volta no EB env →
+Actions → Restart app server
+.
+
+7.
+
+Logs → Request logs → Last 100 lines
+— deve ver Tomcat subindo + Hibernate criando tabelas.
+
+🛂
+
+Analogia:
+é como uma portaria onde, em vez de "qualquer pessoa de fora", você diz "
+quem trabalha naquele prédio ali pode entrar
+". O SG identifica a "empresa" (não o IP), o que é mais robusto pra serviços que mudam de IP frequentemente.
+
+✅
+
+Passo 6 — Testar a URL pública
+
+Sua API na nuvem!
+
+No painel do EB, copia a URL — algo como
+sistema-gestao-env.us-east-1.elasticbeanstalk.com
+. Testa:
+
+Terminal
+
+EB=http://sistema-gestao-env.us-east-1.elasticbeanstalk.com
+
+# 1. Registrar usuário
+curl -X POST $EB/auth/register -H "Content-Type: application/json" \
+-d '{"login":"maria","senha":"123456"}'
+# esperado: 201 + token
+
+# 2. Criar cliente com token
+TOKEN=<cola o token aqui>
+curl -X POST $EB/clientes \
+-H "Authorization: Bearer $TOKEN" \
+-H "Content-Type: application/json" \
+-d '{ ...payload do cap 3... }'
+# esperado: 201
+
+🚨 Pegadinhas que vão acontecer
+
+Sintoma
+
+Causa
+
+Fix
+
+502 Bad Gateway
+App escuta 8080, EB espera 5000
+server.port=5000
+
+Health check vermelho
+App ainda subindo
+Aguarda 2-3 min
+
+Connection refused no RDS
+SG não liberou
+Passo 5 (cross-link SG)
+
+Java version mismatch
+EB Corretto 17 vs pom 21
+Recriar env com Corretto 21
+
+Password authentication failed
+Senha errada no env var
+Conferir
+DB_PASSWORD
+
+database "sistema_gestao" does not exist
+Esqueceu Initial DB name no RDS
+CREATE DATABASE sistema_gestao;
+no DBeaver
+
+401 sempre, mesmo logando
+JWT_SECRET muda a cada deploy
+Fixar nas env vars
+
+📊
+
+Sanity final:
+conecta o DBeaver no RDS e roda
+\dt
+. Tem que aparecer:
+usuario
+,
+cliente
+,
+endereco
+,
+fornecedor
+,
+produto
+. Se aparecer, é sinal que o Hibernate subiu e criou o schema na nuvem. 🎉
+
+🧹
+
+Passo 7 — CLEANUP (não pule isso!)
+
+A diferença entre R$ 0 e R$ 300 no fim do mês
+
+⚠️ Cobrança não para sozinha.
+Free tier cobre 750h/mês de EC2 t3.micro + 750h/mês de RDS db.t3.micro. Se você esquece ligado por 2 meses, paga as horas adicionais. Sempre desligue depois da aula.
+
+📋 Checklist de cleanup completo
+
+1. Deletar Environment do Beanstalk
+
+EB → seu env →
+Actions → Terminate environment
+. Demora ~3 min. Isso mata a EC2 + load balancer (se tivesse).
+
+2. Deletar Application do Beanstalk
+
+EB → Applications →
+Actions → Delete application
+. Isso some com os artefatos S3 que o EB guarda.
+
+3. Deletar o RDS
+
+RDS →
+sistema-gestao-db
+→
+Actions → Delete
+. Desmarca "Create final snapshot" e "Retain automated backups" — senão paga pelo storage do snapshot indefinidamente. Confirma digitando "delete me".
+
+4. Deletar Security Groups órfãos
+
+EC2 → Security Groups → apaga
+rds-sg
+e o SG do EB (se ainda estiver lá). Não custa nada, mas suja o console.
+
+5. Conferir o Billing Dashboard
+
+Billing →
+Bills
+. Deve aparecer R$ 0,00 (ou alguns centavos de cobrança fracionária). Se passou de R$ 5, alguma coisa ficou ligada — investigue.
+
+6. (Recomendado) Configurar Budget Alert
+
+Billing → Budgets →
+Create budget
+→ fixed R$ 1/mês com alerta por e-mail. Se algo escapar no futuro, você recebe e-mail antes da fatura virar surpresa.
+
+✅
+
+Faz o cleanup
+no mesmo dia
+do deploy. Não deixa pra "amanhã". 90% das cobranças surpresa em aluno vêm do "deixei pra desligar depois".
+
+☁️
+
+Na Nuvem!
+
+Você fez seu primeiro deploy AWS de uma app fullstack. Não é trivial — passou por RDS, EC2, IAM (indireto), Security Groups, env vars. Skills reais de produção. 🚀
+
+🎓 O que você consolidou
+
+✅
+
+Diferença entre app e banco
+— RDS sobrevive ao recriar EB
+
+✅
+
+Variáveis de ambiente
+— credenciais NUNCA no código
+
+✅
+
+Security Groups
+— autorizar tráfego entre serviços
+
+✅
+
+Free tier vs custo real
+— cleanup é parte do trabalho
+
+✅
+
+Debug por logs
+— EB → Logs → Last 100
+
+🚧 O que NÃO entrou (extensões pra depois)
+
+•
+
+HTTPS
+com ACM + ALB ou Cloudflare na frente
+
+•
+
+Domínio próprio
+via Route 53 ou registrar.br + CNAME
+
+•
+
+CI/CD
+— GitHub Actions com
+eb deploy
+automático
+
+•
+
+CloudWatch Logs
+centralizados + alertas
+
+•
+
+ECS Fargate
+ou
+Cloud Run
+— quando a app crescer
+
+🎉
+
+Fim da jornada da Turma 05.
+Da primeira linha de SQL até deploy na AWS. Você saiu do zero a uma app fullstack autenticada, integrada e publicada. Agora é botar no portfólio e seguir construindo. 🚀

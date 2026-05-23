@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tour — Conhecendo o PostgreSQL — Backend Java &amp; Spring Boot</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- MENU TOGGLE -->
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR NAV -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar-nav" id="sidebarNav">
+  <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+  <div class="sidebar-header">
+    <h3>📚 Sumário do Curso</h3>
+    <a class="sidebar-link" style="font-weight:700;margin-top:8px" href="index.html" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>🏠 Índice / Capa</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏠 Introdução</div>
+    <a class="sidebar-link" href="cap-01-intro.html#hero" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Visão Geral</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐘 Tour — PostgreSQL</div>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-pg" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que é Banco de Dados?</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-docker" onclick="toggleSidebar()"><span class="dot" style="background:#2496ED"></span>Docker + PostgreSQL</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-dbeaver" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>DBeaver — IDE do Banco</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-sql" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>SQL Básico (CRUD)</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-erros" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Erros Mais Comuns</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Fluxo Mental da Prática</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-treino" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Treino Guiado em Casa</a>
+    <a class="sidebar-link" href="cap-02-tour-postgresql.html#tour-checklist" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Checklist de Conclusão</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🍃 Projeto Spring</div>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#arquitetura" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Arquitetura em Camadas</a>
+    <a class="sidebar-link" href="cap-03-overview-spring.html#setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📦 Capítulo 1 — Fornecedor</div>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-demo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Demo Interativa</a>
+    <a class="sidebar-link" href="cap-04-fornecedor.html#forn-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏷️ Capítulo 2 — Produto</div>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-pom" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Dependência pom.xml</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Enum</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Model</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (Request/Response)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-05-produto.html#prod-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🐶 Desafio — PetShop</div>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>O Desafio</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-setup" onclick="toggleSidebar()"><span class="dot" style="background:var(--spring)"></span>Setup do Projeto</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-bd" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Criar banco no DBeaver</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-fluxo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🗺️ Ordem de Construção</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-enum" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>🐾 Enum EspeciePet</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-tutor-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧑 Tutor: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Model</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: DTOs</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Mapper</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Repository</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Service</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-impl" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: ServiceImpl</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-pet-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--petshop)"></span>🐶 Pet: Controller</a>
+    <a class="sidebar-link" href="cap-06-petshop.html#petshop-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>🦋 Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">👤 Capítulo 3 — Cliente</div>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>O que muda?</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-conceitos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Conceitos Novos</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model-endereco" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Model Endereco</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Model Cliente</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Mapper</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-07-cliente.html#cli-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔧 Capítulo 4 — Refatorar Fornecedor</div>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que refatorar?</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-migracao" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🦫 Migração no banco</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-extrair-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Extrair EnderecoMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-model" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Refatorar Model</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs (aninhados)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-mapper" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>FornecedorMapper</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-repo" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Repository</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Service (Interface)</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-serviceimpl" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>ServiceImpl</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-08-fornecedor-refator.html#forn4-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔐 Capítulo 5 — Autenticação JWT</div>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Por que autenticação?</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-prep" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>Dependências &amp; Config</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-usuario" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>Entidade Usuario</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-dtos" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>DTOs de Auth</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtService</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-jwt-filter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>JwtAuthFilter</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-security-config" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>SecurityConfig</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-service" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>AuthService &amp; Impl</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-controller" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>Controller</a>
+    <a class="sidebar-link" href="cap-09-autenticacao.html#auth-insomnia" onclick="toggleSidebar()"><span class="dot" style="background:#7B68EE"></span>Testando no Insomnia</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🔗 Capítulo 6 — Integração Front × Back</div>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-intro" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Por que integrar agora?</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-snapshot" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>📸 Snapshot inicial</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cors" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚧 CORS no backend</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-api-js" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>api.js + interceptors</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-auth-ctx" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>AuthContext</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-login" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent7)"></span>Tela de Login</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-private-route" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent)"></span>PrivateRoute</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-forn-adapter" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Adapter Fornecedor</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-novos-forms" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent3)"></span>Formulários novos</a>
+    <a class="sidebar-link" href="cap-10-integracao-frontend.html#integ-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 Removendo json-server</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">☁️ Capítulo 7 — Deploy AWS <span style="font-size:0.65rem;background:rgba(255,107,107,0.2);color:var(--accent2);padding:1px 6px;border-radius:4px;margin-left:4px">🚨 1×1</span></div>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#cap-deploy" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🚨 Leia antes — 1×1 com Prof. Kelson</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-overview" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Visão geral</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-rds" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>🐘 RDS PostgreSQL</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-properties" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent4)"></span>application.properties</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-jar" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent6)"></span>Build do jar</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-eb-create" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent5)"></span>Criar Beanstalk</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-sg-link" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🔗 Cross-link SG (EB↔RDS)</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-test" onclick="toggleSidebar()"><span class="dot" style="background:#49cc90"></span>Testar URL pública</a>
+    <a class="sidebar-link" href="cap-11-deploy-aws.html#aws-cleanup" onclick="toggleSidebar()"><span class="dot" style="background:var(--accent2)"></span>🧹 CLEANUP (não pule!)</a>
+  </div>
+</nav>
+
+
+<div class="container">
+
+<div class="prof-banner" style="margin-top:60px">
+  <div class="prof-avatar">👨‍🏫</div>
+  <div class="prof-info">
+    <div class="prof-label">
+      Professor <span class="verified">✓</span>
+    </div>
+    <div class="prof-name">Kelson Almeida</div>
+    <div class="prof-role">
+      <span class="tag">🚀 Programa AI</span>
+      <span class="tag">☕ Backend Java/Spring</span>
+      <span class="tag">📍 João Pessoa, PB</span>
+    </div>
+    <div class="prof-links">
+      <a href="https://github.com/kelsonvictr" target="_blank" class="prof-link">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div class="programa-ai-badge">
+      <span class="ai-dot"></span>
+      Programa AI — Curso Presencial Programação Fullstack
+    </div>
+  </div>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║         TOUR: CONHECENDO O POSTGRESQL                       ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="chapter-divider" id="tour-pg">
+  <span class="chapter-icon">🐘</span>
+  <div class="chapter-number">Pré-requisito</div>
+  <h2 style="background:linear-gradient(135deg,var(--accent4),#336791);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Tour: Conhecendo o PostgreSQL</h2>
+  <p class="chapter-subtitle">Antes de codar, vamos entender onde os dados moram!</p>
+</div>
+
+<!-- MISSÃO DESTA ETAPA -->
+<section class="step-section" id="tour-missao">
+  <div class="card" style="border-left:4px solid var(--accent4);background:linear-gradient(135deg,rgba(69,183,209,0.06),var(--surface))">
+    <h3 style="margin-bottom:16px;display:flex;align-items:center;gap:10px"><span style="font-size:1.6rem">🎯</span> <span style="color:var(--accent4);font-weight:900;font-size:1.2rem">Missão desta etapa</span></h3>
+    <p style="color:var(--text-dim);font-size:0.95rem;margin-bottom:16px">Nesta parte do material, você vai aprender a <strong style="color:var(--text)">preparar todo o ambiente de banco de dados</strong> para o nosso projeto. Ao final, você será capaz de:</p>
+    <div class="keyword-map stagger" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+      <div class="keyword-chip"><span class="emoji">🐳</span><span class="kw-name">Docker</span><span class="kw-desc">Subir um PostgreSQL local com Docker</span></div>
+      <div class="keyword-chip"><span class="emoji">🦫</span><span class="kw-name">DBeaver</span><span class="kw-desc">Conectar pelo DBeaver e navegar no banco</span></div>
+      <div class="keyword-chip"><span class="emoji">🏗️</span><span class="kw-name">Criar Banco</span><span class="kw-desc">Criar o database do projeto</span></div>
+      <div class="keyword-chip"><span class="emoji">📋</span><span class="kw-name">Criar Tabela</span><span class="kw-desc">Definir a estrutura com CREATE TABLE</span></div>
+      <div class="keyword-chip"><span class="emoji">📝</span><span class="kw-name">CRUD em SQL</span><span class="kw-desc">INSERT, SELECT, UPDATE e DELETE</span></div>
+    </div>
+    <div class="tip" style="margin-top:16px;margin-bottom:0;border-left-color:var(--accent4)">
+      <span class="tip-icon">💪</span>
+      <div class="tip-content">
+        <strong style="color:var(--accent4)">Dica de ouro:</strong> Não apenas leia — <strong style="color:var(--text)">execute cada comando</strong> no seu computador! Praticar é o que transforma leitura em habilidade real. Abra o Docker, o DBeaver e vá junto passo a passo.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- O QUE É BANCO DE DADOS -->
+<section class="step-section" id="tour-bd">
+  <div class="step-header">
+    <div class="step-number sn-blue">🗄️</div>
+    <div>
+      <div class="step-title">O que é um Banco de Dados?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Entendendo o conceito antes de tudo</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="analogy">
+      <div class="analogy-title">Analogia: O Armário Organizado</div>
+      <p style="color:var(--text-dim)">Imagine um <strong style="color:var(--text)">armário gigante de escritório</strong> com várias <strong style="color:var(--accent4)">gavetas</strong>. Cada gaveta tem uma <strong style="color:var(--accent5)">etiqueta</strong> (nome da tabela): "Fornecedores", "Produtos", "Clientes". Dentro de cada gaveta tem <strong style="color:var(--accent3)">fichas organizadas</strong> em linhas e colunas. Isso é um banco de dados relacional! 📂</p>
+    </div>
+
+    <div class="concept">
+      <div class="concept-title">📖 Definição</div>
+      <p>Um <strong style="color:var(--text)">banco de dados</strong> é um lugar organizado para <strong>armazenar, consultar e manipular dados</strong>. Quando você fecha o programa, os dados não somem — ficam salvos permanentemente. É diferente de variáveis no código, que morrem quando o programa fecha.</p>
+    </div>
+
+    <div class="keyword-map stagger">
+      <div class="keyword-chip"><span class="emoji">🗄️</span><span class="kw-name">Banco (Database)</span><span class="kw-desc">O armário inteiro</span></div>
+      <div class="keyword-chip"><span class="emoji">📋</span><span class="kw-name">Tabela (Table)</span><span class="kw-desc">Uma gaveta — ex: "fornecedor"</span></div>
+      <div class="keyword-chip"><span class="emoji">📊</span><span class="kw-name">Coluna (Column)</span><span class="kw-desc">Os campos — ex: "nome", "email"</span></div>
+      <div class="keyword-chip"><span class="emoji">📝</span><span class="kw-name">Linha (Row)</span><span class="kw-desc">Um registro — ex: "Distribuidora ABC"</span></div>
+      <div class="keyword-chip"><span class="emoji">🔑</span><span class="kw-name">Chave Primária (PK)</span><span class="kw-desc">ID único de cada registro</span></div>
+      <div class="keyword-chip"><span class="emoji">📝</span><span class="kw-name">SQL</span><span class="kw-desc">A "linguagem" para falar com o banco</span></div>
+    </div>
+
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">🖼️ Visualizando: como uma tabela se parece</h4>
+    <div class="db-table">
+      <div class="db-table-header">📋 Tabela: fornecedor</div>
+      <table>
+        <thead><tr><th>id 🔑</th><th>nome</th><th>cnpj</th><th>email</th><th>cidade</th><th>uf</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--accent5);font-weight:700">1</td><td>Distribuidora ABC</td><td style="color:var(--text-dim)">12.345.678/0001-99</td><td style="color:var(--text-dim)">contato@abc.com</td><td>São Paulo</td><td style="font-weight:700">SP</td></tr>
+          <tr><td style="color:var(--accent5);font-weight:700">2</td><td>Fornecedor XYZ</td><td style="color:var(--text-dim)">98.765.432/0001-11</td><td style="color:var(--text-dim)">vendas@xyz.com</td><td>João Pessoa</td><td style="font-weight:700">PB</td></tr>
+          <tr><td style="color:var(--accent5);font-weight:700">3</td><td>Tech Solutions</td><td style="color:var(--text-dim)">11.222.333/0001-44</td><td style="color:var(--text-dim)">info@tech.com</td><td>Recife</td><td style="font-weight:700">PE</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--text-dim);font-size:0.85rem;margin-top:8px">☝️ Cada <strong style="color:var(--text)">linha</strong> é um fornecedor cadastrado. Cada <strong style="color:var(--text)">coluna</strong> é uma informação sobre ele. O <strong style="color:var(--accent5)">id</strong> é gerado automaticamente e nunca se repete — é a chave primária (PK).</p>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🐘</span>
+      <div class="tip-content">
+        <strong>Por que PostgreSQL?</strong> Existem vários bancos (MySQL, SQLite, Oracle...). O PostgreSQL é <strong style="color:var(--accent4)">gratuito, robusto, seguro</strong> e um dos mais usados no mercado. É perfeito para aprender e também para projetos profissionais!
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- DOCKER + POSTGRESQL -->
+<section class="step-section" id="tour-docker">
+  <div class="step-header">
+    <div class="step-number" style="background:#2496ED">🐳</div>
+    <div>
+      <div class="step-title">Instalando o PostgreSQL com Docker</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A forma mais fácil e profissional de rodar bancos de dados</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🐳 O que é Docker?</div>
+      <p>Docker é como uma <strong style="color:var(--text)">caixa mágica</strong> que empacota um programa com tudo que ele precisa para funcionar. Em vez de instalar o PostgreSQL direto no seu computador (e lidar com configurações complicadas), você <strong style="color:#2496ED">cria um container</strong> — uma "mini-máquina" que roda o PostgreSQL isoladamente.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Container = Marmita</div>
+      <p style="color:var(--text-dim)">Instalar um programa direto no computador é como cozinhar na sua cozinha — suja tudo, ocupa espaço, e é difícil de limpar depois. Usar <strong style="color:#2496ED">Docker</strong> é como pedir uma <strong style="color:var(--text)">marmita</strong>: vem tudo pronto, embalado, e quando você termina, joga fora a embalagem sem sujar nada! 🍱</p>
+    </div>
+
+    <!-- PASSO 1: Docker Desktop -->
+    <h4 style="margin:24px 0 12px;color:#2496ED">📥 Passo 1 — Instale o Docker Desktop</h4>
+    <div style="background:rgba(36,150,237,0.06);border:1px solid rgba(36,150,237,0.15);border-radius:14px;padding:20px 24px;margin-bottom:16px">
+      <p style="font-size:0.92rem;margin-bottom:12px">O <strong style="color:#2496ED">Docker Desktop</strong> é o app que permite usar Docker no seu computador de forma visual e simples.</p>
+      <ol style="color:var(--text-dim);font-size:0.9rem;margin-left:20px;display:flex;flex-direction:column;gap:8px">
+        <li>Acesse <a href="https://www.docker.com/products/docker-desktop/" target="_blank" style="color:#2496ED;font-weight:700">docker.com/products/docker-desktop</a></li>
+        <li>Baixe para o seu sistema operacional (Windows, Mac ou Linux)</li>
+        <li>Instale normalmente (next, next, finish...)</li>
+        <li>Abra o Docker Desktop e aguarde ele iniciar (ícone da baleia 🐳 fica verde)</li>
+      </ol>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">✅</span>
+      <div class="tip-content">
+        <strong>Como saber se o Docker está funcionando?</strong> Abra o terminal e digite <code>docker --version</code>. Se aparecer uma versão, está tudo certo!
+      </div>
+    </div>
+
+    <!-- PASSO 2: Criar container -->
+    <h4 style="margin:24px 0 12px;color:#2496ED">🚀 Passo 2 — Criar o Container do PostgreSQL</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Com o Docker Desktop rodando, abra o <strong>terminal</strong> (Prompt de Comando, PowerShell ou Terminal do Mac) e cole este comando:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">Terminal</span><span class="lang-badge" style="background:rgba(36,150,237,0.15);color:#2496ED">bash</span></div>
+      </div>
+      <pre>docker run --name postgres-fullstack -e POSTGRES_PASSWORD=123 -e POSTGRES_USER=postgres -p 5432:5432 -d postgres</pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 O que cada parte desse comando faz?</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="display:grid;gap:10px;margin-top:8px;font-size:0.88rem">
+          <div><code style="color:#2496ED">docker run</code> — <span style="color:var(--text-dim)">Cria e inicia um novo container</span></div>
+          <div><code style="color:var(--accent5)">--name postgres-fullstack</code> — <span style="color:var(--text-dim)">Dá o nome "postgres-fullstack" ao container (pode ser qualquer nome)</span></div>
+          <div><code style="color:var(--accent3)">-e POSTGRES_PASSWORD=123</code> — <span style="color:var(--text-dim)">Define a <strong style="color:var(--text)">senha</strong> do usuário postgres como <strong>123</strong></span></div>
+          <div><code style="color:var(--accent3)">-e POSTGRES_USER=postgres</code> — <span style="color:var(--text-dim)">Define o <strong style="color:var(--text)">usuário</strong> como <strong>postgres</strong></span></div>
+          <div><code style="color:var(--accent6)">-p 5432:5432</code> — <span style="color:var(--text-dim)">Mapeia a porta 5432 do container para a porta 5432 do seu PC (porta padrão do PostgreSQL)</span></div>
+          <div><code style="color:var(--accent2)">-d</code> — <span style="color:var(--text-dim)">Roda em background (não trava o terminal)</span></div>
+          <div><code style="color:var(--spring)">postgres</code> — <span style="color:var(--text-dim)">Nome da <strong style="color:var(--text)">imagem</strong> oficial do PostgreSQL no Docker Hub</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:12px;border-left-color:#2496ED">
+      <span class="tip-icon">🐳</span>
+      <div class="tip-content">
+        <strong>Pronto!</strong> O PostgreSQL já está rodando! Você pode ver o container no <strong>Docker Desktop</strong> (aba "Containers") — ele deve estar com status verde <span style="color:#49cc90;font-weight:700">Running</span>.
+      </div>
+    </div>
+
+    <!-- PASSO 3: Comandos úteis -->
+    <h4 style="margin:24px 0 12px;color:#2496ED">🔧 Comandos úteis do Docker</h4>
+    <div class="annotation-grid">
+      <div class="annotation-card"><div class="anno-name" style="color:#2496ED">docker ps</div><div class="anno-desc">Lista containers rodando</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:#2496ED">docker stop postgres-fullstack</div><div class="anno-desc">Para o container</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:#2496ED">docker start postgres-fullstack</div><div class="anno-desc">Inicia novamente</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent2)">docker rm postgres-fullstack</div><div class="anno-desc">Remove o container (dados perdem!)</div></div>
+    </div>
+
+    <div class="warning">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Atenção:</strong> Sempre que ligar o computador, abra o Docker Desktop primeiro! Sem ele rodando, o PostgreSQL não funciona. O container não inicia sozinho — você pode configurar auto-start no Docker Desktop ou usar <code>docker start postgres-fullstack</code>.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- DBEAVER -->
+<section class="step-section" id="tour-dbeaver">
+  <div class="step-header">
+    <div class="step-number sn-yellow">🦫</div>
+    <div>
+      <div class="step-title">DBeaver — Sua IDE para Banco de Dados</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Visualize e manipule o banco de forma gráfica</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🤔 O que é o DBeaver?</div>
+      <p>O DBeaver é como o <strong style="color:var(--text)">VS Code, mas para bancos de dados</strong>. É uma ferramenta gráfica (GUI) que permite ver tabelas, escrever SQL, e manipular dados de forma visual — sem precisar decorar comandos. É <strong style="color:var(--accent5)">gratuito</strong> e funciona com qualquer banco!</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Explorer de Arquivos</div>
+      <p style="color:var(--text-dim)">O DBeaver é para o banco de dados o que o <strong style="color:var(--text)">Explorer/Finder</strong> é para arquivos no computador. Você pode navegar pelas "pastas" (bancos), abrir "arquivos" (tabelas), e editar o conteúdo visualmente. Sem ele, seria como usar o computador só pelo terminal — funciona, mas é mais difícil! 🖥️</p>
+    </div>
+
+    <!-- Instalação -->
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">📥 Instalando o DBeaver</h4>
+    <div style="background:rgba(247,183,49,0.06);border:1px solid rgba(247,183,49,0.15);border-radius:14px;padding:20px 24px;margin-bottom:16px">
+      <ol style="color:var(--text-dim);font-size:0.9rem;margin-left:20px;display:flex;flex-direction:column;gap:8px">
+        <li>Acesse <a href="https://dbeaver.io/download/" target="_blank" style="color:var(--accent5);font-weight:700">dbeaver.io/download</a></li>
+        <li>Baixe o <strong style="color:var(--text)">DBeaver Community</strong> (versão gratuita)</li>
+        <li>Instale normalmente</li>
+      </ol>
+    </div>
+
+    <!-- Conectando ao PostgreSQL -->
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">🔌 Conectando o DBeaver ao PostgreSQL</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Com o container Docker rodando, vamos conectar o DBeaver ao banco:</p>
+
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent4)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent4)">1. Nova Conexão</h4>
+          <p>Clique no ícone de <strong>tomada com "+"</strong> (canto superior esquerdo) ou vá em <strong>Database → New Database Connection</strong></p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent4)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent4)">2. Selecione PostgreSQL</h4>
+          <p>Na lista de bancos, escolha o <strong>PostgreSQL</strong> (ícone do elefantinho azul 🐘) e clique em <strong>Next</strong></p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent4)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent4)">3. Preencha os dados de conexão</h4>
+          <p>Configure assim:</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation-grid" style="margin:12px 0 16px">
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">Host</div><div class="anno-desc">localhost</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent4)">Port</div><div class="anno-desc">5432</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent3)">Database</div><div class="anno-desc">postgres <span style="font-size:0.7rem;opacity:0.7">(padrão)</span></div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent5)">Username</div><div class="anno-desc">postgres</div></div>
+      <div class="annotation-card"><div class="anno-name" style="color:var(--accent2)">Password</div><div class="anno-desc">123</div></div>
+    </div>
+
+    <div class="roadmap" style="margin-top:0">
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--accent3)"></div>
+        <div class="roadmap-content">
+          <h4 style="color:var(--accent3)">4. Testar Conexão</h4>
+          <p>Clique em <strong>"Test Connection"</strong>. Se aparecer <strong style="color:#49cc90">"Connected!"</strong>, está tudo certo! Clique em <strong>Finish</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🎉</span>
+      <div class="tip-content">
+        <strong>Parabéns!</strong> Você acabou de se conectar ao seu banco de dados! Agora no painel da esquerda do DBeaver você verá o PostgreSQL listado. Clique para expandir e explorar.
+      </div>
+    </div>
+
+    <!-- Criar o banco do projeto -->
+    <h4 style="margin:24px 0 12px;color:var(--accent5)">🏗️ Criando o Banco do Nosso Projeto</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Precisamos criar um banco de dados específico para o nosso projeto. No DBeaver:</p>
+
+    <div style="background:var(--surface2);border-radius:14px;padding:20px 24px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.05)">
+      <ol style="color:var(--text-dim);font-size:0.9rem;margin-left:20px;display:flex;flex-direction:column;gap:10px">
+        <li>No painel esquerdo, clique com <strong>botão direito</strong> em <strong>"Databases"</strong></li>
+        <li>Selecione <strong>"Create New Database"</strong></li>
+        <li>No campo nome, digite: <code style="color:var(--accent5);font-weight:700">bd_sistema_gestao</code></li>
+        <li>Clique em <strong>OK</strong></li>
+      </ol>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:8px">Ou, se preferir via SQL, abra um novo editor SQL (botão "SQL" no topo) e execute:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre><span class="kw">CREATE DATABASE</span> bd_sistema_gestao;</pre>
+    </div>
+
+    <div class="tip" style="border-left-color:var(--accent5)">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">
+        <strong>Depois de criar o banco</strong>, clique com <strong>botão direito</strong> na conexão do PostgreSQL (painel esquerdo) e selecione <strong>"Refresh"</strong> para ver o novo banco aparecer. Depois, <strong>conecte-se a ele</strong> dando duplo-clique no banco <code>bd_sistema_gestao</code>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- TOUR SQL BÁSICO -->
+<section class="step-section" id="tour-sql">
+  <div class="step-header">
+    <div class="step-number sn-green">📝</div>
+    <div>
+      <div class="step-title">SQL Básico — Falando com o Banco</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">CREATE TABLE, INSERT, SELECT, UPDATE, DELETE</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="concept">
+      <div class="concept-title">🗣️ O que é SQL?</div>
+      <p>SQL (Structured Query Language) é a <strong style="color:var(--text)">linguagem que usamos para conversar com o banco de dados</strong>. É como uma "língua" que o banco entende. Você escreve comandos em SQL e o banco executa — cria tabelas, insere dados, busca informações, etc.</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">Analogia: Cardápio do Restaurante</div>
+      <p style="color:var(--text-dim)">SQL é como fazer pedidos em um restaurante. Você tem <strong style="color:#49cc90">CREATE TABLE</strong> = "quero criar um novo prato no cardápio", <strong style="color:#61affe">INSERT</strong> = "quero servir um prato", <strong style="color:#61affe">SELECT</strong> = "me mostra o que tem", <strong style="color:#fca130">UPDATE</strong> = "muda o prato", <strong style="color:#f93e3e">DELETE</strong> = "tire esse prato". Simples assim! 🍽️</p>
+    </div>
+
+    <div class="warning" style="margin-bottom:20px">
+      <span class="warning-icon">📌</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Onde escrever SQL?</strong> No DBeaver! Conecte-se ao banco <code>bd_sistema_gestao</code>, clique no botão <strong>"SQL"</strong> (ou Ctrl+Enter / Cmd+Enter) para abrir o editor SQL. Escreva os comandos lá e execute com <strong>Ctrl+Enter</strong> (ou o botão ▶️).</div>
+    </div>
+
+    <!-- MAPA DAS 5 OPERAÇÕES SQL -->
+    <h4 style="margin:20px 0 12px;color:var(--accent5)">🗺️ As 5 operações fundamentais do SQL</h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:14px">Todo CRUD no banco de dados se resume a <strong style="color:var(--text)">5 tipos de ação</strong>. Entenda cada uma antes de praticar:</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:24px">
+      <div style="background:rgba(73,204,144,0.06);border:1px solid rgba(73,204,144,0.2);border-radius:14px;padding:16px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🏗️</div>
+        <div style="font-weight:800;font-size:0.85rem;color:#49cc90;margin-bottom:4px">Criar Estrutura</div>
+        <code style="font-size:0.72rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">CREATE TABLE</code>
+        <div style="font-size:0.72rem;color:var(--text-dim);margin-top:4px">Define as colunas e tipos da tabela</div>
+      </div>
+      <div style="background:rgba(73,204,144,0.06);border:1px solid rgba(73,204,144,0.2);border-radius:14px;padding:16px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">➕</div>
+        <div style="font-weight:800;font-size:0.85rem;color:#49cc90;margin-bottom:4px">Inserir Dados</div>
+        <code style="font-size:0.72rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">INSERT INTO</code>
+        <div style="font-size:0.72rem;color:var(--text-dim);margin-top:4px">Adiciona novas linhas (registros)</div>
+      </div>
+      <div style="background:rgba(97,175,254,0.06);border:1px solid rgba(97,175,254,0.2);border-radius:14px;padding:16px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🔍</div>
+        <div style="font-weight:800;font-size:0.85rem;color:#61affe;margin-bottom:4px">Consultar Dados</div>
+        <code style="font-size:0.72rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">SELECT</code>
+        <div style="font-size:0.72rem;color:var(--text-dim);margin-top:4px">Busca e retorna informações</div>
+      </div>
+      <div style="background:rgba(252,161,48,0.06);border:1px solid rgba(252,161,48,0.2);border-radius:14px;padding:16px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">✏️</div>
+        <div style="font-weight:800;font-size:0.85rem;color:#fca130;margin-bottom:4px">Alterar Dados</div>
+        <code style="font-size:0.72rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">UPDATE</code>
+        <div style="font-size:0.72rem;color:var(--text-dim);margin-top:4px">Modifica dados existentes</div>
+      </div>
+      <div style="background:rgba(249,62,62,0.06);border:1px solid rgba(249,62,62,0.2);border-radius:14px;padding:16px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:6px">🗑️</div>
+        <div style="font-weight:800;font-size:0.85rem;color:#f93e3e;margin-bottom:4px">Remover Dados</div>
+        <code style="font-size:0.72rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">DELETE</code>
+        <div style="font-size:0.72rem;color:var(--text-dim);margin-top:4px">Apaga registros da tabela</div>
+      </div>
+    </div>
+
+    <!-- CREATE TABLE -->
+    <h4 style="margin:20px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">CREATE TABLE</span> <span style="color:var(--text)">Criando uma tabela</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Antes de guardar dados, precisamos definir a <strong style="color:var(--text)">estrutura da gaveta</strong> — ou seja, quais colunas a tabela vai ter:</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7</div>
+      <pre>
+<span class="kw">CREATE TABLE</span> teste_fornecedor (
+    id     <span class="tp">SERIAL</span> <span class="kw">PRIMARY KEY</span>,   <span class="cm">-- ID automático, chave primária</span>
+    nome   <span class="tp">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>, <span class="cm">-- Texto de até 100 caracteres, obrigatório</span>
+    cnpj   <span class="tp">VARCHAR</span>(<span class="num">20</span>),           <span class="cm">-- Texto de até 20 caracteres</span>
+    email  <span class="tp">VARCHAR</span>(<span class="num">100</span>),          <span class="cm">-- Texto de até 100 caracteres</span>
+    cidade <span class="tp">VARCHAR</span>(<span class="num">50</span>)            <span class="cm">-- Texto de até 50 caracteres</span>
+);</pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 O que cada parte significa?</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="display:grid;gap:10px;margin-top:8px;font-size:0.88rem">
+          <div><code style="color:#49cc90">CREATE TABLE teste_fornecedor</code> — <span style="color:var(--text-dim)">Cria uma nova tabela chamada "teste_fornecedor"</span></div>
+          <div><code style="color:var(--accent5)">SERIAL</code> — <span style="color:var(--text-dim)">Tipo numérico que se auto-incrementa (1, 2, 3...)</span></div>
+          <div><code style="color:var(--accent5)">PRIMARY KEY</code> — <span style="color:var(--text-dim)">Marca o campo como chave primária (identificador único)</span></div>
+          <div><code style="color:var(--accent5)">VARCHAR(100)</code> — <span style="color:var(--text-dim)">Texto com no máximo 100 caracteres</span></div>
+          <div><code style="color:var(--accent5)">NOT NULL</code> — <span style="color:var(--text-dim)">Campo obrigatório — não pode ficar vazio</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-content">Execute o comando no DBeaver e depois dê <strong>Refresh</strong> no painel esquerdo. Você verá a tabela <code>teste_fornecedor</code> aparecer dentro de <strong>Schemas → public → Tables</strong>!</div>
+    </div>
+
+    <!-- INSERT -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">INSERT</span> <span style="color:var(--text)">Inserindo dados</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Agora vamos <strong style="color:var(--text)">colocar dados dentro</strong> da tabela — como preencher fichas de cadastro:</p>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+      <pre>
+<span class="cm">-- Inserindo o primeiro fornecedor</span>
+<span class="kw">INSERT INTO</span> teste_fornecedor (nome, cnpj, email, cidade)
+<span class="kw">VALUES</span> (<span class="st">'Distribuidora ABC'</span>, <span class="st">'12.345.678/0001-99'</span>, <span class="st">'contato@abc.com'</span>, <span class="st">'São Paulo'</span>);
+
+<span class="cm">-- Inserindo mais alguns</span>
+<span class="kw">INSERT INTO</span> teste_fornecedor (nome, cnpj, email, cidade)
+<span class="kw">VALUES</span> (<span class="st">'Fornecedor XYZ'</span>, <span class="st">'98.765.432/0001-11'</span>, <span class="st">'vendas@xyz.com'</span>, <span class="st">'João Pessoa'</span>);
+
+<span class="kw">INSERT INTO</span> teste_fornecedor (nome, cnpj, email, cidade)
+<span class="kw">VALUES</span> (<span class="st">'Tech Solutions'</span>, <span class="st">'11.222.333/0001-44'</span>, <span class="st">'info@tech.com'</span>, <span class="st">'Recife'</span>);</pre>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content">Perceba que <strong>NÃO informamos o id</strong>! Ele é <code>SERIAL</code> — o banco gera automaticamente: 1, 2, 3...</div>
+    </div>
+
+    <!-- SELECT -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(97,175,254,0.15);color:#61affe;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">SELECT</span> <span style="color:var(--text)">Consultando dados</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">O comando <strong>mais usado</strong> do SQL! É como perguntar ao banco: "me mostra os dados":</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Buscar TODOS os fornecedores (todas as colunas)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor;
+
+<span class="cm">-- Buscar só nome e cidade</span>
+<span class="kw">SELECT</span> nome, cidade <span class="kw">FROM</span> teste_fornecedor;
+
+<span class="cm">-- Buscar fornecedor com id = 1</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor <span class="kw">WHERE</span> id = <span class="num">1</span>;
+
+<span class="cm">-- Buscar fornecedores de São Paulo</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor <span class="kw">WHERE</span> cidade = <span class="st">'São Paulo'</span>;</pre>
+    </div>
+
+    <div class="toggler">
+      <div class="toggler-header" onclick="toggleSection(this)">
+        <span>🔍 Traduzindo cada SELECT:</span>
+        <span class="toggler-arrow">▼</span>
+      </div>
+      <div class="toggler-body">
+        <div style="display:grid;gap:12px;margin-top:8px;font-size:0.88rem">
+          <div>
+            <code style="color:#61affe">SELECT * FROM teste_fornecedor;</code><br>
+            <span style="color:var(--text-dim)">→ "Me dá <strong style="color:var(--text)">tudo</strong> (*) que tem <strong style="color:var(--text)">na tabela</strong> teste_fornecedor"</span>
+          </div>
+          <div>
+            <code style="color:#61affe">SELECT nome, cidade FROM teste_fornecedor;</code><br>
+            <span style="color:var(--text-dim)">→ "Me dá <strong style="color:var(--text)">só o nome e a cidade</strong> dos fornecedores"</span>
+          </div>
+          <div>
+            <code style="color:#61affe">SELECT * FROM teste_fornecedor WHERE id = 1;</code><br>
+            <span style="color:var(--text-dim)">→ "Me dá tudo do fornecedor <strong style="color:var(--text)">cujo id é 1</strong>"</span>
+          </div>
+          <div>
+            <code style="color:#61affe">SELECT * FROM teste_fornecedor WHERE cidade = 'São Paulo';</code><br>
+            <span style="color:var(--text-dim)">→ "Me dá todos <strong style="color:var(--text)">que são de São Paulo</strong>"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPDATE -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(252,161,48,0.15);color:#fca130;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">UPDATE</span> <span style="color:var(--text)">Atualizando dados</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Precisa corrigir ou atualizar algum dado? Use o UPDATE:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Alterar o email do fornecedor com id = 1</span>
+<span class="kw">UPDATE</span> teste_fornecedor
+<span class="kw">SET</span> email = <span class="st">'novoemail@abc.com'</span>
+<span class="kw">WHERE</span> id = <span class="num">1</span>;
+
+<span class="cm">-- Verificar a alteração</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor <span class="kw">WHERE</span> id = <span class="num">1</span>;</pre>
+    </div>
+
+    <div class="warning">
+      <span class="warning-icon">🚨</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent2)">NUNCA esqueça o WHERE no UPDATE!</strong> Se fizer <code>UPDATE teste_fornecedor SET email = 'teste@teste.com'</code> sem WHERE, <strong>TODOS</strong> os fornecedores terão o email alterado! O WHERE filtra quem será afetado.</div>
+    </div>
+
+    <!-- DELETE -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(249,62,62,0.15);color:#f93e3e;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">DELETE</span> <span style="color:var(--text)">Deletando dados</span></h4>
+
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Para remover um registro da tabela:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Deletar o fornecedor com id = 3</span>
+<span class="kw">DELETE FROM</span> teste_fornecedor
+<span class="kw">WHERE</span> id = <span class="num">3</span>;
+
+<span class="cm">-- Verificar: agora só devem aparecer 2 registros</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> teste_fornecedor;</pre>
+    </div>
+
+    <div class="warning">
+      <span class="warning-icon">🚨</span>
+      <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent2)">NUNCA esqueça o WHERE no DELETE!</strong> Um <code>DELETE FROM teste_fornecedor</code> sem WHERE apaga <strong>TODOS</strong> os dados da tabela. Cuidado!</div>
+    </div>
+
+    <!-- AVISOS PEDAGÓGICOS -->
+    <h4 style="margin:28px 0 12px;color:var(--accent5)">📢 Avisos importantes para a prática</h4>
+    <div style="display:grid;gap:12px;margin-bottom:20px">
+      <div class="warning" style="margin:0">
+        <span class="warning-icon">⚠️</span>
+        <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Sempre use WHERE em UPDATE e DELETE</strong> quando a intenção for alterar ou remover <strong style="color:var(--text)">apenas um registro</strong>. Sem o WHERE, o comando afeta <strong style="color:var(--accent2)">todas as linhas</strong> da tabela — e não tem "Ctrl+Z" no banco de dados!</div>
+      </div>
+      <div class="warning" style="margin:0">
+        <span class="warning-icon">🔍</span>
+        <div style="color:var(--text-dim);font-size:0.9rem"><strong style="color:var(--accent5)">Confira em qual database você está conectado!</strong> No DBeaver, olhe o painel esquerdo — o banco ativo aparece em <strong style="color:var(--text)">negrito</strong>. Se estiver no banco <code>postgres</code> em vez do <code>bd_sistema_gestao</code>, seus comandos não vão funcionar como esperado.</div>
+      </div>
+      <div class="tip" style="margin:0">
+        <span class="tip-icon">🏋️</span>
+        <div class="tip-content"><strong style="color:var(--accent3)">Pratique executando, não apenas lendo!</strong> SQL se aprende fazendo. Cada comando aqui deve ser <strong style="color:var(--text)">digitado e executado</strong> no DBeaver. Leitura passiva não fixa — é a prática que constrói a memória.</div>
+      </div>
+    </div>
+
+    <!-- Limpar tabela de teste -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="color:var(--text)">🧹 Limpando a tabela de teste</span></h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Essa tabela era só para praticar. O Spring Boot vai criar as tabelas reais automaticamente! Pode remover:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Apagar a tabela inteira (estrutura + dados)</span>
+<span class="kw">DROP TABLE</span> teste_fornecedor;</pre>
+    </div>
+
+    <!-- Resumo CRUD SQL -->
+    <h4 style="margin:28px 0 12px;color:var(--accent5)">📋 Resumão — CRUD em SQL</h4>
+
+    <table class="endpoint-table">
+      <thead><tr><th>Operação</th><th>Comando SQL</th><th>O que faz</th></tr></thead>
+      <tbody>
+        <tr><td><span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.75rem;font-family:'JetBrains Mono',monospace">CREATE</span></td><td><code>INSERT INTO tabela ...</code></td><td>Insere um novo registro</td></tr>
+        <tr><td><span style="background:rgba(97,175,254,0.15);color:#61affe;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.75rem;font-family:'JetBrains Mono',monospace">READ</span></td><td><code>SELECT * FROM tabela</code></td><td>Consulta registros</td></tr>
+        <tr><td><span style="background:rgba(252,161,48,0.15);color:#fca130;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.75rem;font-family:'JetBrains Mono',monospace">UPDATE</span></td><td><code>UPDATE tabela SET ...</code></td><td>Atualiza registros</td></tr>
+        <tr><td><span style="background:rgba(249,62,62,0.15);color:#f93e3e;padding:2px 10px;border-radius:6px;font-weight:800;font-size:0.75rem;font-family:'JetBrains Mono',monospace">DELETE</span></td><td><code>DELETE FROM tabela ...</code></td><td>Remove registros</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip" style="margin-top:16px;border-left-color:var(--spring)">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-content">
+        <strong>A grande sacada:</strong> Quando usamos <strong style="color:var(--spring)">Spring Boot + JPA</strong>, <strong>você NÃO precisa escrever esses SQLs na mão!</strong> O Hibernate gera tudo automaticamente. O <code>CREATE TABLE</code> vira a anotação <code style="color:var(--accent5)">@Entity</code>, o <code>INSERT</code> vira <code style="color:var(--accent5)">.save()</code>, o <code>SELECT</code> vira <code style="color:var(--accent5)">.findAll()</code>, o <code>UPDATE</code> vira <code style="color:var(--accent5)">.save()</code> de novo, e o <code>DELETE</code> vira <code style="color:var(--accent5)">.deleteById()</code>. Mas é essencial entender o que acontece por baixo dos panos! 🪄
+      </div>
+    </div>
+
+    <!-- SQL vs Spring Boot comparison -->
+    <h4 style="margin:24px 0 12px;color:var(--accent6)">🔄 SQL Manual vs Spring Boot — Comparação</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+      <div style="background:rgba(69,183,209,0.06);border:1px solid rgba(69,183,209,0.15);border-radius:12px;padding:16px;font-size:0.82rem">
+        <div style="color:var(--accent4);font-weight:800;margin-bottom:8px;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px">📝 SQL Manual</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.7;display:block">
+          <span style="color:#49cc90">CREATE TABLE</span> fornecedor (...)<br>
+          <span style="color:#49cc90">INSERT INTO</span> fornecedor ...<br>
+          <span style="color:#61affe">SELECT</span> * FROM fornecedor<br>
+          <span style="color:#fca130">UPDATE</span> fornecedor SET ...<br>
+          <span style="color:#f93e3e">DELETE FROM</span> fornecedor ...
+        </code>
+      </div>
+      <div style="background:rgba(109,179,63,0.06);border:1px solid rgba(109,179,63,0.15);border-radius:12px;padding:16px;font-size:0.82rem">
+        <div style="color:var(--spring);font-weight:800;margin-bottom:8px;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px">🍃 Spring Boot</div>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.7;display:block">
+          <span style="color:var(--accent5)">@Entity @Table</span> ← cria tabela<br>
+          repository.<span style="color:var(--accent3)">save</span>(fornecedor)<br>
+          repository.<span style="color:var(--accent3)">findAll</span>()<br>
+          repository.<span style="color:var(--accent3)">save</span>(fornecedorEditado)<br>
+          repository.<span style="color:var(--accent3)">deleteById</span>(id)
+        </code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- ERROS MAIS COMUNS                       -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="tour-erros">
+  <div class="step-header">
+    <div class="step-number sn-red">🐛</div>
+    <div>
+      <div class="step-title">Erros Mais Comuns</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Problemas que todo iniciante encontra (e como resolver!)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.95rem;margin-bottom:20px">Não se preocupe se algo der errado — isso é <strong style="color:var(--text)">parte normal do aprendizado</strong>! Aqui estão os erros mais comuns e como resolver cada um:</p>
+
+    <div style="display:grid;gap:14px">
+      <!-- Erro 1 -->
+      <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.4rem;flex-shrink:0">🐳</span>
+        <div>
+          <div style="font-weight:800;color:var(--accent2);margin-bottom:4px;font-size:0.92rem">Docker Desktop não está aberto</div>
+          <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:6px"><strong style="color:var(--text)">Sintoma:</strong> Ao rodar <code>docker run...</code> aparece erro "Cannot connect to the Docker daemon".</p>
+          <p style="color:var(--text-dim);font-size:0.85rem"><strong style="color:#49cc90">Solução:</strong> Abra o Docker Desktop e espere o ícone da baleia 🐳 ficar <strong style="color:#49cc90">verde</strong>. Depois tente o comando de novo.</p>
+        </div>
+      </div>
+      <!-- Erro 2 -->
+      <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.4rem;flex-shrink:0">🔌</span>
+        <div>
+          <div style="font-weight:800;color:var(--accent2);margin-bottom:4px;font-size:0.92rem">Porta 5432 já em uso</div>
+          <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:6px"><strong style="color:var(--text)">Sintoma:</strong> Erro "port is already allocated" ou "Bind for 0.0.0.0:5432 failed".</p>
+          <p style="color:var(--text-dim);font-size:0.85rem"><strong style="color:#49cc90">Solução:</strong> Já existe algo usando a porta 5432. Pode ser outro container ou um PostgreSQL instalado localmente. Pare o outro serviço ou mude a porta: <code>-p 5433:5432</code> (e use 5433 no DBeaver).</p>
+        </div>
+      </div>
+      <!-- Erro 3 -->
+      <div style="background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.4rem;flex-shrink:0">🔑</span>
+        <div>
+          <div style="font-weight:800;color:var(--accent2);margin-bottom:4px;font-size:0.92rem">Senha ou usuário incorretos no DBeaver</div>
+          <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:6px"><strong style="color:var(--text)">Sintoma:</strong> "FATAL: password authentication failed" ao testar a conexão.</p>
+          <p style="color:var(--text-dim);font-size:0.85rem"><strong style="color:#49cc90">Solução:</strong> Confira se o usuário é <code>postgres</code> e a senha é <code>123</code> (exatamente como definimos no <code>docker run</code>). Letras maiúsculas/minúsculas importam!</p>
+        </div>
+      </div>
+      <!-- Erro 4 -->
+      <div style="background:rgba(247,183,49,0.05);border:1px solid rgba(247,183,49,0.15);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.4rem;flex-shrink:0">🔄</span>
+        <div>
+          <div style="font-weight:800;color:var(--accent5);margin-bottom:4px;font-size:0.92rem">Esquecer de dar Refresh no DBeaver</div>
+          <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:6px"><strong style="color:var(--text)">Sintoma:</strong> Você criou o banco ou a tabela mas não aparece no painel esquerdo.</p>
+          <p style="color:var(--text-dim);font-size:0.85rem"><strong style="color:#49cc90">Solução:</strong> Clique com botão direito na conexão e selecione <strong>"Refresh"</strong>. O DBeaver não atualiza sozinho!</p>
+        </div>
+      </div>
+      <!-- Erro 5 -->
+      <div style="background:rgba(247,183,49,0.05);border:1px solid rgba(247,183,49,0.15);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.4rem;flex-shrink:0">🎯</span>
+        <div>
+          <div style="font-weight:800;color:var(--accent5);margin-bottom:4px;font-size:0.92rem">Estar conectado no banco errado</div>
+          <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:6px"><strong style="color:var(--text)">Sintoma:</strong> "ERROR: relation "teste_fornecedor" does not exist" — mas você acabou de criar!</p>
+          <p style="color:var(--text-dim);font-size:0.85rem"><strong style="color:#49cc90">Solução:</strong> Verifique se está no database <code>bd_sistema_gestao</code> e não no <code>postgres</code> (padrão). Dê duplo-clique no banco correto no painel esquerdo.</p>
+        </div>
+      </div>
+      <!-- Erro 6 -->
+      <div style="background:rgba(249,62,62,0.05);border:1px solid rgba(249,62,62,0.2);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.4rem;flex-shrink:0">💀</span>
+        <div>
+          <div style="font-weight:800;color:var(--accent2);margin-bottom:4px;font-size:0.92rem">UPDATE ou DELETE sem WHERE — PERIGO!</div>
+          <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:6px"><strong style="color:var(--text)">Sintoma:</strong> Todos os registros da tabela foram alterados ou apagados.</p>
+          <p style="color:var(--text-dim);font-size:0.85rem"><strong style="color:#49cc90">Solução:</strong> Infelizmente, não tem "desfazer" fácil. <strong style="color:var(--accent2)">Sempre revise o comando</strong> antes de executar. Se aconteceu, apague a tabela com <code>DROP TABLE</code> e recrie tudo.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">🧠</span>
+      <div class="tip-content"><strong>Dica de ouro:</strong> Quando algo dá errado, <strong style="color:var(--text)">leia a mensagem de erro com calma</strong>. Ela quase sempre diz o que aconteceu. Copie o texto do erro e pesquise no Google — você vai se surpreender como é rápido encontrar a solução!</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- FLUXO MENTAL DA PRÁTICA                 -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="tour-fluxo">
+  <div class="step-header">
+    <div class="step-number sn-purple">🧠</div>
+    <div>
+      <div class="step-title">Fluxo Mental da Prática</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">A ordem certa para fazer tudo funcionar</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.95rem;margin-bottom:20px">Sempre que for praticar PostgreSQL, <strong style="color:var(--text)">siga essa ordem</strong>. Se pular algum passo, algo vai dar errado!</p>
+
+    <div class="flow-container">
+      <div class="flow-box" style="border-color:#2496ED;background:rgba(36,150,237,0.06)">
+        <div class="label" style="color:#2496ED">Passo 1</div>
+        <span style="color:#2496ED">🐳 Docker Desktop aberto</span>
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:#2496ED">Aguarde ficar verde</span></div>
+      <div class="flow-box" style="border-color:#2496ED;background:rgba(36,150,237,0.06)">
+        <div class="label" style="color:#2496ED">Passo 2</div>
+        <span style="color:#2496ED">📦 Container rodando</span>
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:var(--accent5)">docker start postgres-fullstack</span></div>
+      <div class="flow-box" style="border-color:var(--accent5);background:rgba(247,183,49,0.06)">
+        <div class="label" style="color:var(--accent5)">Passo 3</div>
+        <span style="color:var(--accent5)">🦫 Conexão no DBeaver</span>
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:var(--accent4)">Duplo-clique no banco</span></div>
+      <div class="flow-box" style="border-color:var(--accent4);background:rgba(69,183,209,0.06)">
+        <div class="label" style="color:var(--accent4)">Passo 4</div>
+        <span style="color:var(--accent4)">🏗️ Criar database</span>
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:var(--accent3)">CREATE DATABASE</span></div>
+      <div class="flow-box" style="border-color:var(--accent3);background:rgba(78,205,196,0.06)">
+        <div class="label" style="color:var(--accent3)">Passo 5</div>
+        <span style="color:var(--accent3)">📋 Criar tabela</span>
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:#49cc90">CREATE TABLE</span></div>
+      <div class="flow-box" style="border-color:#49cc90;background:rgba(73,204,144,0.06)">
+        <div class="label" style="color:#49cc90">Passo 6</div>
+        <span style="color:#49cc90">➕ Inserir dados</span>
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:#61affe">INSERT INTO</span></div>
+      <div class="flow-box" style="border-color:#61affe;background:rgba(97,175,254,0.06)">
+        <div class="label" style="color:#61affe">Passo 7</div>
+        <span style="color:#61affe">🔍 Consultar</span>
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:#fca130">SELECT</span></div>
+      <div class="flow-box" style="border-color:#fca130;background:rgba(252,161,48,0.06)">
+        <div class="label" style="color:#fca130">Passo 8</div>
+        <span style="color:#fca130">✏️ Atualizar</span>
+      </div>
+      <div class="flow-arrow"><span class="flow-label" style="color:#f93e3e">UPDATE</span></div>
+      <div class="flow-box" style="border-color:#f93e3e;background:rgba(249,62,62,0.06)">
+        <div class="label" style="color:#f93e3e">Passo 9</div>
+        <span style="color:#f93e3e">🗑️ Deletar</span>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:16px">
+      <span class="tip-icon">💡</span>
+      <div class="tip-content"><strong>Memorizou?</strong> Docker → Container → DBeaver → Database → Tabela → INSERT → SELECT → UPDATE → DELETE. <strong style="color:var(--text)">Sempre nessa ordem!</strong> Se pular o Docker, nada funciona. Se pular a tabela, não tem onde inserir dados.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- TREINO GUIADO EM CASA                   -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="tour-treino">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--spring)">🏠</div>
+    <div>
+      <div class="step-title">Treino Guiado em Casa</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Exercício prático completo para fazer sozinho</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="background:linear-gradient(135deg,rgba(109,179,63,0.08),rgba(78,205,196,0.06));border:1px solid rgba(109,179,63,0.2);border-radius:16px;padding:24px;margin-bottom:20px">
+      <h4 style="color:var(--spring);margin-bottom:8px;display:flex;align-items:center;gap:8px">🎯 Missão: Criar a tabela <code style="color:var(--accent5)">aluno_teste</code></h4>
+      <p style="color:var(--text-dim);font-size:0.92rem">Siga os passos abaixo <strong style="color:var(--text)">na ordem</strong>. Cada comando deve ser executado no DBeaver, conectado ao banco <code>bd_sistema_gestao</code>. Ao final, você terá praticado o CRUD completo!</p>
+    </div>
+
+    <!-- Tabela visual do que vamos criar -->
+    <h4 style="margin:20px 0 12px;color:var(--accent4)">📋 Estrutura da tabela que vamos criar:</h4>
+    <div class="db-table">
+      <div class="db-table-header">📋 Tabela: aluno_teste</div>
+      <table>
+        <thead><tr><th>Coluna</th><th>Tipo</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--accent5);font-weight:700">id</td><td><code style="color:var(--accent3)">SERIAL PRIMARY KEY</code></td><td style="color:var(--text-dim)">Identificador único, gerado automaticamente</td></tr>
+          <tr><td style="color:var(--accent5);font-weight:700">nome</td><td><code style="color:var(--accent3)">VARCHAR(100) NOT NULL</code></td><td style="color:var(--text-dim)">Nome do aluno (obrigatório)</td></tr>
+          <tr><td style="color:var(--accent5);font-weight:700">email</td><td><code style="color:var(--accent3)">VARCHAR(100)</code></td><td style="color:var(--text-dim)">E-mail do aluno</td></tr>
+          <tr><td style="color:var(--accent5);font-weight:700">cidade</td><td><code style="color:var(--accent3)">VARCHAR(50)</code></td><td style="color:var(--text-dim)">Cidade onde mora</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Passo 1: CREATE TABLE -->
+    <h4 style="margin:24px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">PASSO 1</span> <span style="color:var(--text)">Criar a tabela</span></h4>
+
+    <div class="code-block with-lines">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6</div>
+      <pre>
+<span class="kw">CREATE TABLE</span> aluno_teste (
+    id     <span class="tp">SERIAL</span> <span class="kw">PRIMARY KEY</span>,
+    nome   <span class="tp">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>,
+    email  <span class="tp">VARCHAR</span>(<span class="num">100</span>),
+    cidade <span class="tp">VARCHAR</span>(<span class="num">50</span>)
+);</pre>
+    </div>
+
+    <div class="tip" style="margin-bottom:4px">
+      <span class="tip-icon">✅</span>
+      <div class="tip-content">Após executar, dê <strong>Refresh</strong> no DBeaver. A tabela deve aparecer em <strong>Schemas → public → Tables → aluno_teste</strong>.</div>
+    </div>
+
+    <!-- Passo 2: INSERT -->
+    <h4 style="margin:24px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(73,204,144,0.15);color:#49cc90;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">PASSO 2</span> <span style="color:var(--text)">Inserir 3 alunos</span></h4>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="kw">INSERT INTO</span> aluno_teste (nome, email, cidade)
+<span class="kw">VALUES</span> (<span class="st">'Maria Silva'</span>, <span class="st">'maria@email.com'</span>, <span class="st">'João Pessoa'</span>);
+
+<span class="kw">INSERT INTO</span> aluno_teste (nome, email, cidade)
+<span class="kw">VALUES</span> (<span class="st">'Carlos Santos'</span>, <span class="st">'carlos@email.com'</span>, <span class="st">'Recife'</span>);
+
+<span class="kw">INSERT INTO</span> aluno_teste (nome, email, cidade)
+<span class="kw">VALUES</span> (<span class="st">'Ana Oliveira'</span>, <span class="st">'ana@email.com'</span>, <span class="st">'São Paulo'</span>);</pre>
+    </div>
+
+    <!-- Passo 3: SELECT * -->
+    <h4 style="margin:24px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(97,175,254,0.15);color:#61affe;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">PASSO 3</span> <span style="color:var(--text)">Consultar todos os alunos</span></h4>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Listar todos os alunos cadastrados</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> aluno_teste;</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.88rem;margin:8px 0 4px">🎯 <strong style="color:var(--text)">Resultado esperado:</strong> 3 linhas com id 1, 2 e 3.</p>
+
+    <!-- Passo 4: SELECT com WHERE -->
+    <h4 style="margin:24px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(97,175,254,0.15);color:#61affe;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">PASSO 4</span> <span style="color:var(--text)">Consultar com filtro (WHERE)</span></h4>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Buscar apenas alunos de João Pessoa</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> aluno_teste <span class="kw">WHERE</span> cidade = <span class="st">'João Pessoa'</span>;
+
+<span class="cm">-- Buscar o aluno com id = 2</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> aluno_teste <span class="kw">WHERE</span> id = <span class="num">2</span>;</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.88rem;margin:8px 0 4px">🎯 <strong style="color:var(--text)">Resultado esperado:</strong> O primeiro retorna só a Maria. O segundo retorna só o Carlos.</p>
+
+    <!-- Passo 5: UPDATE com WHERE -->
+    <h4 style="margin:24px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(252,161,48,0.15);color:#fca130;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">PASSO 5</span> <span style="color:var(--text)">Atualizar um aluno</span></h4>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Atualizar o email da Maria (id = 1)</span>
+<span class="kw">UPDATE</span> aluno_teste
+<span class="kw">SET</span> email = <span class="st">'maria.nova@email.com'</span>
+<span class="kw">WHERE</span> id = <span class="num">1</span>;
+
+<span class="cm">-- Conferir a alteração</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> aluno_teste <span class="kw">WHERE</span> id = <span class="num">1</span>;</pre>
+    </div>
+
+    <div class="warning" style="margin-bottom:4px">
+      <span class="warning-icon">⚠️</span>
+      <div style="color:var(--text-dim);font-size:0.85rem">Perceba que usamos <code>WHERE id = 1</code>. <strong style="color:var(--accent5)">Sem o WHERE, todos os alunos teriam o email alterado!</strong></div>
+    </div>
+
+    <!-- Passo 6: DELETE com WHERE -->
+    <h4 style="margin:24px 0 12px;display:flex;align-items:center;gap:8px"><span style="background:rgba(249,62,62,0.15);color:#f93e3e;padding:3px 12px;border-radius:6px;font-size:0.8rem;font-weight:800;font-family:'JetBrains Mono',monospace">PASSO 6</span> <span style="color:var(--text)">Deletar um aluno</span></h4>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="cm">-- Deletar o aluno com id = 3 (Ana)</span>
+<span class="kw">DELETE FROM</span> aluno_teste
+<span class="kw">WHERE</span> id = <span class="num">3</span>;
+
+<span class="cm">-- Conferir: agora devem aparecer apenas 2 alunos</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> aluno_teste;</pre>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.88rem;margin:8px 0 4px">🎯 <strong style="color:var(--text)">Resultado esperado:</strong> Somente Maria e Carlos aparecem. Ana foi removida.</p>
+
+    <!-- Limpeza -->
+    <h4 style="margin:28px 0 12px;display:flex;align-items:center;gap:8px"><span style="color:var(--text)">🧹 Limpeza (opcional)</span></h4>
+    <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:12px">Se quiser praticar de novo do zero, apague a tabela e refaça:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="filename">DBeaver — SQL Editor</span><span class="lang-badge sql">SQL</span></div>
+      </div>
+      <pre>
+<span class="kw">DROP TABLE</span> aluno_teste;</pre>
+    </div>
+
+    <div class="tip" style="margin-top:16px;border-left-color:var(--spring)">
+      <span class="tip-icon">🏆</span>
+      <div class="tip-content"><strong style="color:var(--spring)">Parabéns!</strong> Se você chegou até aqui executando cada passo, já praticou o <strong style="color:var(--text)">CRUD completo em SQL</strong>! Esse é o alicerce para tudo que faremos com Spring Boot. Quanto mais vezes repetir, mais natural fica. 💪</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- COMO SABER SE DEU CERTO                 -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="tour-como-saber">
+  <div class="step-header">
+    <div class="step-number sn-green">✅</div>
+    <div>
+      <div class="step-title">Como Saber se Deu Certo?</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Sinais visuais de que tudo está funcionando</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.95rem;margin-bottom:20px">Em cada etapa, existe um <strong style="color:var(--text)">sinal visual claro</strong> de que deu certo. Confira:</p>
+
+    <div style="display:grid;gap:14px">
+      <div style="background:rgba(73,204,144,0.05);border:1px solid rgba(73,204,144,0.15);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.6rem;flex-shrink:0">🐳</span>
+        <div>
+          <div style="font-weight:800;color:#49cc90;margin-bottom:4px;font-size:0.92rem">Docker Desktop</div>
+          <p style="color:var(--text-dim);font-size:0.88rem">O container <code>postgres-fullstack</code> deve aparecer com status <strong style="color:#49cc90">Running</strong> (bolinha verde). Se estiver com status vermelho ou cinza, clique no botão ▶️ para iniciar.</p>
+        </div>
+      </div>
+
+      <div style="background:rgba(73,204,144,0.05);border:1px solid rgba(73,204,144,0.15);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.6rem;flex-shrink:0">🦫</span>
+        <div>
+          <div style="font-weight:800;color:#49cc90;margin-bottom:4px;font-size:0.92rem">DBeaver — Conexão</div>
+          <p style="color:var(--text-dim);font-size:0.88rem">Ao clicar em "Test Connection" deve aparecer a mensagem <strong style="color:#49cc90">"Connected!"</strong> em verde. Sem erros, sem mensagens vermelhas.</p>
+        </div>
+      </div>
+
+      <div style="background:rgba(73,204,144,0.05);border:1px solid rgba(73,204,144,0.15);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.6rem;flex-shrink:0">📋</span>
+        <div>
+          <div style="font-weight:800;color:#49cc90;margin-bottom:4px;font-size:0.92rem">DBeaver — Tabela</div>
+          <p style="color:var(--text-dim);font-size:0.88rem">Depois do CREATE TABLE + Refresh, a tabela deve aparecer no navegador do banco: <strong style="color:var(--text)">bd_sistema_gestao → Schemas → public → Tables → sua_tabela</strong>.</p>
+        </div>
+      </div>
+
+      <div style="background:rgba(73,204,144,0.05);border:1px solid rgba(73,204,144,0.15);border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:1.6rem;flex-shrink:0">📊</span>
+        <div>
+          <div style="font-weight:800;color:#49cc90;margin-bottom:4px;font-size:0.92rem">DBeaver — SELECT</div>
+          <p style="color:var(--text-dim);font-size:0.88rem">O <code>SELECT * FROM sua_tabela</code> deve retornar <strong style="color:var(--text)">linhas com dados</strong> na aba de resultados (parte inferior do DBeaver). Se retornar vazio, é porque ainda não fez INSERT ou está no banco errado.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="analogy" style="margin-top:16px">
+      <div class="analogy-title">Resumo: O "Teste do Espelho"</div>
+      <p style="color:var(--text-dim)">Pense assim: cada ação tem um <strong style="color:var(--text)">"reflexo" visual</strong>. Se você cria uma tabela, ela aparece no painel. Se você insere dados, o SELECT mostra. Se nada aparece, algo saiu errado — volte aos passos e confira! 🪞</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- CHECKLIST DE CONCLUSÃO                  -->
+<!-- ════════════════════════════════════════ -->
+<section class="step-section" id="tour-checklist">
+  <div class="step-header">
+    <div class="step-number" style="background:var(--accent7)">🏁</div>
+    <div>
+      <div class="step-title">Checklist de Conclusão</div>
+      <div style="color:var(--text-dim);font-size:0.88rem">Marque cada item para garantir que completou tudo</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="color:var(--text-dim);font-size:0.95rem;margin-bottom:20px">Use essa lista para conferir se você completou <strong style="color:var(--text)">todas as etapas</strong> do tour pelo PostgreSQL. Ao marcar todos, você está pronto para o Spring Boot! 🚀</p>
+
+    <div style="display:flex;flex-direction:column;gap:8px" id="pgChecklist">
+      <label style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all 0.3s;user-select:none" onchange="updateChecklist()">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--accent7);cursor:pointer;flex-shrink:0">
+        <span style="color:var(--text);font-weight:700;font-size:0.9rem">🐳 Docker Desktop instalado e aberto</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all 0.3s;user-select:none" onchange="updateChecklist()">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--accent7);cursor:pointer;flex-shrink:0">
+        <span style="color:var(--text);font-weight:700;font-size:0.9rem">📦 Container <code>postgres-fullstack</code> rodando (status verde)</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all 0.3s;user-select:none" onchange="updateChecklist()">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--accent7);cursor:pointer;flex-shrink:0">
+        <span style="color:var(--text);font-weight:700;font-size:0.9rem">🦫 Conexão com PostgreSQL no DBeaver funcionando</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all 0.3s;user-select:none" onchange="updateChecklist()">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--accent7);cursor:pointer;flex-shrink:0">
+        <span style="color:var(--text);font-weight:700;font-size:0.9rem">🏗️ Database <code>bd_sistema_gestao</code> criado</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all 0.3s;user-select:none" onchange="updateChecklist()">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--accent7);cursor:pointer;flex-shrink:0">
+        <span style="color:var(--text);font-weight:700;font-size:0.9rem">📋 Tabela criada com sucesso (aparece no painel)</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all 0.3s;user-select:none" onchange="updateChecklist()">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--accent7);cursor:pointer;flex-shrink:0">
+        <span style="color:var(--text);font-weight:700;font-size:0.9rem">➕ INSERTs executados (dados inseridos)</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all 0.3s;user-select:none" onchange="updateChecklist()">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--accent7);cursor:pointer;flex-shrink:0">
+        <span style="color:var(--text);font-weight:700;font-size:0.9rem">🔍 SELECT executado (dados retornados)</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all 0.3s;user-select:none" onchange="updateChecklist()">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--accent7);cursor:pointer;flex-shrink:0">
+        <span style="color:var(--text);font-weight:700;font-size:0.9rem">✏️ UPDATE executado (dado alterado)</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px 20px;cursor:pointer;transition:all 0.3s;user-select:none" onchange="updateChecklist()">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--accent7);cursor:pointer;flex-shrink:0">
+        <span style="color:var(--text);font-weight:700;font-size:0.9rem">🗑️ DELETE executado (registro removido)</span>
+      </label>
+    </div>
+
+    <div id="checklistComplete" style="display:none;margin-top:20px;background:linear-gradient(135deg,rgba(6,214,160,0.1),rgba(109,179,63,0.08));border:2px solid rgba(6,214,160,0.3);border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:8px">🎉</div>
+      <h4 style="color:var(--accent7);font-size:1.2rem;margin-bottom:8px">Tour Completo! Você está pronto!</h4>
+      <p style="color:var(--text-dim);font-size:0.92rem">Agora você domina o básico do PostgreSQL. O próximo passo é deixar o <strong style="color:var(--spring)">Spring Boot</strong> fazer esse trabalho automaticamente — mas sabendo o que acontece por baixo dos panos!</p>
+    </div>
+
+    <div id="checklistProgress" style="margin-top:16px;background:var(--surface2);border-radius:12px;overflow:hidden;height:8px">
+      <div id="checklistBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent7),var(--spring));transition:width 0.5s ease;border-radius:12px"></div>
+    </div>
+    <p id="checklistCount" style="text-align:center;color:var(--text-dim);font-size:0.82rem;margin-top:8px;font-weight:700">0 de 9 completos</p>
+  </div>
+</section>
+
+<div class="section-connector"><div class="line"></div></div>
+
+
+<footer>
+  Feito com <span class="heart">💜</span> para os alunos da <a href="#">Programa AI</a> — Curso Presencial Programação Fullstack<br>
+  <span style="font-size:0.75rem;margin-top:8px;display:block">Backend com Java/Spring Boot — Prof. Kelson Almeida</span>
+</footer>
+
+
+</div><!-- /container -->
+
+<script src="assets/app.js"></script>
+</body>
+</html>

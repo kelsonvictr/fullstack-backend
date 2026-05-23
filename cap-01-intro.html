@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fullstack Java/Spring + React + AWS — Programa AI</title>
+<title>Introdução — Visão Geral — Backend Java &amp; Spring Boot</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -187,181 +187,27 @@
 </div>
 
 
+<!-- HERO -->
+<!-- ════════════════════════════════════════ -->
 <section class="hero" id="hero">
-  <div class="hero-icons">☕ 🍃 🐘 ⚛️ ☁️</div>
+  <div class="hero-icons">☕ 🍃 🐘</div>
   <div class="hero-badge">Programa AI — Curso Presencial Programação Fullstack</div>
-  <h1>Fullstack do Zero<br>ao Deploy na Nuvem</h1>
-  <p class="subtitle">Backend Java/Spring + Frontend React + PostgreSQL + Autenticação JWT + Deploy AWS. Sete capítulos, do primeiro <code>SELECT *</code> à URL pública na nuvem — sem pular nada.</p>
+  <h1>Backend com<br>Java &amp; Spring Boot</h1>
+  <p class="subtitle">A API REST que vai dar vida ao seu frontend React! Do zero ao CRUD completo — passo a passo, sem pular nada. Primeiro Fornecedores, depois Produtos e Clientes.</p>
   <div class="hero-stack">
     <span class="stack-chip java">☕ Java 21</span>
-    <span class="stack-chip spring">🍃 Spring Boot</span>
+    <span class="stack-chip spring">🍃 Spring Boot (versão mais recente)</span>
     <span class="stack-chip pg">🐘 PostgreSQL</span>
-    <span class="stack-chip" style="background:rgba(97,218,251,0.15);color:#61dafb;border-color:rgba(97,218,251,0.3)">⚛️ React + Vite</span>
-    <span class="stack-chip" style="background:rgba(244,114,182,0.15);color:var(--accent7);border-color:rgba(244,114,182,0.3)">🔐 JWT Auth</span>
-    <span class="stack-chip" style="background:rgba(255,159,67,0.15);color:var(--accent5);border-color:rgba(255,159,67,0.3)">☁️ AWS Beanstalk</span>
+    <span class="stack-chip swagger">📗 Swagger</span>
   </div>
 </section>
 
 <div class="section-connector"><div class="line"></div></div>
-
-<section class="step-section">
-  <div class="step-header">
-    <div class="step-number sn-main">📚</div>
-    <div>
-      <div class="step-title">Sumário do Curso</div>
-      <div style="color:var(--text-dim);font-size:0.88rem">Escolha um capítulo para começar — ou siga em ordem.</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="roadmap" style="text-align:left">
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent4)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-02-tour-postgresql.html" style="color:var(--accent4)">🐘 Tour — Conhecendo o PostgreSQL</a></h4>
-          <p>Pré-requisito. Banco de dados, Docker, DBeaver, SQL básico.</p>
-        </div>
-      </div>
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--spring)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-03-overview-spring.html" style="color:var(--spring)">🍃 Projeto Spring — Arquitetura &amp; Setup</a></h4>
-          <p>Camadas (Controller / Service / Repository / Model), criação do projeto.</p>
-        </div>
-      </div>
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent5)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-04-fornecedor.html" style="color:var(--accent5)">📦 Capítulo 1 — Fornecedor</a></h4>
-          <p>Seu primeiro CRUD completo: Model, Repository, Service, Controller.</p>
-        </div>
-      </div>
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent4)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-05-produto.html" style="color:var(--accent4)">🏷️ Capítulo 2 — Produto</a></h4>
-          <p>O padrão profissional: DTOs, Mapper, ServiceImpl, validações, enum.</p>
-        </div>
-      </div>
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--petshop)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-06-petshop.html" style="color:var(--petshop)">🐶 Desafio — PetShop</a></h4>
-          <p>Aplique tudo num projeto novo: Tutor + Pet com relacionamento.</p>
-        </div>
-      </div>
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent6)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-07-cliente.html" style="color:var(--accent6)">👤 Capítulo 3 — Cliente</a></h4>
-          <p>Entidade aninhada com Endereço via @OneToOne + cascade.</p>
-        </div>
-      </div>
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent3)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-08-fornecedor-refator.html" style="color:var(--accent3)">🔧 Capítulo 4 — Refatorar Fornecedor</a></h4>
-          <p>Refactor real: do cap 1 simples para o padrão profissional.</p>
-        </div>
-      </div>
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent7)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-09-autenticacao.html" style="color:var(--accent7)">🔐 Capítulo 5 — Autenticação JWT</a></h4>
-          <p>Protegendo a API com Spring Security minimalista + JWT.</p>
-        </div>
-      </div>
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent3)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-10-integracao-frontend.html" style="color:var(--accent3)">🔗 Capítulo 6 — Integração Front × Back</a></h4>
-          <p>Plugando React no backend autenticado: CORS, JWT, AuthContext, rotas protegidas. Antes × depois lado a lado.</p>
-        </div>
-      </div>
-
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent2)"></div>
-        <div class="roadmap-content">
-          <h4><a href="cap-11-deploy-aws.html" style="color:var(--accent2)">☁️ Capítulo 7 — Deploy AWS</a> <span style="font-size:0.7rem;background:rgba(255,107,107,0.15);color:var(--accent2);padding:2px 8px;border-radius:6px;margin-left:6px">🚨 1×1 com Prof. Kelson</span></h4>
-          <p>Elastic Beanstalk + RDS. Só inicie depois de mostrar os capítulos anteriores rodando — e <strong>sempre</strong> faça cleanup ao final.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<div class="section-connector"><div class="line"></div></div>
-
-<!-- ════════════════════════════════════════ -->
-<!-- PRÓXIMOS CAPÍTULOS                      -->
-<!-- ════════════════════════════════════════ -->
-<section class="step-section" id="proximos">
-  <div class="step-header">
-    <div class="step-number" style="background:#49cc90">🎓</div>
-    <div>
-      <div class="step-title">Trilha completa — e agora?</div>
-      <div style="color:var(--text-dim);font-size:0.88rem">Você chegou ao fim da jornada da Turma 05</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <p style="color:var(--text-dim);margin-bottom:18px">Se você concluiu os 7 capítulos, fez seu próprio CRUD fullstack autenticado e deployado na AWS — <strong style="color:var(--text)">parabéns</strong>. Esse é o "shape" de projeto que aparece em vaga júnior real. 🎯</p>
-
-    <h4 style="margin:8px 0 12px;color:#49cc90">🚀 Para onde ir depois</h4>
-    <div class="roadmap" style="text-align:left">
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent5)"></div>
-        <div class="roadmap-content">
-          <h4 style="color:var(--accent5)">🧪 Testes automatizados</h4>
-          <p>JUnit + Mockito no back, Vitest + React Testing Library no front. Coberturar os fluxos críticos.</p>
-        </div>
-      </div>
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent4)"></div>
-        <div class="roadmap-content">
-          <h4 style="color:var(--accent4)">🔄 CI/CD</h4>
-          <p>GitHub Actions: a cada push em <code>main</code>, build + testes + <code>eb deploy</code> automático.</p>
-        </div>
-      </div>
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent6)"></div>
-        <div class="roadmap-content">
-          <h4 style="color:var(--accent6)">📊 Observabilidade</h4>
-          <p>Logs estruturados, métricas, alertas. CloudWatch ou Grafana Cloud (free tier).</p>
-        </div>
-      </div>
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent7)"></div>
-        <div class="roadmap-content">
-          <h4 style="color:var(--accent7)">🔐 Auth avançado</h4>
-          <p>Roles/permissions, refresh tokens, recuperação de senha, login social (OAuth).</p>
-        </div>
-      </div>
-      <div class="roadmap-item">
-        <div class="roadmap-dot" style="background:var(--accent3)"></div>
-        <div class="roadmap-content">
-          <h4 style="color:var(--accent3)">📦 Portfólio</h4>
-          <p>Subir o projeto no GitHub com README caprichado, screenshots, link da URL pública. É a sua vitrine pra vagas.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 
 <footer>
   Feito com <span class="heart">💜</span> para os alunos da <a href="#">Programa AI</a> — Curso Presencial Programação Fullstack<br>
-  <span style="font-size:0.75rem;margin-top:8px;display:block">Fullstack Java/Spring + React + AWS — Prof. Kelson Almeida</span>
+  <span style="font-size:0.75rem;margin-top:8px;display:block">Backend com Java/Spring Boot — Prof. Kelson Almeida</span>
 </footer>
 
 
